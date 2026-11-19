@@ -1,0 +1,73 @@
+name: Stratum
+options:
+  bundleIdPrefix: app.stratum
+  deploymentTarget:
+    macOS: "14.0"
+  createIntermediateGroups: true
+  defaultConfig: Debug
+
+settings:
+  base:
+    SWIFT_VERSION: "5"
+    MACOSX_DEPLOYMENT_TARGET: "14.0"
+    ENABLE_HARDENED_RUNTIME: YES
+    ENABLE_APP_SANDBOX: NO
+    CODE_SIGN_STYLE: Automatic
+
+packages:
+  GRDB:
+    url: https://github.com/groue/GRDB.swift
+    from: "6.29.0"
+
+targets:
+  Stratum:
+    type: application
+    platform: macOS
+    sources:
+      - path: Stratum
+    resources:
+      - path: Stratum/Resources
+        optional: true
+    dependencies:
+      - package: GRDB
+        product: GRDB
+    info:
+      path: Stratum/Info.plist
+      properties:
+        CFBundleDisplayName: Stratum
+        CFBundleShortVersionString: "0.1.0"
+        CFBundleVersion: "1"
+        CFBundleIconName: AppIcon
+        CFBundleIconFile: AppIcon
+        LSMinimumSystemVersion: "14.0"
+        LSApplicationCategoryType: public.app-category.utilities
+        NSHumanReadableCopyright: ""
+        NSDesktopFolderUsageDescription: "Stratum accesses your Desktop to browse and manage your files."
+        NSDocumentsFolderUsageDescription: "Stratum accesses your Documents to browse and manage your files."
+        NSDownloadsFolderUsageDescription: "Stratum accesses your Downloads to browse and manage your files."
+        NSAppleEventsUsageDescription: "Stratum uses Apple Events to open folders in Terminal and reveal items."
+        NSPrincipalClass: NSApplication
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.stratum.filemanager
+        PRODUCT_NAME: Stratum
+        GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_KEY_NSHumanReadableCopyright: ""
+        COMBINE_HIDPI_IMAGES: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+
+  StratumTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: StratumTests
+    dependencies:
+      - target: Stratum
+      - package: GRDB
+        product: GRDB
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.stratum.filemanager.tests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/Stratum.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Stratum"
+        BUNDLE_LOADER: "$(TEST_HOST)"

@@ -1,0 +1,727 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		05CA587381ACE0A18BD32175 /* ScanDatabaseQueries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F376BA9840E77369EB57F8 /* ScanDatabaseQueries.swift */; };
+		06426387B1DCC944DB4069F9 /* ScanStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C52EDE7AC17F3D44412B099 /* ScanStore.swift */; };
+		0734A00D6FFE67BD4DD2BC5E /* MainWindowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E71AB20B2B84E7ABD952B1 /* MainWindowView.swift */; };
+		0A6869EA392B0DEFAD36A956 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C451677606067CF3A9DBD8ED /* SidebarView.swift */; };
+		0FDDAE7A9244C5CB174D1816 /* Milestone2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEFA5DE73F08CFF21374CDA4 /* Milestone2Tests.swift */; };
+		10C89C959F2085B904DFBF79 /* BrowserContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777607F61614446B433466F7 /* BrowserContainerView.swift */; };
+		148E0936FED9D46A4A02765C /* BulkDirectoryReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56216304CCCAD281B771477 /* BulkDirectoryReader.swift */; };
+		1775C13AA63BC65D540CBD04 /* FastColumnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A45F921C2859A9900874B7A /* FastColumnView.swift */; };
+		17824205AB53DB262C805705 /* SpotlightSearchEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0FBEC0AE3D0A5B632B671B /* SpotlightSearchEngine.swift */; };
+		1910B024DD5BF80652441E6E /* TreemapLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7F1926E2DADFC3CFC5973C7 /* TreemapLayoutTests.swift */; };
+		28FC0EF4C914ADCF47DA9B27 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 4A4B5D27AC7503A576EEBB55 /* GRDB */; };
+		3BCA2F65C28116715CCE4761 /* ProtectedPaths.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAC98F38E8AC563AFB07AE55 /* ProtectedPaths.swift */; };
+		3E783579659A215ECA6FB714 /* PathResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF99EBBA3EE3783B8060988 /* PathResolver.swift */; };
+		3FCE741A0EF877F69065D641 /* FullDiskAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70B9CA2866DA85DFEC188E9 /* FullDiskAccess.swift */; };
+		457FDFCB4C201C72F30B5CC3 /* DirectoryWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9E94C08B1CBB8272B33F373 /* DirectoryWatcher.swift */; };
+		4AF5F73F00F15E0A812E4287 /* Aggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80670F82F82160446EFBDD80 /* Aggregator.swift */; };
+		4F7682330F81DEBB2FE05855 /* ScanEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA2CFB988A15C07FF0FEEAD /* ScanEngineTests.swift */; };
+		585C195F7E21EF203CF281D8 /* FastListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60870378489A921414F91F76 /* FastListView.swift */; };
+		6699D6255FFE90D79D19C102 /* ScanCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC59D84FACC963E94C7884B7 /* ScanCoordinator.swift */; };
+		6908F825816E7FA8AA26A5F3 /* ScanModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A600E6CCCA8545FEFCD8E660 /* ScanModels.swift */; };
+		6BE700A9BD0F6A09F484A795 /* ColorLegibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2585D9FBF948BE73BCA66DB /* ColorLegibility.swift */; };
+		6DB61F5DA479DB1F8E990A9F /* StratumApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06ADA8E13E813C385A25A55F /* StratumApp.swift */; };
+		78654C5AFDF9BC11209A8A7A /* TreemapLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70491EB2406E3D394DFC4780 /* TreemapLayout.swift */; };
+		795362AE494027CC96B461DF /* StorageMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E730F98592F41F85E9C7686 /* StorageMapView.swift */; };
+		814F48E1AECF07A2B7A5620A /* Milestone1Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03547504F3B605532C2F5BCE /* Milestone1Tests.swift */; };
+		88914963E22F9D424D929863 /* AppearanceSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B891F4D4D449DB8804F32F /* AppearanceSettingsView.swift */; };
+		8B12C99333429BD28E9DF67F /* AppearanceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 821E462F06C64A39CAD701B8 /* AppearanceManager.swift */; };
+		8E77E600B6C694BCD06A100F /* FirstRunFDASheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2D917673F70ED81055452CB /* FirstRunFDASheet.swift */; };
+		995D08F25729609C30A4B921 /* ScanStatusViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE8096316AEEC820AD73930 /* ScanStatusViews.swift */; };
+		9A8C556E58734993FD6F3161 /* FileItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD321501387F800C796C1A6C /* FileItem.swift */; };
+		9C34A26C8AE0A7289020DE6E /* SmartOrganizerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887A7368E23336748A3A595F /* SmartOrganizerView.swift */; };
+		A15EA21C2518471A4C559068 /* TerminalLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5B8EC631B09CBC3A403410 /* TerminalLauncher.swift */; };
+		A46EE42CDF3DBF6C202029E4 /* InspectorSidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD54F4E160E3E4239F36E9CB /* InspectorSidebarView.swift */; };
+		AB8D5BCB05ECEABA56A80FB3 /* TransferQueueEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31FA56852936800EDED55A6E /* TransferQueueEngine.swift */; };
+		AB95D67467DF06926C05E225 /* CommandPaletteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C854381E1CFCF6475150E0C3 /* CommandPaletteView.swift */; };
+		AE5718460FECBA3CCE3C0529 /* GroupsByNameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BDA7A8146161BD43636F44F /* GroupsByNameView.swift */; };
+		B05DBA24C0FF0498BCB7F0F8 /* ScanEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15C39B4BAC6EDD0EB5CAA0F1 /* ScanEngine.swift */; };
+		B5B6DA9ACD83546D24389C74 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = B6C4174F7BB4CA3F9C9A05E7 /* GRDB */; };
+		C4356E6C397986F8F5364F0D /* VisualEffectBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024F9CB204AB944FB1FAAFEF /* VisualEffectBackground.swift */; };
+		C9F099C9BDD80B7415D8ED16 /* ToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A4E5C499ACCA9963A80F14F /* ToolbarView.swift */; };
+		E35E20E884B67DE840CE6EAD /* StorageComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80C8AB52010ABCBB9A543591 /* StorageComponents.swift */; };
+		E3C6E121E03867D219A6DE23 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE224E3555C88FC444B95B7 /* AppState.swift */; };
+		E67A95AD21B92A106DCFA25A /* BatchRenameSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B246DD4D80C2793B2BB46D2 /* BatchRenameSheet.swift */; };
+		EC0F233150CBD733DC0C0101 /* StatusBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C22CF0063D58C2198BD1FA8B /* StatusBarView.swift */; };
+		F153F4AB6658C7A311D1C099 /* ScanDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7922AE3292B14702400A2941 /* ScanDatabase.swift */; };
+		F30A600B8485CCC1E7A84A25 /* StorageCleanupPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2B37AF26243ABA3E670DD2 /* StorageCleanupPanel.swift */; };
+		F925BCEA56FDB2F17A53AA11 /* FastIconGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5B33D4CA5292F044A4B177 /* FastIconGridView.swift */; };
+		FA7295DFC514AF2876F5BAA1 /* IconPipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA40473F4735F9AC0D03F92 /* IconPipeline.swift */; };
+		FC998EC890917069D9F78B83 /* DeleteService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D4F2666D2B21F8984140FE /* DeleteService.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		E2DA5E3848FD5E13390AA549 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D79E32980D08D60995754048 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 72377CA8003A3B53E624732A;
+			remoteInfo = Stratum;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		00F376BA9840E77369EB57F8 /* ScanDatabaseQueries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanDatabaseQueries.swift; sourceTree = "<group>"; };
+		024F9CB204AB944FB1FAAFEF /* VisualEffectBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectBackground.swift; sourceTree = "<group>"; };
+		03547504F3B605532C2F5BCE /* Milestone1Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Milestone1Tests.swift; sourceTree = "<group>"; };
+		06ADA8E13E813C385A25A55F /* StratumApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StratumApp.swift; sourceTree = "<group>"; };
+		0E730F98592F41F85E9C7686 /* StorageMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageMapView.swift; sourceTree = "<group>"; };
+		13E71AB20B2B84E7ABD952B1 /* MainWindowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindowView.swift; sourceTree = "<group>"; };
+		15C39B4BAC6EDD0EB5CAA0F1 /* ScanEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanEngine.swift; sourceTree = "<group>"; };
+		26D4F2666D2B21F8984140FE /* DeleteService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteService.swift; sourceTree = "<group>"; };
+		31FA56852936800EDED55A6E /* TransferQueueEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferQueueEngine.swift; sourceTree = "<group>"; };
+		3B246DD4D80C2793B2BB46D2 /* BatchRenameSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchRenameSheet.swift; sourceTree = "<group>"; };
+		4BF99EBBA3EE3783B8060988 /* PathResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathResolver.swift; sourceTree = "<group>"; };
+		5A45F921C2859A9900874B7A /* FastColumnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastColumnView.swift; sourceTree = "<group>"; };
+		5C52EDE7AC17F3D44412B099 /* ScanStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanStore.swift; sourceTree = "<group>"; };
+		5DA2CFB988A15C07FF0FEEAD /* ScanEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanEngineTests.swift; sourceTree = "<group>"; };
+		60870378489A921414F91F76 /* FastListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastListView.swift; sourceTree = "<group>"; };
+		6A4E5C499ACCA9963A80F14F /* ToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarView.swift; sourceTree = "<group>"; };
+		6BDA7A8146161BD43636F44F /* GroupsByNameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsByNameView.swift; sourceTree = "<group>"; };
+		6DE958612C09A5F625FD3A7D /* Stratum.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stratum.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		70491EB2406E3D394DFC4780 /* TreemapLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreemapLayout.swift; sourceTree = "<group>"; };
+		777607F61614446B433466F7 /* BrowserContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserContainerView.swift; sourceTree = "<group>"; };
+		7922AE3292B14702400A2941 /* ScanDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanDatabase.swift; sourceTree = "<group>"; };
+		80670F82F82160446EFBDD80 /* Aggregator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Aggregator.swift; sourceTree = "<group>"; };
+		80C8AB52010ABCBB9A543591 /* StorageComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageComponents.swift; sourceTree = "<group>"; };
+		821E462F06C64A39CAD701B8 /* AppearanceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceManager.swift; sourceTree = "<group>"; };
+		887A7368E23336748A3A595F /* SmartOrganizerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartOrganizerView.swift; sourceTree = "<group>"; };
+		9EE8096316AEEC820AD73930 /* ScanStatusViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanStatusViews.swift; sourceTree = "<group>"; };
+		A600E6CCCA8545FEFCD8E660 /* ScanModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanModels.swift; sourceTree = "<group>"; };
+		A6CA8D0F8FC6273E22168B05 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		AAC98F38E8AC563AFB07AE55 /* ProtectedPaths.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtectedPaths.swift; sourceTree = "<group>"; };
+		AC59D84FACC963E94C7884B7 /* ScanCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanCoordinator.swift; sourceTree = "<group>"; };
+		AE5B8EC631B09CBC3A403410 /* TerminalLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalLauncher.swift; sourceTree = "<group>"; };
+		AF2B37AF26243ABA3E670DD2 /* StorageCleanupPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageCleanupPanel.swift; sourceTree = "<group>"; };
+		B56216304CCCAD281B771477 /* BulkDirectoryReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkDirectoryReader.swift; sourceTree = "<group>"; };
+		B9E94C08B1CBB8272B33F373 /* DirectoryWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryWatcher.swift; sourceTree = "<group>"; };
+		BD321501387F800C796C1A6C /* FileItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileItem.swift; sourceTree = "<group>"; };
+		BD5B33D4CA5292F044A4B177 /* FastIconGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastIconGridView.swift; sourceTree = "<group>"; };
+		C1B891F4D4D449DB8804F32F /* AppearanceSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettingsView.swift; sourceTree = "<group>"; };
+		C22CF0063D58C2198BD1FA8B /* StatusBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarView.swift; sourceTree = "<group>"; };
+		C2D917673F70ED81055452CB /* FirstRunFDASheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstRunFDASheet.swift; sourceTree = "<group>"; };
+		C451677606067CF3A9DBD8ED /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
+		C70B9CA2866DA85DFEC188E9 /* FullDiskAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullDiskAccess.swift; sourceTree = "<group>"; };
+		C7F1926E2DADFC3CFC5973C7 /* TreemapLayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreemapLayoutTests.swift; sourceTree = "<group>"; };
+		C854381E1CFCF6475150E0C3 /* CommandPaletteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandPaletteView.swift; sourceTree = "<group>"; };
+		CD54F4E160E3E4239F36E9CB /* InspectorSidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectorSidebarView.swift; sourceTree = "<group>"; };
+		CEA40473F4735F9AC0D03F92 /* IconPipeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPipeline.swift; sourceTree = "<group>"; };
+		CEE224E3555C88FC444B95B7 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		D2585D9FBF948BE73BCA66DB /* ColorLegibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorLegibility.swift; sourceTree = "<group>"; };
+		DF0FBEC0AE3D0A5B632B671B /* SpotlightSearchEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotlightSearchEngine.swift; sourceTree = "<group>"; };
+		F3C5D7BFEFD9B4257EFBD6D5 /* StratumTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StratumTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FEFA5DE73F08CFF21374CDA4 /* Milestone2Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Milestone2Tests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		453E46C92427EE9DDD7F5BAB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B5B6DA9ACD83546D24389C74 /* GRDB in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D251A02D7B5ADC7D96489578 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				28FC0EF4C914ADCF47DA9B27 /* GRDB in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		02F8AE86BA697D958EE210DB /* Palette */ = {
+			isa = PBXGroup;
+			children = (
+				C854381E1CFCF6475150E0C3 /* CommandPaletteView.swift */,
+			);
+			path = Palette;
+			sourceTree = "<group>";
+		};
+		10FD5676C3BDB780C4280BC6 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				821E462F06C64A39CAD701B8 /* AppearanceManager.swift */,
+				D2585D9FBF948BE73BCA66DB /* ColorLegibility.swift */,
+				024F9CB204AB944FB1FAAFEF /* VisualEffectBackground.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		25515DD6A0F1AA9164F0505F /* Stratum */ = {
+			isa = PBXGroup;
+			children = (
+				A6CA8D0F8FC6273E22168B05 /* Info.plist */,
+				06ADA8E13E813C385A25A55F /* StratumApp.swift */,
+				30AD779DB6FE6DE5561999B5 /* Engine */,
+				A516E50393C294D80D5D6193 /* Models */,
+				10FD5676C3BDB780C4280BC6 /* Theme */,
+				5856175A0CE056FB1264E124 /* Views */,
+			);
+			path = Stratum;
+			sourceTree = "<group>";
+		};
+		30AD779DB6FE6DE5561999B5 /* Engine */ = {
+			isa = PBXGroup;
+			children = (
+				B56216304CCCAD281B771477 /* BulkDirectoryReader.swift */,
+				26D4F2666D2B21F8984140FE /* DeleteService.swift */,
+				B9E94C08B1CBB8272B33F373 /* DirectoryWatcher.swift */,
+				C70B9CA2866DA85DFEC188E9 /* FullDiskAccess.swift */,
+				CEA40473F4735F9AC0D03F92 /* IconPipeline.swift */,
+				AAC98F38E8AC563AFB07AE55 /* ProtectedPaths.swift */,
+				DF0FBEC0AE3D0A5B632B671B /* SpotlightSearchEngine.swift */,
+				AE5B8EC631B09CBC3A403410 /* TerminalLauncher.swift */,
+				31FA56852936800EDED55A6E /* TransferQueueEngine.swift */,
+				4B1B8FBE27A6E646F02C91CC /* Scanner */,
+			);
+			path = Engine;
+			sourceTree = "<group>";
+		};
+		4698171FB1AC458EF0383772 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				AF2B37AF26243ABA3E670DD2 /* StorageCleanupPanel.swift */,
+				80C8AB52010ABCBB9A543591 /* StorageComponents.swift */,
+				0E730F98592F41F85E9C7686 /* StorageMapView.swift */,
+				70491EB2406E3D394DFC4780 /* TreemapLayout.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
+		4B1B8FBE27A6E646F02C91CC /* Scanner */ = {
+			isa = PBXGroup;
+			children = (
+				80670F82F82160446EFBDD80 /* Aggregator.swift */,
+				4BF99EBBA3EE3783B8060988 /* PathResolver.swift */,
+				AC59D84FACC963E94C7884B7 /* ScanCoordinator.swift */,
+				7922AE3292B14702400A2941 /* ScanDatabase.swift */,
+				00F376BA9840E77369EB57F8 /* ScanDatabaseQueries.swift */,
+				15C39B4BAC6EDD0EB5CAA0F1 /* ScanEngine.swift */,
+				A600E6CCCA8545FEFCD8E660 /* ScanModels.swift */,
+				5C52EDE7AC17F3D44412B099 /* ScanStore.swift */,
+			);
+			path = Scanner;
+			sourceTree = "<group>";
+		};
+		5856175A0CE056FB1264E124 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				3B246DD4D80C2793B2BB46D2 /* BatchRenameSheet.swift */,
+				C2D917673F70ED81055452CB /* FirstRunFDASheet.swift */,
+				13E71AB20B2B84E7ABD952B1 /* MainWindowView.swift */,
+				C451677606067CF3A9DBD8ED /* SidebarView.swift */,
+				C22CF0063D58C2198BD1FA8B /* StatusBarView.swift */,
+				6A4E5C499ACCA9963A80F14F /* ToolbarView.swift */,
+				7BFFAF33C3E5ECDDA73F52C5 /* Browser */,
+				DC6FB5AB6C7FCB2A4957B0B9 /* Groups */,
+				5C4FD716B3A97B9807D3F03F /* Organizer */,
+				02F8AE86BA697D958EE210DB /* Palette */,
+				AC89ED5FEA4D744F9DE74373 /* Settings */,
+				E9EE8436EDBB2A0DEAAD6842 /* Shared */,
+				4698171FB1AC458EF0383772 /* Storage */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		5C4FD716B3A97B9807D3F03F /* Organizer */ = {
+			isa = PBXGroup;
+			children = (
+				887A7368E23336748A3A595F /* SmartOrganizerView.swift */,
+			);
+			path = Organizer;
+			sourceTree = "<group>";
+		};
+		625664D9FDCB83D12AD2E9E5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6DE958612C09A5F625FD3A7D /* Stratum.app */,
+				F3C5D7BFEFD9B4257EFBD6D5 /* StratumTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		732AEEA04D19725988EBA40C = {
+			isa = PBXGroup;
+			children = (
+				25515DD6A0F1AA9164F0505F /* Stratum */,
+				E8E521705E33BF55214C07AD /* StratumTests */,
+				625664D9FDCB83D12AD2E9E5 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		7BFFAF33C3E5ECDDA73F52C5 /* Browser */ = {
+			isa = PBXGroup;
+			children = (
+				777607F61614446B433466F7 /* BrowserContainerView.swift */,
+				5A45F921C2859A9900874B7A /* FastColumnView.swift */,
+				BD5B33D4CA5292F044A4B177 /* FastIconGridView.swift */,
+				60870378489A921414F91F76 /* FastListView.swift */,
+				CD54F4E160E3E4239F36E9CB /* InspectorSidebarView.swift */,
+			);
+			path = Browser;
+			sourceTree = "<group>";
+		};
+		A516E50393C294D80D5D6193 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				CEE224E3555C88FC444B95B7 /* AppState.swift */,
+				BD321501387F800C796C1A6C /* FileItem.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		AC89ED5FEA4D744F9DE74373 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				C1B891F4D4D449DB8804F32F /* AppearanceSettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		DC6FB5AB6C7FCB2A4957B0B9 /* Groups */ = {
+			isa = PBXGroup;
+			children = (
+				6BDA7A8146161BD43636F44F /* GroupsByNameView.swift */,
+			);
+			path = Groups;
+			sourceTree = "<group>";
+		};
+		E8E521705E33BF55214C07AD /* StratumTests */ = {
+			isa = PBXGroup;
+			children = (
+				03547504F3B605532C2F5BCE /* Milestone1Tests.swift */,
+				FEFA5DE73F08CFF21374CDA4 /* Milestone2Tests.swift */,
+				5DA2CFB988A15C07FF0FEEAD /* ScanEngineTests.swift */,
+				C7F1926E2DADFC3CFC5973C7 /* TreemapLayoutTests.swift */,
+			);
+			path = StratumTests;
+			sourceTree = "<group>";
+		};
+		E9EE8436EDBB2A0DEAAD6842 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				9EE8096316AEEC820AD73930 /* ScanStatusViews.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2ED75FB8D05C38B2FDA8C7AB /* StratumTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8C448786AA18A0F3FC971FAE /* Build configuration list for PBXNativeTarget "StratumTests" */;
+			buildPhases = (
+				B02C4315CFB0433140E08ABC /* Sources */,
+				453E46C92427EE9DDD7F5BAB /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				82FA3D1EB8219836D956F145 /* PBXTargetDependency */,
+			);
+			name = StratumTests;
+			packageProductDependencies = (
+				B6C4174F7BB4CA3F9C9A05E7 /* GRDB */,
+			);
+			productName = StratumTests;
+			productReference = F3C5D7BFEFD9B4257EFBD6D5 /* StratumTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		72377CA8003A3B53E624732A /* Stratum */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 91E926E3178D8C1A755E7F3E /* Build configuration list for PBXNativeTarget "Stratum" */;
+			buildPhases = (
+				EE13C2284051DF4D3B9A5280 /* Sources */,
+				D251A02D7B5ADC7D96489578 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Stratum;
+			packageProductDependencies = (
+				4A4B5D27AC7503A576EEBB55 /* GRDB */,
+			);
+			productName = Stratum;
+			productReference = 6DE958612C09A5F625FD3A7D /* Stratum.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D79E32980D08D60995754048 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					2ED75FB8D05C38B2FDA8C7AB = {
+						ProvisioningStyle = Automatic;
+					};
+					72377CA8003A3B53E624732A = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = AF678A50AC9A02519EB6B34E /* Build configuration list for PBXProject "Stratum" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 732AEEA04D19725988EBA40C;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				9C7D75196D510795C9DF73E0 /* XCRemoteSwiftPackageReference "GRDB.swift" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 625664D9FDCB83D12AD2E9E5 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				72377CA8003A3B53E624732A /* Stratum */,
+				2ED75FB8D05C38B2FDA8C7AB /* StratumTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B02C4315CFB0433140E08ABC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				814F48E1AECF07A2B7A5620A /* Milestone1Tests.swift in Sources */,
+				0FDDAE7A9244C5CB174D1816 /* Milestone2Tests.swift in Sources */,
+				4F7682330F81DEBB2FE05855 /* ScanEngineTests.swift in Sources */,
+				1910B024DD5BF80652441E6E /* TreemapLayoutTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EE13C2284051DF4D3B9A5280 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4AF5F73F00F15E0A812E4287 /* Aggregator.swift in Sources */,
+				E3C6E121E03867D219A6DE23 /* AppState.swift in Sources */,
+				8B12C99333429BD28E9DF67F /* AppearanceManager.swift in Sources */,
+				88914963E22F9D424D929863 /* AppearanceSettingsView.swift in Sources */,
+				E67A95AD21B92A106DCFA25A /* BatchRenameSheet.swift in Sources */,
+				10C89C959F2085B904DFBF79 /* BrowserContainerView.swift in Sources */,
+				148E0936FED9D46A4A02765C /* BulkDirectoryReader.swift in Sources */,
+				6BE700A9BD0F6A09F484A795 /* ColorLegibility.swift in Sources */,
+				AB95D67467DF06926C05E225 /* CommandPaletteView.swift in Sources */,
+				FC998EC890917069D9F78B83 /* DeleteService.swift in Sources */,
+				457FDFCB4C201C72F30B5CC3 /* DirectoryWatcher.swift in Sources */,
+				1775C13AA63BC65D540CBD04 /* FastColumnView.swift in Sources */,
+				F925BCEA56FDB2F17A53AA11 /* FastIconGridView.swift in Sources */,
+				585C195F7E21EF203CF281D8 /* FastListView.swift in Sources */,
+				9A8C556E58734993FD6F3161 /* FileItem.swift in Sources */,
+				8E77E600B6C694BCD06A100F /* FirstRunFDASheet.swift in Sources */,
+				3FCE741A0EF877F69065D641 /* FullDiskAccess.swift in Sources */,
+				AE5718460FECBA3CCE3C0529 /* GroupsByNameView.swift in Sources */,
+				FA7295DFC514AF2876F5BAA1 /* IconPipeline.swift in Sources */,
+				A46EE42CDF3DBF6C202029E4 /* InspectorSidebarView.swift in Sources */,
+				0734A00D6FFE67BD4DD2BC5E /* MainWindowView.swift in Sources */,
+				3E783579659A215ECA6FB714 /* PathResolver.swift in Sources */,
+				3BCA2F65C28116715CCE4761 /* ProtectedPaths.swift in Sources */,
+				6699D6255FFE90D79D19C102 /* ScanCoordinator.swift in Sources */,
+				F153F4AB6658C7A311D1C099 /* ScanDatabase.swift in Sources */,
+				05CA587381ACE0A18BD32175 /* ScanDatabaseQueries.swift in Sources */,
+				B05DBA24C0FF0498BCB7F0F8 /* ScanEngine.swift in Sources */,
+				6908F825816E7FA8AA26A5F3 /* ScanModels.swift in Sources */,
+				995D08F25729609C30A4B921 /* ScanStatusViews.swift in Sources */,
+				06426387B1DCC944DB4069F9 /* ScanStore.swift in Sources */,
+				0A6869EA392B0DEFAD36A956 /* SidebarView.swift in Sources */,
+				9C34A26C8AE0A7289020DE6E /* SmartOrganizerView.swift in Sources */,
+				17824205AB53DB262C805705 /* SpotlightSearchEngine.swift in Sources */,
+				EC0F233150CBD733DC0C0101 /* StatusBarView.swift in Sources */,
+				F30A600B8485CCC1E7A84A25 /* StorageCleanupPanel.swift in Sources */,
+				E35E20E884B67DE840CE6EAD /* StorageComponents.swift in Sources */,
+				795362AE494027CC96B461DF /* StorageMapView.swift in Sources */,
+				6DB61F5DA479DB1F8E990A9F /* StratumApp.swift in Sources */,
+				A15EA21C2518471A4C559068 /* TerminalLauncher.swift in Sources */,
+				C9F099C9BDD80B7415D8ED16 /* ToolbarView.swift in Sources */,
+				AB8D5BCB05ECEABA56A80FB3 /* TransferQueueEngine.swift in Sources */,
+				78654C5AFDF9BC11209A8A7A /* TreemapLayout.swift in Sources */,
+				C4356E6C397986F8F5364F0D /* VisualEffectBackground.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		82FA3D1EB8219836D956F145 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 72377CA8003A3B53E624732A /* Stratum */;
+			targetProxy = E2DA5E3848FD5E13390AA549 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		2FC89F8552CA8D1ED2B7A064 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Stratum/Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = app.stratum.filemanager;
+				PRODUCT_NAME = Stratum;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		36A6FE753EE7753CE697B9B6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = app.stratum.filemanager.tests;
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Stratum.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Stratum";
+			};
+			name = Debug;
+		};
+		42E449FBBA928246FCDFB174 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5;
+			};
+			name = Debug;
+		};
+		4DEB93F035D0B5B082D682F0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = app.stratum.filemanager.tests;
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Stratum.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Stratum";
+			};
+			name = Release;
+		};
+		99CBD6BFEF42E74C4E053572 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Stratum/Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = app.stratum.filemanager;
+				PRODUCT_NAME = Stratum;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		A083C8E52AC514F825C6D641 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8C448786AA18A0F3FC971FAE /* Build configuration list for PBXNativeTarget "StratumTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				36A6FE753EE7753CE697B9B6 /* Debug */,
+				4DEB93F035D0B5B082D682F0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		91E926E3178D8C1A755E7F3E /* Build configuration list for PBXNativeTarget "Stratum" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				99CBD6BFEF42E74C4E053572 /* Debug */,
+				2FC89F8552CA8D1ED2B7A064 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		AF678A50AC9A02519EB6B34E /* Build configuration list for PBXProject "Stratum" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				42E449FBBA928246FCDFB174 /* Debug */,
+				A083C8E52AC514F825C6D641 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		9C7D75196D510795C9DF73E0 /* XCRemoteSwiftPackageReference "GRDB.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/groue/GRDB.swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.29.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4A4B5D27AC7503A576EEBB55 /* GRDB */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9C7D75196D510795C9DF73E0 /* XCRemoteSwiftPackageReference "GRDB.swift" */;
+			productName = GRDB;
+		};
+		B6C4174F7BB4CA3F9C9A05E7 /* GRDB */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9C7D75196D510795C9DF73E0 /* XCRemoteSwiftPackageReference "GRDB.swift" */;
+			productName = GRDB;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = D79E32980D08D60995754048 /* Project object */;
+}
