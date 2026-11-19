@@ -236,6 +236,7 @@ private struct TreemapTile: View {
                     appeared = true
                 }
             }
-            .help("\(item.name) — \(StorageFormat.bytes(item.size))")
+            .stratumHelp("\(item.name), \(StorageFormat.bytes(item.size)), \(percent) of this folder")
+            .accessibilityAddTraits(.isButton)
     }
 }

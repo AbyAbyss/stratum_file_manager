@@ -31,7 +31,7 @@ struct StatusBarView: View {
                     Slider(value: $appState.iconScale, in: 1...5, step: 0.5)
                         .frame(width: 84)
                         .tint(appearance.accentColor)
-                        .help("Icon size")
+                        .stratumHelp("Icon size")
                 }
             }
         }

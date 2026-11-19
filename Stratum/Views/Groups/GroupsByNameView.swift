@@ -528,7 +528,7 @@ struct GroupsByNameView: View {
                             .contentShape(Rectangle())
                         }
                         .buttonStyle(.plain)
-                        .help(allChecked ? "Deselect all \(group.name) folders" : "Select all \(group.name) folders")
+                        .stratumHelp(allChecked ? "Deselect all \(group.name) folders" : "Select all \(group.name) folders")
 
                         // Row title + expand trigger
                         Button {
@@ -685,7 +685,7 @@ struct GroupsByNameView: View {
                                                 .contentShape(Rectangle())
                                         }
                                         .buttonStyle(.plain)
-                                        .help("Move this folder to Trash")
+                                        .stratumHelp("Move this folder to Trash")
                                     }
                                 }
                                 .padding(.horizontal, 10)

@@ -45,7 +45,7 @@ struct ToolbarView: View {
                     .contentShape(Capsule())
                 }
                 .buttonStyle(StratumInteractiveButtonStyle(hoverScale: 1.04, pressScale: 0.94))
-                .help("Stratum Engine — Click to replay launch animation")
+                .stratumHelp("Stratum Engine — Click to replay launch animation")
                 .contextMenu {
                     Button("Replay Startup Animation") {
                         appState.replayStartupSplash()
@@ -203,7 +203,7 @@ struct ToolbarView: View {
                     }
                     .menuStyle(.borderlessButton)
                     .frame(width: 30, height: 30)
-                    .help("Switch Glass Theme or Customize Appearance")
+                    .stratumHelp("Switch Glass Theme or Customize Appearance")
 
                     toolbarIconButton("sidebar.right", label: "Toggle inspector (⌘I)") {
                         withAnimation(.spring(response: 0.32, dampingFraction: 0.84)) {
@@ -252,7 +252,7 @@ struct ToolbarView: View {
                     }
                     .buttonStyle(StratumInteractiveButtonStyle())
                     .transition(.scale.combined(with: .opacity))
-                    .help("View active transfer")
+                    .stratumHelp("View active transfer")
                 }
 
                 // Search / Command Palette button (Cmd+K)
@@ -360,7 +360,7 @@ struct ToolbarView: View {
                             .foregroundStyle(.secondary)
                     }
                     .buttonStyle(.plain)
-                    .help("Exit Smart Folder")
+                    .stratumHelp("Exit Smart Folder")
                 }
                 .padding(.horizontal, 9)
                 .frame(height: 24)
@@ -616,7 +616,7 @@ struct ToolbarView: View {
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(StratumInteractiveButtonStyle())
-                .help("New Tab (⌘T)")
+                .stratumHelp("New Tab (⌘T)")
 
                 Spacer(minLength: 8)
 
@@ -648,7 +648,7 @@ struct ToolbarView: View {
         }
         .buttonStyle(StratumInteractiveButtonStyle(hoverScale: 1.08, pressScale: 0.90))
         .disabled(disabled)
-        .help(label)
+        .stratumHelp(label)
     }
 
     private func viewModeButton(_ mode: BrowserViewMode, icon: String, label: String) -> some View {
@@ -673,7 +673,7 @@ struct ToolbarView: View {
                 .contentShape(Rectangle())
         }
         .buttonStyle(StratumInteractiveButtonStyle())
-        .help(label)
+        .stratumHelp(label)
     }
 
     private func shareSelectedItems() {

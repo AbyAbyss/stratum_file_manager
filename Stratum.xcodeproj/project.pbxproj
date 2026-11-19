@@ -24,6 +24,7 @@
 		457FDFCB4C201C72F30B5CC3 /* DirectoryWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9E94C08B1CBB8272B33F373 /* DirectoryWatcher.swift */; };
 		4AF5F73F00F15E0A812E4287 /* Aggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80670F82F82160446EFBDD80 /* Aggregator.swift */; };
 		4F7682330F81DEBB2FE05855 /* ScanEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA2CFB988A15C07FF0FEEAD /* ScanEngineTests.swift */; };
+		506EAB9974D6EE9E3E4C43D7 /* AccessibilityHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 587F089E17C10B1F88623289 /* AccessibilityHelpers.swift */; };
 		585C195F7E21EF203CF281D8 /* FastListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60870378489A921414F91F76 /* FastListView.swift */; };
 		6699D6255FFE90D79D19C102 /* ScanCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC59D84FACC963E94C7884B7 /* ScanCoordinator.swift */; };
 		6908F825816E7FA8AA26A5F3 /* ScanModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A600E6CCCA8545FEFCD8E660 /* ScanModels.swift */; };
@@ -80,6 +81,7 @@
 		31FA56852936800EDED55A6E /* TransferQueueEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferQueueEngine.swift; sourceTree = "<group>"; };
 		3B246DD4D80C2793B2BB46D2 /* BatchRenameSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchRenameSheet.swift; sourceTree = "<group>"; };
 		4BF99EBBA3EE3783B8060988 /* PathResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathResolver.swift; sourceTree = "<group>"; };
+		587F089E17C10B1F88623289 /* AccessibilityHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityHelpers.swift; sourceTree = "<group>"; };
 		5A45F921C2859A9900874B7A /* FastColumnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastColumnView.swift; sourceTree = "<group>"; };
 		5C52EDE7AC17F3D44412B099 /* ScanStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanStore.swift; sourceTree = "<group>"; };
 		5DA2CFB988A15C07FF0FEEAD /* ScanEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanEngineTests.swift; sourceTree = "<group>"; };
@@ -312,6 +314,7 @@
 		E9EE8436EDBB2A0DEAAD6842 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				587F089E17C10B1F88623289 /* AccessibilityHelpers.swift */,
 				9EE8096316AEEC820AD73930 /* ScanStatusViews.swift */,
 			);
 			path = Shared;
@@ -415,6 +418,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				506EAB9974D6EE9E3E4C43D7 /* AccessibilityHelpers.swift in Sources */,
 				4AF5F73F00F15E0A812E4287 /* Aggregator.swift in Sources */,
 				E3C6E121E03867D219A6DE23 /* AppState.swift in Sources */,
 				8B12C99333429BD28E9DF67F /* AppearanceManager.swift in Sources */,

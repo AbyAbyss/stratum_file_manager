@@ -172,7 +172,7 @@ struct BrowserContainerView: View {
                             .contentShape(Circle())
                     }
                     .buttonStyle(.plain)
-                    .help(isPinned ? "Unpin folder from Sidebar" : "Pin folder to Sidebar Favorites")
+                    .stratumHelp(isPinned ? "Unpin folder from Sidebar" : "Pin folder to Sidebar Favorites")
                 }
 
                 HStack(spacing: 5) {
@@ -474,7 +474,7 @@ struct BrowserContainerView: View {
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .help("Clear selection (Esc)")
+            .stratumHelp("Clear selection (Esc)")
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 8)

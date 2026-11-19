@@ -710,7 +710,7 @@ struct AppearanceSettingsView: View {
                                 .foregroundStyle(.secondary)
                         }
                         .buttonStyle(.plain)
-                        .help("Delete custom theme")
+                        .stratumHelp("Delete custom theme")
                     } else if isSelected {
                         Image(systemName: "checkmark.circle.fill")
                             .font(.system(size: 13))

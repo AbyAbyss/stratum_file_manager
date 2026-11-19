@@ -324,7 +324,7 @@ struct StorageMapView: View {
             }
             .buttonStyle(StratumInteractiveButtonStyle())
             .disabled(crumbs.count <= 1)
-            .help("Up one level (Esc)")
+            .stratumHelp("Up one level (Esc)")
 
             ForEach(Array(crumbs.enumerated()), id: \.element.id) { index, crumb in
                 if index > 0 {
@@ -626,7 +626,7 @@ private struct LargeFileRowView: View {
             .buttonStyle(StratumInteractiveButtonStyle())
             .foregroundStyle(appearance.accentColor)
             .opacity(hovering ? 1 : 0.35)
-            .help("Reveal in Finder")
+            .stratumHelp("Reveal in Finder")
         }
         .padding(.horizontal, 16)
         .frame(height: 44)

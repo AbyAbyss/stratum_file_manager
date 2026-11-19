@@ -57,7 +57,7 @@ struct SidebarView: View {
                                     .contentShape(Rectangle())
                             }
                             .buttonStyle(.plain)
-                            .help("Pin or unpin current folder")
+                            .stratumHelp("Pin or unpin current folder")
                         }
                         .padding(.horizontal, 10)
                         .padding(.bottom, 3)
@@ -232,7 +232,7 @@ struct SidebarView: View {
                                             .contentShape(Rectangle())
                                     }
                                     .buttonStyle(.plain)
-                                    .help("Eject \(vol.name)")
+                                    .stratumHelp("Eject \(vol.name)")
                                 }
                             }
                         }
