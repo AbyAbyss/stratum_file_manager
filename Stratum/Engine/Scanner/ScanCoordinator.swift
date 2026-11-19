@@ -39,14 +39,8 @@ final class ScanCoordinator {
             refreshAllQueries(animated: true)
         }
     }
-    var scanScheduleFrequency: String = UserDefaults.standard.string(forKey: "stratum.scanScheduleFrequency") ?? "Live FSEvents" {
-        didSet { UserDefaults.standard.set(scanScheduleFrequency, forKey: "stratum.scanScheduleFrequency") }
-    }
     var onlyOnPower: Bool = UserDefaults.standard.object(forKey: "stratum.onlyOnPower") as? Bool ?? true {
         didSet { UserDefaults.standard.set(onlyOnPower, forKey: "stratum.onlyOnPower") }
-    }
-    var largeFileThresholdMB: Int = UserDefaults.standard.object(forKey: "stratum.largeFileThresholdMB") as? Int ?? 100 {
-        didSet { UserDefaults.standard.set(largeFileThresholdMB, forKey: "stratum.largeFileThresholdMB") }
     }
 
     var progress: ScanProgress = ScanProgress(fraction: 0, filesScanned: 0, currentPath: "", etaSeconds: nil)
@@ -246,6 +240,7 @@ final class ScanCoordinator {
     func startScan(at url: URL, name: String? = nil, silent: Bool = false) {
         if silent {
             guard autoRefreshEnabled, !isScanning, !isBackgroundRefreshing else { return }
+            if onlyOnPower && PowerSource.isOnBattery { return }
             isBackgroundRefreshing = true
         } else {
             scanTask?.cancel()
@@ -672,8 +667,38 @@ final class ScanCoordinator {
         }
     }
 
-    func trashGroupInstances(_ instances: [GroupInstanceRow], appState: AppState) {
-        guard !instances.isEmpty, let db = activeDB else { return }
+    /// Folders modified within this window count as "active" for Protect active projects.
+    private static let activeProjectWindow: TimeInterval = 14 * 86_400
+
+    /// Splits folders around `cutoff`. A folder with no known modification date counts as
+    /// recent: when unsure, leave it alone.
+    nonisolated static func splitByRecency(
+        _ rows: [GroupInstanceRow],
+        cutoff: Date
+    ) -> (stale: [GroupInstanceRow], recent: [GroupInstanceRow]) {
+        var stale: [GroupInstanceRow] = [], recent: [GroupInstanceRow] = []
+        for row in rows {
+            if let modified = row.dirRow.mtime, modified < cutoff { stale.append(row) } else { recent.append(row) }
+        }
+        return (stale, recent)
+    }
+
+    func trashGroupInstances(_ requested: [GroupInstanceRow], appState: AppState) {
+        guard !requested.isEmpty, let db = activeDB else { return }
+
+        // Protect active projects guards bulk cleanups. A single folder trashed on purpose
+        // is not a sweep, so it always goes through.
+        var instances = requested
+        var skippedRecent = 0
+        if protectActiveProjects && requested.count > 1 {
+            let split = Self.splitByRecency(requested, cutoff: Date().addingTimeInterval(-Self.activeProjectWindow))
+            instances = split.stale
+            skippedRecent = split.recent.count
+            guard !instances.isEmpty else {
+                appState.showToast("Left \(skippedRecent) folders alone: all were used in the last 14 days. Turn off Protect active projects in Settings to include them.")
+                return
+            }
+        }
         let totalToFree = instances.reduce(Int64(0)) { $0 + $1.dirRow.totalSize }
 
         // Optional safety confirmation if > 1 GB and confirmLargeDeletes is enabled
@@ -708,7 +733,8 @@ final class ScanCoordinator {
                 self?.refreshAllQueries(animated: true)
                 appState.refreshVolumes()
                 self?.scheduleSmartBackgroundRefresh(delay: 2.0, force: true)
-                appState.showToast("Moved \(outcome.removed.count) \(outcome.removed.count == 1 ? "folder" : "folders") to Trash (\(BulkDirectoryReader.fastFormatBytes(outcome.freedBytes)) freed)")
+                let skipNote = skippedRecent > 0 ? " · \(skippedRecent) recent left alone" : ""
+                appState.showToast("Moved \(outcome.removed.count) \(outcome.removed.count == 1 ? "folder" : "folders") to Trash (\(BulkDirectoryReader.fastFormatBytes(outcome.freedBytes)) freed)\(skipNote)")
             }
         }
     }

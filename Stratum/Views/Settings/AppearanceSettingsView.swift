@@ -137,7 +137,7 @@ struct AppearanceSettingsView: View {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Protect active projects")
                             .font(.system(size: 13, weight: .semibold))
-                        Text("Leave recently touched project folders alone.")
+                        Text("Bulk cleanups skip folders modified in the last 14 days.")
                             .font(.system(size: 11.5))
                             .foregroundStyle(.secondary)
                     }
@@ -306,27 +306,6 @@ struct AppearanceSettingsView: View {
 
                     Divider().overlay(Color.primary.opacity(0.06))
 
-                    HStack {
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("How often")
-                                .font(.system(size: 13, weight: .semibold))
-                            Text("Runs smoothly on a background utility queue without UI lag.")
-                                .font(.system(size: 11.5))
-                                .foregroundStyle(.secondary)
-                        }
-                        Spacer()
-                        Picker("", selection: $coordinator.scanScheduleFrequency) {
-                            Text("Live FSEvents").tag("Live FSEvents")
-                            Text("On App Open").tag("On App Open")
-                            Text("Daily").tag("Daily")
-                            Text("Weekly").tag("Weekly")
-                        }
-                        .labelsHidden()
-                        .frame(width: 130)
-                    }
-
-                    Divider().overlay(Color.primary.opacity(0.06))
-
                     Toggle(isOn: $coordinator.onlyOnPower) {
                         VStack(alignment: .leading, spacing: 2) {
                             Text("Only on power")
@@ -362,21 +341,6 @@ struct AppearanceSettingsView: View {
                         label: "Scans kept",
                         value: "\(coordinator.snapshotCount) · \(BulkDirectoryReader.fastFormatBytes(coordinator.snapshotTotalBytes))"
                     )
-
-                    HStack {
-                        Text("Large-file threshold")
-                            .font(.system(size: 12.5))
-                            .foregroundStyle(.secondary)
-                        Spacer()
-                        Picker("", selection: $coordinator.largeFileThresholdMB) {
-                            Text("100 MB").tag(100)
-                            Text("250 MB").tag(250)
-                            Text("500 MB").tag(500)
-                            Text("1 GB").tag(1024)
-                        }
-                        .labelsHidden()
-                        .frame(width: 110)
-                    }
 
                     snapshotMetaRow(
                         label: "Engine",
