@@ -2,13 +2,6 @@ import AppKit
 import Quartz
 
 enum TerminalLauncher {
-    static let candidateBundleIDs: [(name: String, bundleID: String)] = [
-        ("Ghostty", "com.mitchellh.ghostty"),
-        ("iTerm", "com.googlecode.iterm2"),
-        ("Warp", "dev.warp.Warp-Stable"),
-        ("Terminal", "com.apple.Terminal")
-    ]
-
     @MainActor
     static func openInTerminal(url: URL) {
         let dirURL: URL

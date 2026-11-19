@@ -618,41 +618,7 @@ struct StratumInteractiveButtonStyle: ButtonStyle {
     }
 }
 
-struct StratumHoverCardModifier: ViewModifier {
-    var cornerRadius: CGFloat = 12
-    var accentColor: Color
-    var scaleAmount: CGFloat = 1.008
-
-    @State private var isHovered = false
-
-    func body(content: Content) -> some View {
-        content
-            .scaleEffect(isHovered ? scaleAmount : 1.0)
-            .overlay(
-                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                    .strokeBorder(
-                        isHovered ? accentColor.opacity(0.38) : Color.clear,
-                        lineWidth: 1
-                    )
-                    .allowsHitTesting(false)
-            )
-            .shadow(
-                color: .black.opacity(isHovered ? 0.18 : 0.0),
-                radius: isHovered ? 12 : 0,
-                y: isHovered ? 4 : 0
-            )
-            .animation(.spring(response: 0.26, dampingFraction: 0.78), value: isHovered)
-            .onHover { hovering in
-                isHovered = hovering
-            }
-    }
-}
-
 extension View {
-    func stratumHoverCard(cornerRadius: CGFloat = 12, accent: Color, scale: CGFloat = 1.008) -> some View {
-        modifier(StratumHoverCardModifier(cornerRadius: cornerRadius, accentColor: accent, scaleAmount: scale))
-    }
-
     func stratumScrollMotion() -> some View {
         self.scrollTransition(.animated(.spring(response: 0.34, dampingFraction: 0.82))) { content, phase in
             content

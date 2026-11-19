@@ -1,5 +1,6 @@
 import SwiftUI
 import AppKit
+import UniformTypeIdentifiers
 
 // MARK: - Model
 
@@ -91,6 +92,12 @@ struct StorageItemMenu: View {
 }
 
 enum StorageFormat {
+    /// File icon for an extension, without the deprecated `icon(forFileType:)`.
+    static func fileIcon(forExtension ext: String?) -> NSImage {
+        let type = ext.flatMap { $0.isEmpty ? nil : UTType(filenameExtension: $0) } ?? .data
+        return NSWorkspace.shared.icon(for: type)
+    }
+
     static func bytes(_ value: Int64) -> String { BulkDirectoryReader.fastFormatBytes(value) }
 
     static func percent(_ part: Int64, of total: Int64) -> String {

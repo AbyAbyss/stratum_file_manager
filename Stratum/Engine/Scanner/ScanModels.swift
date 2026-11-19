@@ -110,10 +110,6 @@ struct VolumeInfo: Identifiable, Hashable, Sendable {
     let url: URL
 
     var used: Int64 { max(0, totalCapacity - availableCapacity) }
-    var fractionUsed: Double {
-        guard totalCapacity > 0 else { return 0 }
-        return Double(used) / Double(totalCapacity)
-    }
 }
 
 struct DeleteTarget: Identifiable, Hashable, Sendable {
@@ -210,7 +206,6 @@ struct BoundedMinHeap<T: Comparable>: Sendable where T: Sendable {
     }
 
     var count: Int { items.count }
-    var isFull: Bool { items.count >= capacity }
     var min: T? { items.first }
 
     mutating func consider(_ item: T) {

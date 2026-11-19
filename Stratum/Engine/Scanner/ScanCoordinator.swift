@@ -27,7 +27,6 @@ final class ScanCoordinator {
     }
 
     // Safety & Scan Preferences (persisted)
-    var protectSystemPaths: Bool = true
     var protectActiveProjects: Bool = UserDefaults.standard.object(forKey: "stratum.protectActiveProjects") as? Bool ?? true {
         didSet { UserDefaults.standard.set(protectActiveProjects, forKey: "stratum.protectActiveProjects") }
     }

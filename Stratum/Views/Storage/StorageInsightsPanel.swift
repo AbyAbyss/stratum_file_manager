@@ -150,7 +150,7 @@ private struct InsightFileRow: View {
             NSWorkspace.shared.activateFileViewerSelecting([URL(fileURLWithPath: path)])
         } label: {
             HStack(spacing: 9) {
-                Image(nsImage: NSWorkspace.shared.icon(forFileType: file.ext ?? ""))
+                Image(nsImage: StorageFormat.fileIcon(forExtension: file.ext))
                     .resizable()
                     .frame(width: 20, height: 20)
                 VStack(alignment: .leading, spacing: 1) {

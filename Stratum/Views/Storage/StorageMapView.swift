@@ -614,7 +614,7 @@ private struct LargeFileRowView: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            Image(nsImage: NSWorkspace.shared.icon(forFileType: file.ext ?? ""))
+            Image(nsImage: StorageFormat.fileIcon(forExtension: file.ext))
                 .resizable().frame(width: 22, height: 22)
             VStack(alignment: .leading, spacing: 1) {
                 Text(file.name).font(.system(size: 13, weight: .medium)).lineLimit(1)

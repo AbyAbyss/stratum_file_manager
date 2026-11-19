@@ -20,22 +20,6 @@ enum FileKindCategory: Int, CaseIterable, Sendable, Comparable {
         lhs.rawValue < rhs.rawValue
     }
 
-    var sectionTitle: String {
-        switch self {
-        case .folder: return "Folders"
-        case .image: return "Images"
-        case .video: return "Videos"
-        case .audio: return "Audio"
-        case .pdf: return "PDFs"
-        case .document: return "Documents"
-        case .spreadsheet: return "Spreadsheets"
-        case .presentation: return "Presentations"
-        case .code: return "Code & Config"
-        case .archive: return "Archives"
-        case .app: return "Applications"
-        case .other: return "Other Files"
-        }
-    }
 }
 
 struct FinderTag: Hashable, Sendable, Identifiable {
@@ -127,10 +111,6 @@ struct FileItem: Identifiable, Hashable, Sendable {
 
     var isVideo: Bool {
         kindCategory == .video
-    }
-
-    var isPaper: Bool {
-        !isFolderLike && !isImageOrVideo && !isAppOrPackage
     }
 
     var isTextPreviewable: Bool {

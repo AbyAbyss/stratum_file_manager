@@ -121,13 +121,14 @@ struct AppearanceSettingsView: View {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Protect system paths")
                             .font(.system(size: 13, weight: .semibold))
-                        Text("Always skip /System, /usr, /private, and similar.")
+                        Text("Always on. Stratum never touches /System, /usr, /private, and similar.")
                             .font(.system(size: 11.5))
                             .foregroundStyle(.secondary)
                     }
                 }
                 .toggleStyle(.switch)
                 .tint(appearance.accentColor)
+                .disabled(true)
                 .disabled(true)
 
                 Divider().overlay(Color.primary.opacity(0.06))
