@@ -120,6 +120,9 @@ final class AppState {
     var showBatchRename: Bool = false
     var showFDASheet: Bool = false
     var showStartupSplash: Bool = true
+    /// True on the very first launch (and when replayed from Help); replaces the splash and
+    /// the Full Disk Access sheet while it is up.
+    var showWalkthrough: Bool = !Walkthrough.hasCompleted
     var hasFullDiskAccess: Bool = true
 
     var showHiddenFiles: Bool = false {
@@ -322,7 +325,7 @@ final class AppState {
         FullDiskAccess.checkAccess { [weak self] granted in
             guard let self else { return }
             self.hasFullDiskAccess = granted
-            if !granted && !FullDiskAccess.hasShownFirstRunPrompt {
+            if !granted && !FullDiskAccess.hasShownFirstRunPrompt && !self.showWalkthrough {
                 self.showFDASheet = true
             }
         }
@@ -1406,6 +1409,15 @@ final class AppState {
             self?.reloadCurrentDirectory(preserveSelection: true)
             self?.showToast("Dropped \(itemsToCopy.count) Shelf \(itemsToCopy.count == 1 ? "item" : "items") into \(destinationFolder.lastPathComponent)")
         }
+    }
+
+    func startWalkthrough() {
+        withAnimation(.easeOut(duration: 0.3)) { showWalkthrough = true }
+    }
+
+    func finishWalkthrough() {
+        showStartupSplash = false   // the tour was the welcome; don't play the splash right after it
+        withAnimation(.easeOut(duration: 0.25)) { showWalkthrough = false }
     }
 
     func replayStartupSplash() {

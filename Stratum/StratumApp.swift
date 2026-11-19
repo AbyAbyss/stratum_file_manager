@@ -15,6 +15,12 @@ struct StratumApp: App {
         .windowStyle(.hiddenTitleBar)
         .defaultSize(width: 1340, height: 840)
         .commands {
+            CommandGroup(replacing: .help) {
+                Button("Welcome Tour") {
+                    appState.startWalkthrough()
+                }
+            }
+
             CommandGroup(replacing: .newItem) {
                 Button("New Tab") {
                     appState.addNewTab()

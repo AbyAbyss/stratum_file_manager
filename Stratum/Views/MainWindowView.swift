@@ -101,8 +101,16 @@ struct MainWindowView: View {
                 .zIndex(20)
             }
 
+            // First-launch walkthrough (night sky, scan, permission, water-break reveal)
+            if appState.showWalkthrough {
+                WalkthroughView(appState: appState, appearance: appearance) {
+                    appState.finishWalkthrough()
+                }
+                .zIndex(150)
+            }
+
             // Startup Logo & Motion Graphics Overlay
-            if appState.showStartupSplash {
+            if appState.showStartupSplash && !appState.showWalkthrough {
                 StratumStartupSplashView(appearance: appearance) {
                     withAnimation(.spring(response: 0.52, dampingFraction: 0.86)) {
                         appState.showStartupSplash = false
