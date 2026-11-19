@@ -413,6 +413,7 @@ final class StratumGridCollectionItem: NSCollectionViewItem {
         thumbnailRequest = nil
         currentItem = nil
         cardView.thumbnailImage = nil
+        cardView.resetMotion()
     }
 
     @MainActor
@@ -439,9 +440,146 @@ final class StratumGridCollectionItem: NSCollectionViewItem {
 
 final class GridTileGraphicView: NSView {
     var fileItem: FileItem? { didSet { needsDisplay = true } }
-    var isSelectedTile: Bool = false { didSet { needsDisplay = true } }
+    var isSelectedTile: Bool = false {
+        didSet {
+            needsDisplay = true
+            guard isSelectedTile != oldValue else { return }
+            // Selecting pops the tile; the hover wash gives way to the selection fill.
+            animateHoverWash(visible: isHovered && !isSelectedTile)
+            if isSelectedTile { popSelection() } else { animateScale(to: isHovered ? Self.hoverScale : 1) }
+        }
+    }
     var thumbnailImage: NSImage? { didSet { needsDisplay = true } }
     var onDoubleClick: (() -> Void)?
+
+    // MARK: Hover and selection motion
+    // Layer-based so it never touches the drawing code below. Skipped under Reduce Motion.
+
+    private static let hoverScale: CGFloat = 1.03
+    private let hoverLayer = CALayer()
+    private var trackingArea: NSTrackingArea?
+    private var isHovered = false
+    private var reduceMotion: Bool { NSWorkspace.shared.accessibilityDisplayShouldReduceMotion }
+
+    override init(frame frameRect: NSRect) {
+        super.init(frame: frameRect)
+        setUpMotionLayer()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setUpMotionLayer()
+    }
+
+    private func setUpMotionLayer() {
+        wantsLayer = true
+        hoverLayer.opacity = 0
+        hoverLayer.cornerRadius = 12
+        hoverLayer.cornerCurve = .continuous
+        hoverLayer.borderWidth = 1
+        layer?.addSublayer(hoverLayer)
+        refreshHoverColors()
+    }
+
+    private func refreshHoverColors() {
+        effectiveAppearance.performAsCurrentDrawingAppearance {
+            hoverLayer.backgroundColor = NSColor.labelColor.withAlphaComponent(0.06).cgColor
+            hoverLayer.borderColor = NSColor.labelColor.withAlphaComponent(0.12).cgColor
+        }
+    }
+
+    override func viewDidChangeEffectiveAppearance() {
+        super.viewDidChangeEffectiveAppearance()
+        refreshHoverColors()
+    }
+
+    override func layout() {
+        super.layout()
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        hoverLayer.frame = bounds.insetBy(dx: 2, dy: 2)
+        CATransaction.commit()
+    }
+
+    override func updateTrackingAreas() {
+        super.updateTrackingAreas()
+        if let trackingArea { removeTrackingArea(trackingArea) }
+        let area = NSTrackingArea(
+            rect: bounds,
+            options: [.mouseEnteredAndExited, .activeInKeyWindow, .inVisibleRect],
+            owner: self,
+            userInfo: nil
+        )
+        addTrackingArea(area)
+        trackingArea = area
+    }
+
+    override func mouseEntered(with event: NSEvent) { setHovered(true) }
+    override func mouseExited(with event: NSEvent) { setHovered(false) }
+
+    private func setHovered(_ hovered: Bool) {
+        guard hovered != isHovered else { return }
+        isHovered = hovered
+        animateHoverWash(visible: hovered && !isSelectedTile)
+        animateScale(to: hovered && !isSelectedTile ? Self.hoverScale : 1)
+    }
+
+    private func animateHoverWash(visible: Bool) {
+        let target: Float = visible ? 1 : 0
+        let from = hoverLayer.presentation()?.opacity ?? hoverLayer.opacity
+        hoverLayer.opacity = target
+        guard !reduceMotion else { return }
+        let fade = CABasicAnimation(keyPath: "opacity")
+        fade.fromValue = from
+        fade.toValue = target
+        fade.duration = 0.16
+        hoverLayer.add(fade, forKey: "hoverFade")
+    }
+
+    /// Scale about the tile centre. NSView layers anchor at the origin, so translate around it.
+    private func scaleTransform(_ scale: CGFloat) -> CATransform3D {
+        var t = CATransform3DMakeTranslation(bounds.midX, bounds.midY, 0)
+        t = CATransform3DScale(t, scale, scale, 1)
+        return CATransform3DTranslate(t, -bounds.midX, -bounds.midY, 0)
+    }
+
+    private func animateScale(to scale: CGFloat) {
+        guard let layer else { return }
+        let from = layer.presentation()?.transform ?? layer.transform
+        let target = scaleTransform(scale)
+        layer.transform = target
+        guard !reduceMotion else { return }
+        let spring = CASpringAnimation(keyPath: "transform")
+        spring.fromValue = NSValue(caTransform3D: from)
+        spring.toValue = NSValue(caTransform3D: target)
+        spring.damping = 16
+        spring.stiffness = 260
+        spring.mass = 1
+        spring.duration = spring.settlingDuration
+        layer.add(spring, forKey: "scale")
+    }
+
+    private func popSelection() {
+        guard let layer, !reduceMotion else { return }
+        let spring = CASpringAnimation(keyPath: "transform")
+        spring.fromValue = NSValue(caTransform3D: scaleTransform(0.94))
+        spring.toValue = NSValue(caTransform3D: CATransform3DIdentity)
+        spring.damping = 12
+        spring.stiffness = 320
+        spring.mass = 1
+        spring.duration = spring.settlingDuration
+        layer.transform = CATransform3DIdentity
+        layer.add(spring, forKey: "scale")
+    }
+
+    /// Cells are reused: drop any in-flight motion so a recycled tile never starts mid-hover.
+    func resetMotion() {
+        isHovered = false
+        hoverLayer.removeAllAnimations()
+        hoverLayer.opacity = 0
+        layer?.removeAllAnimations()
+        layer?.transform = CATransform3DIdentity
+    }
 
     override func mouseDown(with event: NSEvent) {
         super.mouseDown(with: event)
