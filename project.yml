@@ -63,7 +63,7 @@ targets:
         CURRENT_PROJECT_VERSION: "1"
         # The EdDSA public key that update archives are checked against. Paste the key printed by
         # Sparkle's generate_keys here (docs/RELEASING.md). While empty, the build has no updater.
-        SPARKLE_PUBLIC_KEY: ""
+        SPARKLE_PUBLIC_KEY: "fHu+dsMu8HEriacv3AlFWYjU5qDvFM0AGGtwCrFI3PY="
         # The hardened runtime is switched on by the release workflow for signed builds only: it
         # enforces library validation, which stops an ad-hoc build loading the embedded Sparkle.
         GENERATE_INFOPLIST_FILE: NO

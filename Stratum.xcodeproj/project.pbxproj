@@ -756,7 +756,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = app.stratum.filemanager;
 				PRODUCT_NAME = Stratum;
 				SDKROOT = macosx;
-				SPARKLE_PUBLIC_KEY = "";
+				SPARKLE_PUBLIC_KEY = "fHu+dsMu8HEriacv3AlFWYjU5qDvFM0AGGtwCrFI3PY=";
 			};
 			name = Release;
 		};
@@ -876,7 +876,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = app.stratum.filemanager;
 				PRODUCT_NAME = Stratum;
 				SDKROOT = macosx;
-				SPARKLE_PUBLIC_KEY = "";
+				SPARKLE_PUBLIC_KEY = "fHu+dsMu8HEriacv3AlFWYjU5qDvFM0AGGtwCrFI3PY=";
 			};
 			name = Debug;
 		};

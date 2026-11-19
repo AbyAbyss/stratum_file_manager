@@ -56,7 +56,7 @@ mkdir dmg && cp -R "$APP" dmg/ && ln -s /Applications dmg/Applications
 hdiutil create -volname Stratum -srcfolder dmg -ov -format UDZO Stratum-local.dmg
 ```
 
-## Auto-updates (Sparkle) — one-time setup
+## Auto-updates (Sparkle)
 
 Stratum updates itself with [Sparkle](https://sparkle-project.org). Each release attaches an
 `appcast.xml`, and the app reads the copy on the latest release:
@@ -66,8 +66,12 @@ https://github.com/AbyAbyss/stratum_file_manager/releases/latest/download/appcas
 ```
 
 Sparkle only installs an update whose EdDSA signature matches the public key built into the
-running app. **Until you do the steps below, builds have no updater** (no "Check for Updates…"
-item) and the release workflow refuses to run, so a release can't ship without one by accident.
+running app. The public key is `SPARKLE_PUBLIC_KEY` in `project.yml`, and the matching private key
+is the `SPARKLE_PRIVATE_KEY` repository secret. Stratum currently shares Yankit's key pair. A build
+with an empty `SPARKLE_PUBLIC_KEY` has no updater (no "Check for Updates…" item), and the release
+workflow refuses to run without one, so a release can't ship without an updater by accident.
+
+The steps below are the one-time setup, for reference or for switching to a key of Stratum's own.
 
 1. Download the Sparkle release matching the package version from
    [its releases page](https://github.com/sparkle-project/Sparkle/releases) and run
@@ -79,8 +83,10 @@ item) and the release workflow refuses to run, so a release can't ship without o
    Actions), then delete the file. Keep the Keychain copy: **if you lose the private key,
    installed copies can never update again.**
 
-You may reuse the key pair you made for another app, but separate keys per app are Sparkle's
-recommendation: one leaked key then doesn't compromise every app.
+Sharing one key pair between apps works, but separate keys per app are Sparkle's recommendation:
+one leaked key then doesn't compromise every app. To switch Stratum to its own key later, generate
+a new pair, update `SPARKLE_PUBLIC_KEY` and the `SPARKLE_PRIVATE_KEY` secret, and note that copies
+already installed with the old key will not accept updates signed with the new one.
 
 The first release with a key is the first one that can update itself. Sparkle asks on the second
 launch whether to check automatically.
