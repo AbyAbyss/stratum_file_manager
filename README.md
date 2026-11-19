@@ -85,9 +85,10 @@ Icons, list and columns; tabs; an inspector with preview, metadata and tags; and
 
 ## Make it yours
 
-Fourteen built-in themes (light, dark, or follow the system), twenty accent colors, a custom
-accent, or one picked from your wallpaper. Window material, blur and translucency are adjustable,
-and respect Reduce Transparency and Increase Contrast.
+Settings is four calm pages (Appearance, Safety, Scanning, About) with a live preview as you
+change things. Fourteen built-in themes (light, dark, or follow the system), twenty accent colors,
+a custom accent, or one picked from your wallpaper. Window material, blur and translucency are
+adjustable, and respect Reduce Transparency and Increase Contrast.
 
 <p align="center">
   <img src="docs/images/themes.jpg" alt="Settings: the theme gallery" width="92%">
@@ -123,7 +124,7 @@ You can replay it any time from **Help → Welcome Tour**.
 | 🎨 **Themes** | 14 themes, 20 accents, custom accent or wallpaper match, light/dark/system. |
 | ♿ **Accessibility** | Icon buttons carry VoiceOver labels; animations respect Reduce Motion. |
 | 🔒 **Private** | Everything runs and stays on your Mac. No account, no analytics. The only network request is the update check. |
-| 🔄 **Updates itself** | Sparkle checks for new versions; every update is signature-verified. |
+| 🔄 **Updates itself** | Sparkle checks for new versions; every update is signature-verified. A toolbar menu has *Check for Updates*, the welcome tour, and the support links. |
 
 ## Keyboard shortcuts
 

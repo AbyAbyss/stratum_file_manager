@@ -208,11 +208,12 @@ struct ToolbarView: View {
                             appState.showInspector.toggle()
                         }
                     }
-                    toolbarIconButton("slider.horizontal.3", label: "Appearance & Theme Studio (⌘,)") {
+                    toolbarIconButton("slider.horizontal.3", label: "Settings (⌘,)") {
                         withAnimation(.spring(response: 0.34, dampingFraction: 0.84)) {
                             appState.screen = .settings
                         }
                     }
+                    helpMenu
                 }
 
                 // Live transfer pill

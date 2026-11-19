@@ -10,6 +10,8 @@ enum AppInfo {
     static let authorName = "Aby Saji"
     static let author = URL(string: "https://abyabyss.github.io/")!
     static let repository = URL(string: "https://github.com/AbyAbyss/stratum_file_manager")!
+    static let releases = URL(string: "https://github.com/AbyAbyss/stratum_file_manager/releases")!
+    static let newIssue = URL(string: "https://github.com/AbyAbyss/stratum_file_manager/issues/new")!
     /// Buy Me a Coffee page (the same handle as Yankit).
     static let support = URL(string: "https://buymeacoffee.com/abyabyss")!
 }

@@ -162,7 +162,7 @@ struct MainWindowView: View {
         case .storage:
             DeferredContent { StorageMapView(appState: appState, appearance: appearance) }
         case .settings:
-            DeferredContent { AppearanceSettingsView(appState: appState, appearance: appearance) }
+            DeferredContent { SettingsView(appState: appState, appearance: appearance) }
         }
     }
 }
