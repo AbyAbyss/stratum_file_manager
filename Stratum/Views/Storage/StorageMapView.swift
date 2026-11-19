@@ -18,7 +18,8 @@ struct StorageMapView: View {
     private static let maxTiles = 14
 
     @State private var mode: Mode = .folders
-    @State private var category: FileTypeCategory = .video
+    /// The category the user picked; until then the biggest one with large files is shown.
+    @State private var pickedCategory: FileTypeCategory?
     @State private var selectedID: Int64?
     @State private var hoveredID: Int64?
     @State private var items: [StorageItem] = []
@@ -360,6 +361,11 @@ struct StorageMapView: View {
     private var fileTypesSection: some View {
         let totals = scanCoordinator.fileTypeTotals.sorted { $0.totalSize > $1.totalSize }
         let sum = max(1, totals.reduce(Int64(0)) { $0 + $1.totalSize })
+        let withFiles = Set(scanCoordinator.largeFiles.map(\.type))
+        let category = pickedCategory
+            ?? totals.first(where: { withFiles.contains($0.type) })?.type
+            ?? totals.first?.type
+            ?? .other
         let files = scanCoordinator.largeFiles
             .filter { $0.type == category }
             .sorted { $0.size > $1.size }
@@ -387,7 +393,7 @@ struct StorageMapView: View {
                         appearance: appearance
                     )
                     .onTapGesture {
-                        withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) { category = total.type }
+                        withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) { pickedCategory = total.type }
                     }
                 }
             }
