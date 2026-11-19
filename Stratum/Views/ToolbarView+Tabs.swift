@@ -8,25 +8,39 @@ extension ToolbarView {
                 ForEach(appState.tabs) { tab in
                     let isActive = (tab.id == appState.activeTabID)
                     HStack(spacing: 4) {
-                        Image(systemName: isActive && appState.activeSmartFolderName != nil ? "sparkle.magnifyingglass" : "folder.fill")
-                            .font(.system(size: 11.5))
-                            .foregroundStyle(isActive ? appearance.accentColor : .secondary)
-
+                        // One button for icon + title, so a pinned tab (icon only) is still a full click target.
                         Button {
                             withAnimation(.spring(response: 0.28, dampingFraction: 0.82)) {
                                 appState.selectTab(tab.id)
                             }
                         } label: {
-                            Text(isActive ? appState.currentFolderTitle : tab.title)
-                                .font(.system(size: 12.5, weight: isActive ? .semibold : .regular))
-                                .foregroundStyle(isActive ? .primary : .secondary)
-                                .padding(.horizontal, 6)
-                                .frame(height: 24)
-                                .contentShape(Rectangle())
+                            HStack(spacing: 5) {
+                                Image(systemName: isActive && appState.activeSmartFolderName != nil ? "sparkle.magnifyingglass" : "folder.fill")
+                                    .font(.system(size: 11.5))
+                                    .foregroundStyle(isActive ? appearance.accentColor : .secondary)
+                                    .overlay(alignment: .topTrailing) {
+                                        if tab.isPinned {
+                                            Image(systemName: "pin.fill")
+                                                .font(.system(size: 6.5, weight: .bold))
+                                                .foregroundStyle(appearance.accentColor)
+                                                .rotationEffect(.degrees(35))
+                                                .offset(x: 5, y: -4)
+                                        }
+                                    }
+                                if !tab.isPinned {
+                                    Text(isActive ? appState.currentFolderTitle : tab.title)
+                                        .font(.system(size: 12.5, weight: isActive ? .semibold : .regular))
+                                        .foregroundStyle(isActive ? .primary : .secondary)
+                                        .padding(.trailing, 2)
+                                }
+                            }
+                            .frame(height: 24)
+                            .contentShape(Rectangle())
                         }
                         .buttonStyle(.plain)
+                        .stratumHelp(tab.isPinned ? "\(tab.title) (pinned)" : tab.title)
 
-                        if appState.tabs.count > 1 {
+                        if appState.tabs.count > 1 && !tab.isPinned {
                             Button {
                                 withAnimation(.spring(response: 0.28, dampingFraction: 0.82)) {
                                     appState.closeTab(tab.id)
@@ -39,10 +53,11 @@ extension ToolbarView {
                                     .contentShape(Rectangle())
                             }
                             .buttonStyle(StratumInteractiveButtonStyle())
+                            .stratumHelp("Close tab")
                         }
                     }
-                    .padding(.leading, 10)
-                    .padding(.trailing, 4)
+                    .padding(.leading, tab.isPinned ? 9 : 10)
+                    .padding(.trailing, tab.isPinned ? 9 : 4)
                     .frame(height: 28)
                     .background {
                         if isActive {
@@ -57,6 +72,12 @@ extension ToolbarView {
                     }
                     .transition(.scale(scale: 0.92).combined(with: .opacity))
                     .contextMenu {
+                        Button(tab.isPinned ? "Unpin Tab" : "Pin Tab") {
+                            withAnimation(.spring(response: 0.32, dampingFraction: 0.82)) {
+                                appState.togglePinTab(tab.id)
+                            }
+                        }
+                        Divider()
                         Button("Duplicate Tab") {
                             appState.addNewTab(at: tab.url)
                         }

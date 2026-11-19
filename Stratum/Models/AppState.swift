@@ -122,7 +122,11 @@ final class AppState {
     }
 
     // Tabs & Navigation
-    var tabs: [BrowserTab] = []
+    var tabs: [BrowserTab] = [] {
+        didSet { persistPinnedTabsIfChanged() }
+    }
+    private static let pinnedTabsKey = "Stratum.pinnedTabPaths"
+    private var savedPinnedTabPaths: [String] = []
     var activeTabID: UUID = UUID()
 
     // Current folder items
@@ -205,7 +209,16 @@ final class AppState {
             historyIndex: 0,
             selectedIDs: []
         )
-        self.tabs = [firstTab]
+        // Pinned tabs from last time come back first; the usual start folder stays the active tab.
+        let restoredPins = (UserDefaults.standard.stringArray(forKey: Self.pinnedTabsKey) ?? []).compactMap { path -> BrowserTab? in
+            var isDir: ObjCBool = false
+            guard FileManager.default.fileExists(atPath: path, isDirectory: &isDir), isDir.boolValue else { return nil }
+            let url = URL(fileURLWithPath: path, isDirectory: true)
+            return BrowserTab(id: UUID(), url: url, history: [NavigationHistoryItem(screen: .browser, url: url)],
+                              historyIndex: 0, selectedIDs: [], isPinned: true)
+        }
+        self.savedPinnedTabPaths = restoredPins.map(\.url.path)
+        self.tabs = restoredPins + [firstTab]
         self.activeTabID = firstTab.id
 
         if let savedPaths = UserDefaults.standard.stringArray(forKey: "Stratum.pinnedFolderPaths") {
@@ -396,6 +409,21 @@ final class AppState {
         )
         tabs.append(tab)
         selectTab(tab.id)
+    }
+
+    func togglePinTab(_ id: UUID) {
+        guard let idx = tabs.firstIndex(where: { $0.id == id }) else { return }
+        tabs[idx].isPinned.toggle()
+        tabs = BrowserTab.pinnedFirst(tabs)
+    }
+
+    /// Writes the pinned tabs' folders to settings, but only when that list actually changed:
+    /// `tabs` is mutated on every navigation and selection.
+    private func persistPinnedTabsIfChanged() {
+        let paths = tabs.filter(\.isPinned).map(\.url.path)
+        guard paths != savedPinnedTabPaths else { return }
+        savedPinnedTabPaths = paths
+        UserDefaults.standard.set(paths, forKey: Self.pinnedTabsKey)
     }
 
     func closeTab(_ id: UUID) {

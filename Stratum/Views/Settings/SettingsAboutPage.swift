@@ -4,6 +4,19 @@ import SwiftUI
 struct SettingsAboutPage: View {
     var appearance: AppearanceManager
 
+    @State private var finderEnabled = FinderIntegration.standard.isInstalled
+    @State private var finderError: String?
+
+    private func setFinder(_ on: Bool) {
+        do {
+            if on { try FinderIntegration.standard.install() } else { try FinderIntegration.standard.uninstall() }
+            finderEnabled = on
+            finderError = nil
+        } catch {
+            finderError = "Couldn\u{2019}t change it: \(error.localizedDescription)"
+        }
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 28) {
             VStack(spacing: 10) {
@@ -34,6 +47,15 @@ struct SettingsAboutPage: View {
                             .font(.system(size: 13, weight: .semibold))
                     }
                 }
+            }
+
+            SettingsGroup("Finder", footer: "Adds \u{201C}Open in Stratum\u{201D} when you right-click a folder in Finder, under Quick Actions. macOS has no way to put it higher in the menu.", appearance: appearance) {
+                SettingsToggleRow(
+                    title: "Open in Stratum from Finder",
+                    detail: finderError ?? "Right-click any folder, then Quick Actions \u{203A} Open in Stratum.",
+                    isOn: Binding(get: { finderEnabled }, set: setFinder),
+                    appearance: appearance
+                )
             }
 
             SettingsGroup("Project", footer: "MIT licensed. Copyright © 2026 \(AppInfo.authorName).", appearance: appearance) {

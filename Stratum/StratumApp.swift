@@ -3,6 +3,7 @@ import AppKit
 
 @main
 struct StratumApp: App {
+    @NSApplicationDelegateAdaptor(StratumAppDelegate.self) private var appDelegate
     @State private var appState = AppState()
     @State private var appearance = AppearanceManager.shared
 
@@ -15,6 +16,7 @@ struct StratumApp: App {
             MainWindowView(appState: appState, appearance: appearance)
                 .frame(minWidth: 980, minHeight: 640)
                 .background(WindowAccessor())
+                .onAppear { appDelegate.attach(appState) }
         }
         .windowStyle(.hiddenTitleBar)
         .defaultSize(width: 1340, height: 840)

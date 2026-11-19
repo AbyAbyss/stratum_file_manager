@@ -1,0 +1,39 @@
+import XCTest
+@testable import Stratum
+
+final class PinnedTabsTests: XCTestCase {
+    private func tab(_ name: String, pinned: Bool) -> BrowserTab {
+        let url = URL(fileURLWithPath: "/tmp/\(name)", isDirectory: true)
+        return BrowserTab(id: UUID(), url: url, history: [], historyIndex: 0, selectedIDs: [], isPinned: pinned)
+    }
+
+    func testPinnedTabsMoveToTheFrontAndKeepTheirOrder() {
+        let tabs = [tab("a", pinned: false), tab("b", pinned: true), tab("c", pinned: false), tab("d", pinned: true)]
+        XCTAssertEqual(BrowserTab.pinnedFirst(tabs).map(\.title), ["b", "d", "a", "c"])
+    }
+
+    func testOrderingWithNothingPinnedChangesNothing() {
+        let tabs = [tab("a", pinned: false), tab("b", pinned: false)]
+        XCTAssertEqual(BrowserTab.pinnedFirst(tabs).map(\.title), ["a", "b"])
+    }
+
+    func testTabsAreUnpinnedByDefault() {
+        let t = BrowserTab(id: UUID(), url: URL(fileURLWithPath: "/tmp"), history: [], historyIndex: 0, selectedIDs: [])
+        XCTAssertFalse(t.isPinned)
+    }
+}
+
+final class FinderIntegrationTests: XCTestCase {
+    func testInstallAndUninstallRoundTrip() throws {
+        let dir = FileManager.default.temporaryDirectory.appendingPathComponent("svc-\(UUID().uuidString)")
+        defer { try? FileManager.default.removeItem(at: dir) }
+        let integration = FinderIntegration(servicesDirectory: dir, bundleIdentifier: "app.test")
+        XCTAssertFalse(integration.isInstalled)
+        try integration.install()
+        XCTAssertTrue(integration.isInstalled)
+        let wflow = try String(contentsOf: integration.workflowURL.appendingPathComponent("Contents/document.wflow"), encoding: .utf8)
+        XCTAssertTrue(wflow.contains("open -b \"app.test\""))
+        try integration.uninstall()
+        XCTAssertFalse(integration.isInstalled)
+    }
+}

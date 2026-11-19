@@ -14,6 +14,7 @@
 		0A6869EA392B0DEFAD36A956 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C451677606067CF3A9DBD8ED /* SidebarView.swift */; };
 		0FDDAE7A9244C5CB174D1816 /* Milestone2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEFA5DE73F08CFF21374CDA4 /* Milestone2Tests.swift */; };
 		0FEB075BBE22E091E7220083 /* UpdateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FC32BA0DACEFA12E6F6B473 /* UpdateController.swift */; };
+		10BCE0F144B2F010BE59CD23 /* FinderIntegration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FEBCF450BF7771B292130A7 /* FinderIntegration.swift */; };
 		10C89C959F2085B904DFBF79 /* BrowserContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777607F61614446B433466F7 /* BrowserContainerView.swift */; };
 		148E0936FED9D46A4A02765C /* BulkDirectoryReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56216304CCCAD281B771477 /* BulkDirectoryReader.swift */; };
 		1775C13AA63BC65D540CBD04 /* FastColumnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A45F921C2859A9900874B7A /* FastColumnView.swift */; };
@@ -94,6 +95,7 @@
 		B05DBA24C0FF0498BCB7F0F8 /* ScanEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15C39B4BAC6EDD0EB5CAA0F1 /* ScanEngine.swift */; };
 		B50AE83ED6A46B735542C368 /* SettingsAppearancePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6606F38E9405205A42CAA98 /* SettingsAppearancePage.swift */; };
 		B5B6DA9ACD83546D24389C74 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = B6C4174F7BB4CA3F9C9A05E7 /* GRDB */; };
+		B8FBDAD71B94B98B07E1CF06 /* StratumAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E33244289FC4672B2B65C7E /* StratumAppDelegate.swift */; };
 		B903AFB85C004ACCF5F15380 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 2FA6587CE5BC162D7ABCB774 /* Sparkle */; };
 		B9949980C89713CD699586F9 /* GridCollectionViewItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = A765EBFD1FC58E4E3C055246 /* GridCollectionViewItems.swift */; };
 		BDD5A2A7E2CBEF6A4C25A50A /* SettingsThemeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61F90927958E1C1DA47434FC /* SettingsThemeCard.swift */; };
@@ -108,6 +110,7 @@
 		E5284AAEE14C71CDA1824EA3 /* StorageInsightsPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA970C38D1B7CD7B4D8DE5F8 /* StorageInsightsPanel.swift */; };
 		E622B08157EC841394194B9D /* StratumLogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C127D2340E44B3F7AC90E04 /* StratumLogo.swift */; };
 		E67A95AD21B92A106DCFA25A /* BatchRenameSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B246DD4D80C2793B2BB46D2 /* BatchRenameSheet.swift */; };
+		EB20AC34461CBD37D9FA38D1 /* PinnedTabsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D660A71F10121D486541A1B /* PinnedTabsTests.swift */; };
 		EC0F233150CBD733DC0C0101 /* StatusBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C22CF0063D58C2198BD1FA8B /* StatusBarView.swift */; };
 		ED9DC699E6C74636B2C73E7A /* SettingsLivePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6886FA8D4561CBEC9D368FB /* SettingsLivePreview.swift */; };
 		EDE0E09B721D5B01D8C0B6CC /* SmartOrganizerView+Logic.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBEF0B412DAF34777517940E /* SmartOrganizerView+Logic.swift */; };
@@ -147,6 +150,7 @@
 		19122EACEF9D08B794AA5B48 /* PowerSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PowerSource.swift; sourceTree = "<group>"; };
 		23FF2FFEE1BECE494A28CE62 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		26D4F2666D2B21F8984140FE /* DeleteService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteService.swift; sourceTree = "<group>"; };
+		2E33244289FC4672B2B65C7E /* StratumAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StratumAppDelegate.swift; sourceTree = "<group>"; };
 		2FA3F1BEA1E741BDE82CFD80 /* CommandPaletteView+Results.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CommandPaletteView+Results.swift"; sourceTree = "<group>"; };
 		30AD9DE4C41E2B509CEC6D18 /* NightSkyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightSkyView.swift; sourceTree = "<group>"; };
 		31FA56852936800EDED55A6E /* TransferQueueEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferQueueEngine.swift; sourceTree = "<group>"; };
@@ -159,7 +163,9 @@
 		43391BD308ED4050C81F0954 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		47BE3D6A83CE7D7D17E90003 /* InspectorSidebarView+PreviewCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InspectorSidebarView+PreviewCard.swift"; sourceTree = "<group>"; };
 		4BF99EBBA3EE3783B8060988 /* PathResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathResolver.swift; sourceTree = "<group>"; };
+		4D660A71F10121D486541A1B /* PinnedTabsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinnedTabsTests.swift; sourceTree = "<group>"; };
 		4E92C9FFE6EDCA2EF0866F66 /* CommandPaletteView+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CommandPaletteView+Preview.swift"; sourceTree = "<group>"; };
+		4FEBCF450BF7771B292130A7 /* FinderIntegration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinderIntegration.swift; sourceTree = "<group>"; };
 		5161D5AA97C54072B2FB8426 /* ToolbarView+HelpMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ToolbarView+HelpMenu.swift"; sourceTree = "<group>"; };
 		5289B3759D5A8CA7B3FF75CB /* ToolbarView+Tabs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ToolbarView+Tabs.swift"; sourceTree = "<group>"; };
 		587F089E17C10B1F88623289 /* AccessibilityHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityHelpers.swift; sourceTree = "<group>"; };
@@ -298,6 +304,7 @@
 				23FF2FFEE1BECE494A28CE62 /* Assets.xcassets */,
 				A6CA8D0F8FC6273E22168B05 /* Info.plist */,
 				06ADA8E13E813C385A25A55F /* StratumApp.swift */,
+				2E33244289FC4672B2B65C7E /* StratumAppDelegate.swift */,
 				30AD779DB6FE6DE5561999B5 /* Engine */,
 				A516E50393C294D80D5D6193 /* Models */,
 				10FD5676C3BDB780C4280BC6 /* Theme */,
@@ -312,6 +319,7 @@
 				B56216304CCCAD281B771477 /* BulkDirectoryReader.swift */,
 				26D4F2666D2B21F8984140FE /* DeleteService.swift */,
 				B9E94C08B1CBB8272B33F373 /* DirectoryWatcher.swift */,
+				4FEBCF450BF7771B292130A7 /* FinderIntegration.swift */,
 				C70B9CA2866DA85DFEC188E9 /* FullDiskAccess.swift */,
 				CEA40473F4735F9AC0D03F92 /* IconPipeline.swift */,
 				19122EACEF9D08B794AA5B48 /* PowerSource.swift */,
@@ -495,6 +503,7 @@
 				0507DF0213876EA54756EF72 /* DirRowTests.swift */,
 				03547504F3B605532C2F5BCE /* Milestone1Tests.swift */,
 				FEFA5DE73F08CFF21374CDA4 /* Milestone2Tests.swift */,
+				4D660A71F10121D486541A1B /* PinnedTabsTests.swift */,
 				0F3EB478E77E62019E6EEEEB /* ProtectActiveProjectsTests.swift */,
 				D9022AF3D4446CF92A83595E /* RippleTests.swift */,
 				5DA2CFB988A15C07FF0FEEAD /* ScanEngineTests.swift */,
@@ -619,6 +628,7 @@
 				3551ED9B28D38951826B0C4B /* DirRowTests.swift in Sources */,
 				814F48E1AECF07A2B7A5620A /* Milestone1Tests.swift in Sources */,
 				0FDDAE7A9244C5CB174D1816 /* Milestone2Tests.swift in Sources */,
+				EB20AC34461CBD37D9FA38D1 /* PinnedTabsTests.swift in Sources */,
 				938692F86C5E31E74AF432E1 /* ProtectActiveProjectsTests.swift in Sources */,
 				48E2812E9D32C9A20CFC56B2 /* RippleTests.swift in Sources */,
 				4F7682330F81DEBB2FE05855 /* ScanEngineTests.swift in Sources */,
@@ -659,6 +669,7 @@
 				F925BCEA56FDB2F17A53AA11 /* FastIconGridView.swift in Sources */,
 				585C195F7E21EF203CF281D8 /* FastListView.swift in Sources */,
 				9A8C556E58734993FD6F3161 /* FileItem.swift in Sources */,
+				10BCE0F144B2F010BE59CD23 /* FinderIntegration.swift in Sources */,
 				8E77E600B6C694BCD06A100F /* FirstRunFDASheet.swift in Sources */,
 				3FCE741A0EF877F69065D641 /* FullDiskAccess.swift in Sources */,
 				B9949980C89713CD699586F9 /* GridCollectionViewItems.swift in Sources */,
@@ -713,6 +724,7 @@
 				2F801D2EBB6FEA0F22A19978 /* StorageMapParts.swift in Sources */,
 				795362AE494027CC96B461DF /* StorageMapView.swift in Sources */,
 				6DB61F5DA479DB1F8E990A9F /* StratumApp.swift in Sources */,
+				B8FBDAD71B94B98B07E1CF06 /* StratumAppDelegate.swift in Sources */,
 				425E320D4B3E38AF1CE2FAFE /* StratumButtonStyles.swift in Sources */,
 				E425CE1D34CC1134C5736269 /* StratumContextMenuBuilder.swift in Sources */,
 				E622B08157EC841394194B9D /* StratumLogo.swift in Sources */,

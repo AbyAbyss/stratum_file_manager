@@ -100,4 +100,24 @@ extension AppState {
             }
         }
     }
+
+    // MARK: Opening from outside the app
+
+    /// Opens a folder (or a file's folder, with the file selected) requested by Finder, the
+    /// command line or the Dock. Reuses a tab that already shows that folder.
+    func openFromOutside(_ url: URL) {
+        let target = url.standardizedFileURL
+        var isDirectory: ObjCBool = false
+        guard FileManager.default.fileExists(atPath: target.path, isDirectory: &isDirectory) else { return }
+        let isFolder = isDirectory.boolValue && !((try? target.resourceValues(forKeys: [.isPackageKey]).isPackage) ?? false)
+        let folder = isFolder ? target : target.deletingLastPathComponent()
+
+        screen = .browser
+        if let existing = tabs.first(where: { $0.url.standardizedFileURL == folder }) {
+            selectTab(existing.id)
+        } else {
+            addNewTab(at: folder)
+        }
+        if !isFolder { selectedItemIDs = [target.path] }
+    }
 }

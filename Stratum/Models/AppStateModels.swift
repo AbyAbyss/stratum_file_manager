@@ -39,6 +39,14 @@ struct BrowserTab: Identifiable, Sendable {
     var history: [NavigationHistoryItem]
     var historyIndex: Int
     var selectedIDs: Set<String>
+    /// Pinned tabs sit at the left as compact icons, can't be closed by accident, and come back
+    /// on the next launch.
+    var isPinned: Bool = false
+
+    /// Pinned tabs first, keeping each group's existing order.
+    static func pinnedFirst(_ tabs: [BrowserTab]) -> [BrowserTab] {
+        tabs.filter(\.isPinned) + tabs.filter { !$0.isPinned }
+    }
 
     var title: String {
         if url.path == "/" { return "Macintosh HD" }
