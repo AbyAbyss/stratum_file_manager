@@ -5,6 +5,11 @@ struct BrowserContainerView: View {
     @Bindable var appState: AppState
     var appearance: AppearanceManager
 
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// While a different folder loads, the old listing is dimmed so it never reads as current.
+    @State private var isNavigating = false
+    @State private var navigationToken = 0
+
     var body: some View {
         HStack(spacing: 0) {
             VStack(spacing: 0) {
@@ -25,9 +30,17 @@ struct BrowserContainerView: View {
 
                         if appState.displayedItems.isEmpty && !appState.isLoadingDirectory {
                             emptyFolderStateView
+                                .transition(.opacity.combined(with: .scale(scale: 0.96)))
                         }
                     }
+                    .id(appState.viewMode)
+                    .transition(reduceMotion ? .opacity : .opacity.combined(with: .scale(scale: 0.985)))
+                    .opacity(isNavigating ? 0.5 : 1)
+                    .offset(y: isNavigating && !reduceMotion ? 6 : 0)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .animation(.easeOut(duration: 0.2), value: appState.viewMode)
+                    .animation(.spring(response: 0.35, dampingFraction: 0.85), value: isNavigating)
+                    .animation(.easeOut(duration: 0.2), value: appState.displayedItems.isEmpty)
 
                     if appState.selectedItemIDs.count > 1 {
                         multiSelectFloatingBar
@@ -44,6 +57,29 @@ struct BrowserContainerView: View {
                     .transition(.move(edge: .trailing).combined(with: .opacity))
             }
         }
+        .animation(.spring(response: 0.38, dampingFraction: 0.86), value: appState.showInspector)
+        .onChange(of: appState.currentURL) { _, _ in beginNavigation() }
+        .onChange(of: appState.isLoadingDirectory) { _, loading in
+            if !loading { endNavigation() }
+        }
+    }
+
+    // MARK: - Folder navigation feedback
+
+    private func beginNavigation() {
+        navigationToken += 1
+        let token = navigationToken
+        isNavigating = true
+        // Safety net: never leave the listing dimmed if a load finishes before we see it.
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(500))
+            if navigationToken == token { isNavigating = false }
+        }
+    }
+
+    private func endNavigation() {
+        guard isNavigating else { return }
+        isNavigating = false
     }
 
     private var emptyFolderStateView: some View {
