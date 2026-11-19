@@ -200,15 +200,6 @@ final class TransferQueueEngine {
         box.setPaused(nextPaused)
     }
 
-    func pauseAll() {
-        for job in jobs where !job.isCompleted && !job.isCancelled {
-            if let idx = jobs.firstIndex(where: { $0.id == job.id }) {
-                jobs[idx].isPaused = true
-            }
-            controlBoxes[job.id]?.setPaused(true)
-        }
-    }
-
     func cancel(jobID: UUID) {
         if let idx = jobs.firstIndex(where: { $0.id == jobID }) {
             jobs[idx].isCancelled = true

@@ -1,81 +1,7 @@
 import SwiftUI
 import AppKit
 
-enum AppThemeOverride: String, CaseIterable, Codable, Sendable {
-    case system = "auto"
-    case dark = "dark"
-    case light = "light"
-
-    var label: String {
-        switch self {
-        case .system: return "Match system"
-        case .dark: return "Dark"
-        case .light: return "Light"
-        }
-    }
-}
-
 typealias StratumThemeMode = AppThemeOverride
-
-enum AccentMode: String, CaseIterable, Codable, Sendable {
-    case system = "system"
-    case wallpaper = "wallpaper"
-    case swatch = "swatch"
-    case custom = "custom"
-}
-
-enum RowDensity: String, CaseIterable, Codable, Sendable {
-    case compact = "Compact"
-    case comfortable = "Comfortable"
-    case spacious = "Spacious"
-
-    var rowHeight: CGFloat {
-        switch self {
-        case .compact: return 24
-        case .comfortable: return 30
-        case .spacious: return 36
-        }
-    }
-}
-
-enum GlassBlurStyle: String, CaseIterable, Codable, Identifiable, Sendable {
-    case hudGlass = "HUD Deep Glass"
-    case sidebarVibrancy = "Desktop Vibrancy"
-    case frostedPopover = "Frosted Crystal"
-    case ultraDarkAcrylic = "Obsidian Acrylic"
-
-    var id: String { rawValue }
-
-    var nsMaterial: NSVisualEffectView.Material {
-        switch self {
-        case .hudGlass: return .hudWindow
-        case .sidebarVibrancy: return .sidebar
-        case .frostedPopover: return .popover
-        case .ultraDarkAcrylic: return .underWindowBackground
-        }
-    }
-}
-
-struct StratumThemePreset: Identifiable, Codable, Equatable, Sendable {
-    var id: String
-    var name: String
-    var subtitle: String
-    var mode: AppThemeOverride
-    var windowTintHex: String
-    var sidebarTintHex: String
-    var cardTintHex: String
-    var accentHex: String
-    var translucency: Double       // 0...100 (higher = more translucent glass)
-    var cardGlowIntensity: Double  // 0...100
-    var blurStyle: GlassBlurStyle
-    var isBuiltIn: Bool
-}
-
-struct AccentSwatch: Identifiable, Sendable {
-    var id: String { name }
-    let name: String
-    let hex: String
-}
 
 @Observable
 @MainActor
@@ -829,28 +755,4 @@ final class AppearanceManager {
 
 extension Notification.Name {
     static let stratumAppearanceDidChange = Notification.Name("stratumAppearanceDidChange")
-}
-
-extension NSColor {
-    convenience init?(hex: String) {
-        var cleaned = hex.trimmingCharacters(in: .whitespacesAndNewlines)
-        if cleaned.hasPrefix("#") {
-            cleaned.removeFirst()
-        }
-        guard cleaned.count == 6, let rgb = UInt64(cleaned, radix: 16) else {
-            return nil
-        }
-        let r = CGFloat((rgb >> 16) & 0xFF) / 255.0
-        let g = CGFloat((rgb >> 8) & 0xFF) / 255.0
-        let b = CGFloat(rgb & 0xFF) / 255.0
-        self.init(srgbRed: r, green: g, blue: b, alpha: 1.0)
-    }
-
-    func toHexString() -> String {
-        guard let rgb = usingColorSpace(.sRGB) else { return "#44D492" }
-        let r = Int(round(rgb.redComponent * 255))
-        let g = Int(round(rgb.greenComponent * 255))
-        let b = Int(round(rgb.blueComponent * 255))
-        return String(format: "#%02X%02X%02X", r, g, b)
-    }
 }

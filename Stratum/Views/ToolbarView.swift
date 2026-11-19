@@ -217,40 +217,48 @@ struct ToolbarView: View {
 
                 // Live transfer pill
                 if let job = transferEngine.activeJob {
-                    Button {
-                        withAnimation(.spring(response: 0.34, dampingFraction: 0.84)) {
-                            appState.screen = .organizer
-                        }
-                    } label: {
-                        HStack(spacing: 7) {
-                            ZStack(alignment: .leading) {
-                                Capsule()
-                                    .fill(Color.primary.opacity(0.15))
-                                    .frame(width: 28, height: 5)
-                                Capsule()
-                                    .fill(appearance.accentColor)
-                                    .frame(width: max(4, 28 * job.progressFraction), height: 5)
-                                    .animation(.spring(response: 0.25, dampingFraction: 0.8), value: job.progressFraction)
+                    HStack(spacing: 4) {
+                        Button {
+                            withAnimation(.spring(response: 0.34, dampingFraction: 0.84)) {
+                                appState.screen = .organizer
                             }
-                            Text("\(job.titleText) · \(job.progressPercent)%")
-                                .font(.system(size: 11.5, weight: .semibold).monospacedDigit())
-                                .contentTransition(.numericText())
-                        }
-                        .padding(.horizontal, 10)
-                        .frame(height: 28)
-                        .background(
-                            Capsule()
-                                .fill(appearance.selectionTintColor)
-                                .overlay(
+                        } label: {
+                            HStack(spacing: 7) {
+                                ZStack(alignment: .leading) {
                                     Capsule()
-                                        .strokeBorder(appearance.selectionBorderColor, lineWidth: 1)
-                                )
-                        )
-                        .contentShape(Capsule())
+                                        .fill(Color.primary.opacity(0.15))
+                                        .frame(width: 28, height: 5)
+                                    Capsule()
+                                        .fill(appearance.accentColor)
+                                        .frame(width: max(4, 28 * job.progressFraction), height: 5)
+                                        .animation(.spring(response: 0.25, dampingFraction: 0.8), value: job.progressFraction)
+                                }
+                                Text("\(job.titleText) · \(job.isPaused ? "Paused" : "\(job.progressPercent)%")")
+                                    .font(.system(size: 11.5, weight: .semibold).monospacedDigit())
+                                    .contentTransition(.numericText())
+                            }
+                            .padding(.horizontal, 10)
+                            .frame(height: 28)
+                            .background(
+                                Capsule()
+                                    .fill(appearance.selectionTintColor)
+                                    .overlay(
+                                        Capsule()
+                                            .strokeBorder(appearance.selectionBorderColor, lineWidth: 1)
+                                    )
+                            )
+                            .contentShape(Capsule())
+                        }
+                        .buttonStyle(StratumInteractiveButtonStyle())
+                        .stratumHelp("View active transfer")
+                        transferControl(job.isPaused ? "play.fill" : "pause.fill", label: job.isPaused ? "Resume transfer" : "Pause transfer") {
+                            transferEngine.togglePause(jobID: job.id)
+                        }
+                        transferControl("xmark", label: "Cancel transfer") {
+                            transferEngine.cancel(jobID: job.id)
+                        }
                     }
-                    .buttonStyle(StratumInteractiveButtonStyle())
                     .transition(.scale.combined(with: .opacity))
-                    .stratumHelp("View active transfer")
                 }
 
                 // Search / Command Palette button (Cmd+K)
@@ -627,6 +635,19 @@ struct ToolbarView: View {
                 .fill(Color.primary.opacity(0.06))
                 .frame(height: 1)
         }
+    }
+
+    private func transferControl(_ symbol: String, label: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Image(systemName: symbol)
+                .font(.system(size: 9.5, weight: .bold))
+                .foregroundStyle(.secondary)
+                .frame(width: 22, height: 22)
+                .background(Circle().fill(Color.primary.opacity(0.08)))
+                .contentShape(Circle())
+        }
+        .buttonStyle(StratumInteractiveButtonStyle())
+        .stratumHelp(label)
     }
 
     private func toolbarIconButton(_ symbol: String, label: String, disabled: Bool = false, action: @escaping () -> Void) -> some View {
