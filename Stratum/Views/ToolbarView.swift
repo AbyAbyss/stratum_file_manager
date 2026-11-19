@@ -121,8 +121,6 @@ struct ToolbarView: View {
                             .font(.system(size: 13.5, weight: .bold))
                             .padding(.horizontal, 2)
                             .contentTransition(.interpolate)
-
-                        StratumLiveSyncPill(appearance: appearance)
                     }
                     .transition(.opacity.combined(with: .move(edge: .trailing)))
                 }
@@ -619,9 +617,6 @@ struct ToolbarView: View {
                 .stratumHelp("New Tab (⌘T)")
 
                 Spacer(minLength: 8)
-
-                // Live Smart Auto-Sync indicator right in the tab bar
-                StratumLiveSyncPill(appearance: appearance)
             }
             .padding(.horizontal, 10)
             .padding(.vertical, 5)
