@@ -88,7 +88,7 @@ struct StorageMapView: View {
                 content
             }
             Divider().opacity(0.5)
-            StorageCleanupPanel(appState: appState, appearance: appearance)
+            StorageInsightsPanel(appState: appState, appearance: appearance)
                 .frame(width: 310)
         }
         .focusable()
@@ -273,6 +273,10 @@ struct StorageMapView: View {
             .padding(10)
             .storageCard(appearance)
 
+            Label("Double-click a folder to open it · Esc goes back", systemImage: "cursorarrow.click.2")
+                .font(.system(size: 11.5))
+                .foregroundStyle(.secondary)
+
             if shown.count > tiles.count {
                 Text("Showing the \(tiles.count) largest of \(shown.count) items. The list below has everything.")
                     .font(.system(size: 11.5))
@@ -297,12 +301,15 @@ struct StorageMapView: View {
                     .onHover { inside in
                         hoveredID = inside ? item.id : (hoveredID == item.id ? nil : hoveredID)
                     }
-                    .onTapGesture(count: 2) {
-                        zoomAnchor = .center
-                        open(item)
-                    }
                     .onTapGesture {
-                        withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) { selectedID = item.id }
+                        // One gesture reading the click count: a separate single-tap gesture
+                        // waits out the whole double-click interval, which made selecting lag.
+                        if (NSApp.currentEvent?.clickCount ?? 1) >= 2 {
+                            zoomAnchor = .center
+                            open(item)
+                        } else {
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) { selectedID = item.id }
+                        }
                     }
                     .contextMenu { StorageItemMenu(item: item, actions: actions) }
                 }
