@@ -138,6 +138,12 @@ struct MainWindowView: View {
         .onAppear {
             appearance.applyWindowAppearance()
             StratumAppIconGenerator.applyCustomDockIcon(accentColor: NSColor(hex: appearance.activeHexString) ?? .systemGreen)
+            #if DEBUG
+            if let dir = ProcessInfo.processInfo.environment["STRATUM_EXPORT_ICON"] {
+                StratumAppIconGenerator.exportIconSet(to: URL(fileURLWithPath: dir))
+                NSApp.terminate(nil)
+            }
+            #endif
         }
         .onChange(of: appearance.activeHexString) { _, newHex in
             StratumAppIconGenerator.applyCustomDockIcon(accentColor: NSColor(hex: newHex) ?? .systemGreen)

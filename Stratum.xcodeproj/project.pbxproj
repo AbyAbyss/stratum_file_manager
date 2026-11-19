@@ -10,6 +10,7 @@
 		05CA587381ACE0A18BD32175 /* ScanDatabaseQueries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F376BA9840E77369EB57F8 /* ScanDatabaseQueries.swift */; };
 		06426387B1DCC944DB4069F9 /* ScanStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C52EDE7AC17F3D44412B099 /* ScanStore.swift */; };
 		0734A00D6FFE67BD4DD2BC5E /* MainWindowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E71AB20B2B84E7ABD952B1 /* MainWindowView.swift */; };
+		0872EC27C2DFC67CE4BFBD45 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 23FF2FFEE1BECE494A28CE62 /* Assets.xcassets */; };
 		0A6869EA392B0DEFAD36A956 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C451677606067CF3A9DBD8ED /* SidebarView.swift */; };
 		0FDDAE7A9244C5CB174D1816 /* Milestone2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEFA5DE73F08CFF21374CDA4 /* Milestone2Tests.swift */; };
 		10C89C959F2085B904DFBF79 /* BrowserContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777607F61614446B433466F7 /* BrowserContainerView.swift */; };
@@ -62,6 +63,7 @@
 		795362AE494027CC96B461DF /* StorageMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E730F98592F41F85E9C7686 /* StorageMapView.swift */; };
 		7ACFA1DCC0F548A5F56E6BDB /* InspectorSidebarView+Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C471F2B030021153305C8566 /* InspectorSidebarView+Actions.swift */; };
 		7C9318D0FFF824A0A6C94EE2 /* AppState+FileOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B92C90BE22725E797D906AC /* AppState+FileOperations.swift */; };
+		8075D118754CEB9D0D9A830D /* AppIconTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C9EC5306CC9D61E34B5F798 /* AppIconTests.swift */; };
 		814F48E1AECF07A2B7A5620A /* Milestone1Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03547504F3B605532C2F5BCE /* Milestone1Tests.swift */; };
 		831AD063E89F42348D80C3ED /* StratumTableRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4AC0DB562E9CE6F0F70F305 /* StratumTableRowView.swift */; };
 		88914963E22F9D424D929863 /* AppearanceSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B891F4D4D449DB8804F32F /* AppearanceSettingsView.swift */; };
@@ -136,6 +138,7 @@
 		15C39B4BAC6EDD0EB5CAA0F1 /* ScanEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanEngine.swift; sourceTree = "<group>"; };
 		17AF723BD16F558A6C2414C4 /* NSColor+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSColor+Hex.swift"; sourceTree = "<group>"; };
 		19122EACEF9D08B794AA5B48 /* PowerSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PowerSource.swift; sourceTree = "<group>"; };
+		23FF2FFEE1BECE494A28CE62 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		26D4F2666D2B21F8984140FE /* DeleteService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteService.swift; sourceTree = "<group>"; };
 		2FA3F1BEA1E741BDE82CFD80 /* CommandPaletteView+Results.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CommandPaletteView+Results.swift"; sourceTree = "<group>"; };
 		30AD9DE4C41E2B509CEC6D18 /* NightSkyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightSkyView.swift; sourceTree = "<group>"; };
@@ -143,6 +146,7 @@
 		39D44CADC7436BBA3E176AE3 /* AppState+Shelf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppState+Shelf.swift"; sourceTree = "<group>"; };
 		3A7C1EF28F3B52B73CC70963 /* TransferControlTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferControlTests.swift; sourceTree = "<group>"; };
 		3B246DD4D80C2793B2BB46D2 /* BatchRenameSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchRenameSheet.swift; sourceTree = "<group>"; };
+		3C9EC5306CC9D61E34B5F798 /* AppIconTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIconTests.swift; sourceTree = "<group>"; };
 		3DEF64ADCE10868408035973 /* SmartOrganizerView+Declutter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SmartOrganizerView+Declutter.swift"; sourceTree = "<group>"; };
 		47BE3D6A83CE7D7D17E90003 /* InspectorSidebarView+PreviewCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InspectorSidebarView+PreviewCard.swift"; sourceTree = "<group>"; };
 		4BF99EBBA3EE3783B8060988 /* PathResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathResolver.swift; sourceTree = "<group>"; };
@@ -279,6 +283,7 @@
 		25515DD6A0F1AA9164F0505F /* Stratum */ = {
 			isa = PBXGroup;
 			children = (
+				23FF2FFEE1BECE494A28CE62 /* Assets.xcassets */,
 				A6CA8D0F8FC6273E22168B05 /* Info.plist */,
 				06ADA8E13E813C385A25A55F /* StratumApp.swift */,
 				30AD779DB6FE6DE5561999B5 /* Engine */,
@@ -469,6 +474,7 @@
 		E8E521705E33BF55214C07AD /* StratumTests */ = {
 			isa = PBXGroup;
 			children = (
+				3C9EC5306CC9D61E34B5F798 /* AppIconTests.swift */,
 				0507DF0213876EA54756EF72 /* DirRowTests.swift */,
 				03547504F3B605532C2F5BCE /* Milestone1Tests.swift */,
 				FEFA5DE73F08CFF21374CDA4 /* Milestone2Tests.swift */,
@@ -518,6 +524,7 @@
 			buildConfigurationList = 91E926E3178D8C1A755E7F3E /* Build configuration list for PBXNativeTarget "Stratum" */;
 			buildPhases = (
 				EE13C2284051DF4D3B9A5280 /* Sources */,
+				912C637A1D39B55A4626C38E /* Resources */,
 				D251A02D7B5ADC7D96489578 /* Frameworks */,
 			);
 			buildRules = (
@@ -572,11 +579,23 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		912C637A1D39B55A4626C38E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0872EC27C2DFC67CE4BFBD45 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		B02C4315CFB0433140E08ABC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8075D118754CEB9D0D9A830D /* AppIconTests.swift in Sources */,
 				3551ED9B28D38951826B0C4B /* DirRowTests.swift in Sources */,
 				814F48E1AECF07A2B7A5620A /* Milestone1Tests.swift in Sources */,
 				0FDDAE7A9244C5CB174D1816 /* Milestone2Tests.swift in Sources */,
