@@ -45,7 +45,7 @@ targets:
         CFBundleIconFile: AppIcon
         LSMinimumSystemVersion: "14.0"
         LSApplicationCategoryType: public.app-category.utilities
-        NSHumanReadableCopyright: "Copyright © 2026 Aby Saji."
+        NSHumanReadableCopyright: "Copyright © 2026 Aby Saji. MIT Licensed."
         SUFeedURL: "https://github.com/AbyAbyss/stratum_file_manager/releases/latest/download/appcast.xml"
         SUPublicEDKey: "$(SPARKLE_PUBLIC_KEY)"
         NSDesktopFolderUsageDescription: "Stratum accesses your Desktop to browse and manage your files."

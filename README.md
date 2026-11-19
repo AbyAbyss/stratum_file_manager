@@ -6,6 +6,7 @@
   <a href="https://github.com/AbyAbyss/stratum_file_manager/releases/latest"><img src="https://img.shields.io/github/v/release/AbyAbyss/stratum_file_manager?style=for-the-badge&color=44D492&labelColor=0e1411&label=release" alt="Latest release"></a>
   <img src="https://img.shields.io/badge/macOS-14%2B-F2F2F7?style=for-the-badge&logo=apple&logoColor=white&labelColor=0e1411" alt="macOS 14+">
   <img src="https://img.shields.io/badge/Swift-SwiftUI%20%2B%20AppKit-F05138?style=for-the-badge&logo=swift&logoColor=white&labelColor=0e1411" alt="Swift, SwiftUI + AppKit">
+  <img src="https://img.shields.io/badge/license-MIT-7AB0FF?style=for-the-badge&labelColor=0e1411" alt="License: MIT">
   <a href="https://buymeacoffee.com/abyabyss"><img src="https://img.shields.io/badge/buy%20me%20a-coffee-FFDD00?style=for-the-badge&logo=buymeacoffee&logoColor=black&labelColor=0e1411" alt="Buy me a coffee"></a>
 </p>
 
@@ -237,6 +238,11 @@ Stratum is free. If it saves you time, a coffee keeps the updates coming:
 </p>
 
 Starring the repo, reporting bugs and telling a friend help just as much.
+
+## License
+
+MIT, see [LICENSE](LICENSE). Contributions welcome. Stratum is built on [GRDB](https://github.com/groue/GRDB.swift)
+(MIT) and [Sparkle](https://github.com/sparkle-project/Sparkle) (MIT-style), which keep their own licenses.
 
 <p align="center">
   <sub>Made by <a href="https://abyabyss.github.io/">Aby Saji</a></sub>

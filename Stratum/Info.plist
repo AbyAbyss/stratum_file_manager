@@ -37,7 +37,7 @@
 	<key>NSDownloadsFolderUsageDescription</key>
 	<string>Stratum accesses your Downloads to browse and manage your files.</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright © 2026 Aby Saji.</string>
+	<string>Copyright © 2026 Aby Saji. MIT Licensed.</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 	<key>SUFeedURL</key>
