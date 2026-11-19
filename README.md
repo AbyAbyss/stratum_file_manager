@@ -117,7 +117,9 @@ You can replay it any time from **Help → Welcome Tour**.
 | 🗺 **Storage map** | Treemap with drill-down, a linked list, a File Types view, and read-only Insights. |
 | 🫧 **Groups by name** | Finds every `node_modules`, `DerivedData`, `.venv` and friends, totals them, cleans up with undo. |
 | 🛡 **Safe by default** | Moves to the Trash, never permanently deletes; system paths are always protected; large cleanups ask first. |
-| 🗂 **Browser** | Icon, list and column views, tabs, inspector, Finder tags, breadcrumb path bar, drag and drop. |
+| 🗂 **Browser** | Icon, list and column views, tabs (pin the ones you keep), inspector, Finder tags, breadcrumb path bar, drag and drop. Panels resize by dragging their edge. |
+| 🪟 **Multiple windows** | ⌘N opens another window; each browses on its own while sharing one disk scan, so nothing is scanned twice. |
+| 🔎 **From Finder** | Turn on *Open in Stratum* in Settings and it appears under right-click › Quick Actions. |
 | 🔎 **Command palette** | One field for files, content, tags, paths and commands. |
 | 🧹 **Smart Organizer** | Declutter a folder into category folders, find exact duplicates (SHA-256 verified), park files on a drop shelf. |
 | 📦 **Transfers** | Copies use APFS cloning where possible, with pause and cancel from the toolbar. |
@@ -134,7 +136,8 @@ You can replay it any time from **Help → Welcome Tour**.
 | <kbd>⌘</kbd> <kbd>1</kbd> / <kbd>2</kbd> / <kbd>3</kbd> | View as icons / list / columns |
 | <kbd>⌥</kbd> <kbd>⌘</kbd> <kbd>1</kbd>–<kbd>4</kbd> | Browser / Smart Organizer / Groups / Storage map |
 | <kbd>⌘</kbd> <kbd>,</kbd> | Settings |
-| <kbd>⌘</kbd> <kbd>T</kbd> / <kbd>⌘</kbd> <kbd>W</kbd> | New tab / close tab |
+| <kbd>⌘</kbd> <kbd>T</kbd> / <kbd>⌘</kbd> <kbd>W</kbd> | New tab / close tab (or the window, on its last tab) |
+| <kbd>⌘</kbd> <kbd>N</kbd> / <kbd>⌥</kbd> <kbd>⌘</kbd> <kbd>N</kbd> | New window / move this tab to a new window |
 | <kbd>⇧</kbd> <kbd>⌘</kbd> <kbd>N</kbd> | New folder |
 | <kbd>⌘</kbd> <kbd>[</kbd> / <kbd>]</kbd> | Back / forward |
 | <kbd>⌘</kbd> <kbd>↑</kbd> | Enclosing folder |
