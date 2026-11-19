@@ -92,50 +92,62 @@ struct WalkthroughView: View {
 
     private func revealing(start: Date, origin: CGPoint, size: CGSize) -> some View {
         TimelineView(.animation) { context in
-            let t = max(0, context.date.timeIntervalSince(start))
-            let radius = CGFloat(t * NightSkyView.Ripple.speed)
+            revealFrame(t: max(0, context.date.timeIntervalSince(start)), origin: origin, size: size)
+        }
+    }
 
-            if reduceMotion {
-                overlay(size: size)
-                    .environment(\.colorScheme, .dark)
-                    .allowsHitTesting(false)
-                    .opacity(max(0, 1 - t / 0.5))
-            } else {
-                ZStack {
-                    ZStack {
-                        // The sky itself ripples; the text and buttons dissolve first so
-                        // nothing flat is left floating over the water.
-                        NightSkyView(accent: appearance.accentColor, ripple: .init(origin: origin, time: t))
-                        content(size: size)
-                            .environment(\.colorScheme, .dark)
-                            .opacity(max(0, 1 - t / 0.3))
-                    }
-                    .allowsHitTesting(false)
-                    .mask {
-                        // The sky with a growing hole where the water has broken through.
-                        ZStack {
-                            Rectangle().fill(.white)
-                            Circle()
-                                .fill(.black)
-                                .frame(width: radius * 2, height: radius * 2)
-                                .position(origin)
-                                .blendMode(.destinationOut)
-                        }
-                        .compositingGroup()
-                    }
-
-                    ForEach(0..<3, id: \.self) { ring in
-                        let r = max(0, radius - CGFloat(ring) * 70)
-                        Circle()
-                            .strokeBorder(.white.opacity(max(0, 0.55 * (1 - t / 1.5)) * (1 - Double(ring) * 0.3)),
-                                          lineWidth: 2.5 - CGFloat(ring) * 0.6)
-                            .frame(width: r * 2, height: r * 2)
-                            .position(origin)
-                    }
-                    .allowsHitTesting(false)
+    @ViewBuilder
+    private func revealFrame(t: Double, origin: CGPoint, size: CGSize) -> some View {
+        let radius = CGFloat(t * NightSkyView.Ripple.speed)
+        if reduceMotion {
+            overlay(size: size)
+                .environment(\.colorScheme, .dark)
+                .allowsHitTesting(false)
+                .opacity(max(0, 1 - t / 0.5))
+        } else {
+            ZStack {
+                skyWithHole(t: t, radius: radius, origin: origin, size: size)
+                ForEach(0..<3, id: \.self) { ring in
+                    rippleRing(ring, t: t, radius: radius, origin: origin)
                 }
+                .allowsHitTesting(false)
             }
         }
+    }
+
+    private func skyWithHole(t: Double, radius: CGFloat, origin: CGPoint, size: CGSize) -> some View {
+        ZStack {
+            // The sky itself ripples; the text and buttons dissolve first so
+            // nothing flat is left floating over the water.
+            NightSkyView(accent: appearance.accentColor, ripple: .init(origin: origin, time: t))
+            content(size: size)
+                .environment(\.colorScheme, .dark)
+                .opacity(max(0, 1 - t / 0.3))
+        }
+        .allowsHitTesting(false)
+        .mask {
+            // The sky with a growing hole where the water has broken through.
+            ZStack {
+                Rectangle().fill(.white)
+                Circle()
+                    .fill(.black)
+                    .frame(width: radius * 2, height: radius * 2)
+                    .position(origin)
+                    .blendMode(.destinationOut)
+            }
+            .compositingGroup()
+        }
+    }
+
+    private func rippleRing(_ ring: Int, t: Double, radius: CGFloat, origin: CGPoint) -> some View {
+        let r = max(0, radius - CGFloat(ring) * 70)
+        let fade: Double = max(0, 0.55 * (1 - t / 1.5))
+        let opacity: Double = fade * (1 - Double(ring) * 0.3)
+        let lineWidth: CGFloat = 2.5 - CGFloat(ring) * 0.6
+        return Circle()
+            .strokeBorder(.white.opacity(opacity), lineWidth: lineWidth)
+            .frame(width: r * 2, height: r * 2)
+            .position(origin)
     }
 
     // MARK: Chrome
