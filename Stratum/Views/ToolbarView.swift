@@ -7,8 +7,8 @@ struct ToolbarView: View {
     var transferEngine = TransferQueueEngine.shared
     var scanCoordinator = ScanCoordinator.shared
 
-    @State private var showToolbarTagsPopover = false
-    @Namespace private var toolbarMotionNamespace
+    @State var showToolbarTagsPopover = false
+    @Namespace var toolbarMotionNamespace
 
     var body: some View {
         VStack(spacing: 0) {
@@ -318,326 +318,7 @@ struct ToolbarView: View {
         }
     }
 
-    @ViewBuilder
-    private var pathBar: some View {
-        if let smartName = appState.activeSmartFolderName {
-            // Smart Folder Breadcrumb Pill (so title & top bar always match!)
-            HStack(spacing: 8) {
-                Button {
-                    withAnimation(.spring(response: 0.28, dampingFraction: 0.84)) {
-                        appState.exitSmartFolder()
-                    }
-                } label: {
-                    HStack(spacing: 4) {
-                        Image(systemName: "folder")
-                            .font(.system(size: 11, weight: .semibold))
-                        Text(appState.currentURL.lastPathComponent.isEmpty ? "Macintosh HD" : appState.currentURL.lastPathComponent)
-                            .font(.system(size: 12, weight: .medium))
-                    }
-                    .foregroundStyle(.secondary)
-                    .padding(.horizontal, 8)
-                    .frame(height: 24)
-                    .background(
-                        RoundedRectangle(cornerRadius: 6, style: .continuous)
-                            .fill(Color.primary.opacity(0.05))
-                    )
-                }
-                .buttonStyle(StratumInteractiveButtonStyle())
-
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 9, weight: .bold))
-                    .foregroundStyle(.tertiary)
-
-                HStack(spacing: 6) {
-                    Image(systemName: "sparkle.magnifyingglass")
-                        .font(.system(size: 11.5, weight: .bold))
-                        .foregroundStyle(appearance.accentColor)
-                    Text("Smart Folder: \(smartName)")
-                        .font(.system(size: 12.5, weight: .semibold))
-                        .foregroundStyle(.primary)
-
-                    Button {
-                        withAnimation(.spring(response: 0.28, dampingFraction: 0.84)) {
-                            appState.exitSmartFolder()
-                        }
-                    } label: {
-                        Image(systemName: "xmark.circle.fill")
-                            .font(.system(size: 12))
-                            .foregroundStyle(.secondary)
-                    }
-                    .buttonStyle(.plain)
-                    .stratumHelp("Exit Smart Folder")
-                }
-                .padding(.horizontal, 9)
-                .frame(height: 24)
-                .background(
-                    RoundedRectangle(cornerRadius: 6, style: .continuous)
-                        .fill(appearance.selectionFillColor)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 6, style: .continuous)
-                                .strokeBorder(appearance.selectionBorderColor.opacity(0.65), lineWidth: 1)
-                        )
-                )
-            }
-            .padding(.horizontal, 6)
-            .frame(height: 30)
-            .background(
-                RoundedRectangle(cornerRadius: 9, style: .continuous)
-                    .fill(appearance.cardGlassFillColor)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 9, style: .continuous)
-                            .strokeBorder(Color.primary.opacity(0.08), lineWidth: 1)
-                    )
-            )
-        } else if let tagName = appState.selectedTagFilter {
-            HStack(spacing: 8) {
-                Button {
-                    withAnimation(.spring(response: 0.28, dampingFraction: 0.84)) {
-                        appState.selectedTagFilter = nil
-                    }
-                } label: {
-                    HStack(spacing: 4) {
-                        Image(systemName: "folder")
-                            .font(.system(size: 11, weight: .semibold))
-                        Text(appState.currentURL.lastPathComponent.isEmpty ? "Macintosh HD" : appState.currentURL.lastPathComponent)
-                            .font(.system(size: 12, weight: .medium))
-                    }
-                    .foregroundStyle(.secondary)
-                    .padding(.horizontal, 8)
-                    .frame(height: 24)
-                }
-                .buttonStyle(StratumInteractiveButtonStyle())
-
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 9, weight: .bold))
-                    .foregroundStyle(.tertiary)
-
-                HStack(spacing: 6) {
-                    Image(systemName: "tag.fill")
-                        .font(.system(size: 11, weight: .bold))
-                        .foregroundStyle(appearance.accentColor)
-                    Text("Tag: \(tagName)")
-                        .font(.system(size: 12.5, weight: .semibold))
-                    Button {
-                        appState.selectedTagFilter = nil
-                    } label: {
-                        Image(systemName: "xmark.circle.fill")
-                            .font(.system(size: 12))
-                            .foregroundStyle(.secondary)
-                    }
-                    .buttonStyle(.plain)
-                }
-                .padding(.horizontal, 9)
-                .frame(height: 24)
-                .background(
-                    RoundedRectangle(cornerRadius: 6, style: .continuous)
-                        .fill(appearance.selectionFillColor)
-                )
-            }
-            .padding(.horizontal, 6)
-            .frame(height: 30)
-            .background(
-                RoundedRectangle(cornerRadius: 9, style: .continuous)
-                    .fill(appearance.cardGlassFillColor)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 9, style: .continuous)
-                            .strokeBorder(Color.primary.opacity(0.08), lineWidth: 1)
-                    )
-            )
-        } else {
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 2) {
-                    ForEach(appState.pathSegments) { seg in
-                        Button {
-                            withAnimation(.spring(response: 0.28, dampingFraction: 0.84)) {
-                                appState.navigate(to: seg.url)
-                            }
-                        } label: {
-                            HStack(spacing: 5) {
-                                if seg.isLast {
-                                    Image(systemName: "folder.fill")
-                                        .font(.system(size: 12))
-                                        .foregroundStyle(appearance.accentColor)
-                                        .transition(.scale.combined(with: .opacity))
-                                }
-                                Text(seg.name)
-                                    .font(.system(size: 12.5, weight: seg.isLast ? .semibold : .regular))
-                                    .foregroundStyle(seg.isLast ? .primary : .secondary)
-                            }
-                            .padding(.horizontal, 7)
-                            .frame(height: 24)
-                            .background(
-                                RoundedRectangle(cornerRadius: 6, style: .continuous)
-                                    .fill(seg.isLast ? appearance.faintTintColor : Color.clear)
-                            )
-                            .contentShape(Rectangle())
-                        }
-                        .buttonStyle(StratumInteractiveButtonStyle(hoverScale: 1.04, pressScale: 0.95))
-                        .contextMenu {
-                            Button("Open in New Tab") {
-                                appState.addNewTab(at: seg.url)
-                            }
-                            Button("Open in Smart Organizer") {
-                                appState.openInSmartOrganizer(seg.url)
-                            }
-                            Button(appState.isPinned(seg.url) ? "Unpin from Sidebar" : "Pin to Sidebar Favorites") {
-                                appState.togglePinFolder(seg.url)
-                            }
-                            Divider()
-                            Button("Copy Path") {
-                                TerminalLauncher.copyPathToPasteboard(seg.url.path)
-                                appState.showToast("Copied \(seg.url.path)")
-                            }
-                            Button("Open in Terminal") {
-                                TerminalLauncher.openInTerminal(url: seg.url)
-                            }
-                            Button("Scan in Storage Map") {
-                                appState.scanFolder(seg.url, inScreen: .storage)
-                            }
-                            Button("Go to Folder… (⇧⌘G)") {
-                                appState.showGoToFolder = true
-                            }
-                            Divider()
-                            Button("Reveal in Finder") {
-                                NSWorkspace.shared.activateFileViewerSelecting([seg.url])
-                            }
-                        }
-
-                        if !seg.isLast {
-                            Image(systemName: "chevron.right")
-                                .font(.system(size: 9, weight: .bold))
-                                .foregroundStyle(.tertiary)
-                        }
-                    }
-                }
-                .animation(.spring(response: 0.3, dampingFraction: 0.82), value: appState.currentURL)
-                .padding(.horizontal, 6)
-                .frame(height: 30)
-            }
-            .background(
-                RoundedRectangle(cornerRadius: 9, style: .continuous)
-                    .fill(appearance.cardGlassFillColor)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 9, style: .continuous)
-                            .strokeBorder(Color.primary.opacity(0.08), lineWidth: 1)
-                    )
-            )
-        }
-    }
-
-    private var tabStrip: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 4) {
-                ForEach(appState.tabs) { tab in
-                    let isActive = (tab.id == appState.activeTabID)
-                    HStack(spacing: 4) {
-                        Image(systemName: isActive && appState.activeSmartFolderName != nil ? "sparkle.magnifyingglass" : "folder.fill")
-                            .font(.system(size: 11.5))
-                            .foregroundStyle(isActive ? appearance.accentColor : .secondary)
-
-                        Button {
-                            withAnimation(.spring(response: 0.28, dampingFraction: 0.82)) {
-                                appState.selectTab(tab.id)
-                            }
-                        } label: {
-                            Text(isActive ? appState.currentFolderTitle : tab.title)
-                                .font(.system(size: 12.5, weight: isActive ? .semibold : .regular))
-                                .foregroundStyle(isActive ? .primary : .secondary)
-                                .padding(.horizontal, 6)
-                                .frame(height: 24)
-                                .contentShape(Rectangle())
-                        }
-                        .buttonStyle(.plain)
-
-                        if appState.tabs.count > 1 {
-                            Button {
-                                withAnimation(.spring(response: 0.28, dampingFraction: 0.82)) {
-                                    appState.closeTab(tab.id)
-                                }
-                            } label: {
-                                Image(systemName: "xmark")
-                                    .font(.system(size: 9, weight: .bold))
-                                    .foregroundStyle(.secondary)
-                                    .frame(width: 20, height: 20)
-                                    .contentShape(Rectangle())
-                            }
-                            .buttonStyle(StratumInteractiveButtonStyle())
-                        }
-                    }
-                    .padding(.leading, 10)
-                    .padding(.trailing, 4)
-                    .frame(height: 28)
-                    .background {
-                        if isActive {
-                            RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                .fill(appearance.selectionFillColor)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                        .strokeBorder(appearance.selectionBorderColor.opacity(0.65), lineWidth: 1)
-                                )
-                                .matchedGeometryEffect(id: "ActiveTabBackground", in: toolbarMotionNamespace)
-                        }
-                    }
-                    .transition(.scale(scale: 0.92).combined(with: .opacity))
-                    .contextMenu {
-                        Button("Duplicate Tab") {
-                            appState.addNewTab(at: tab.url)
-                        }
-                        Button(appState.isPinned(tab.url) ? "Unpin from Sidebar" : "Pin Folder to Sidebar") {
-                            appState.togglePinFolder(tab.url)
-                        }
-                        Divider()
-                        Button("Open in Terminal") {
-                            TerminalLauncher.openInTerminal(url: tab.url)
-                        }
-                        Button("Copy Path") {
-                            TerminalLauncher.copyPathToPasteboard(tab.url.path)
-                            appState.showToast("Copied path")
-                        }
-                        Button("Reveal in Finder") {
-                            NSWorkspace.shared.activateFileViewerSelecting([tab.url])
-                        }
-                        if appState.tabs.count > 1 {
-                            Divider()
-                            Button("Close Tab") {
-                                appState.closeTab(tab.id)
-                            }
-                        }
-                    }
-                }
-
-                Button {
-                    withAnimation(.spring(response: 0.28, dampingFraction: 0.82)) {
-                        appState.addNewTab()
-                    }
-                } label: {
-                    Image(systemName: "plus")
-                        .font(.system(size: 12, weight: .semibold))
-                        .foregroundStyle(.secondary)
-                        .frame(width: 26, height: 26)
-                        .background(
-                            RoundedRectangle(cornerRadius: 7, style: .continuous)
-                                .fill(Color.primary.opacity(0.04))
-                        )
-                        .contentShape(Rectangle())
-                }
-                .buttonStyle(StratumInteractiveButtonStyle())
-                .stratumHelp("New Tab (⌘T)")
-
-                Spacer(minLength: 8)
-            }
-            .padding(.horizontal, 10)
-            .padding(.vertical, 5)
-        }
-        .background(appearance.sidebarGlassColor.opacity(0.4))
-        .overlay(alignment: .bottom) {
-            Rectangle()
-                .fill(Color.primary.opacity(0.06))
-                .frame(height: 1)
-        }
-    }
-
-    private func transferControl(_ symbol: String, label: String, action: @escaping () -> Void) -> some View {
+    func transferControl(_ symbol: String, label: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Image(systemName: symbol)
                 .font(.system(size: 9.5, weight: .bold))
@@ -650,7 +331,7 @@ struct ToolbarView: View {
         .stratumHelp(label)
     }
 
-    private func toolbarIconButton(_ symbol: String, label: String, disabled: Bool = false, action: @escaping () -> Void) -> some View {
+    func toolbarIconButton(_ symbol: String, label: String, disabled: Bool = false, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Image(systemName: symbol)
                 .font(.system(size: 13.5, weight: .medium))
@@ -667,7 +348,7 @@ struct ToolbarView: View {
         .stratumHelp(label)
     }
 
-    private func viewModeButton(_ mode: BrowserViewMode, icon: String, label: String) -> some View {
+    func viewModeButton(_ mode: BrowserViewMode, icon: String, label: String) -> some View {
         let isActive = (appState.viewMode == mode)
         return Button {
             withAnimation(.spring(response: 0.30, dampingFraction: 0.80)) {
@@ -692,42 +373,11 @@ struct ToolbarView: View {
         .stratumHelp(label)
     }
 
-    private func shareSelectedItems() {
+    func shareSelectedItems() {
         let urls = appState.selectedItems.isEmpty ? [appState.currentURL] : appState.selectedItems.map(\.url)
         guard let window = NSApp.keyWindow, let contentView = window.contentView else { return }
         let picker = NSSharingServicePicker(items: urls)
         picker.show(relativeTo: .zero, of: contentView, preferredEdge: .minY)
     }
 
-    private var toolbarTagPopoverContent: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text("Assign Tag to Selection")
-                .font(.system(size: 11, weight: .semibold))
-                .foregroundStyle(.secondary)
-            ForEach(FinderTag.presets) { preset in
-                Button {
-                    let targets = appState.selectedItems
-                    for item in targets {
-                        appState.toggleTag(preset, on: item)
-                    }
-                    showToolbarTagsPopover = false
-                } label: {
-                    HStack(spacing: 8) {
-                        Circle()
-                            .fill(Color(nsColor: NSColor(hex: preset.hexColor) ?? .systemBlue))
-                            .frame(width: 9, height: 9)
-                        Text(preset.name)
-                            .font(.system(size: 12.5))
-                        Spacer()
-                    }
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .contentShape(Rectangle())
-                }
-                .buttonStyle(StratumInteractiveButtonStyle())
-            }
-        }
-        .frame(width: 170)
-        .padding(10)
-    }
 }

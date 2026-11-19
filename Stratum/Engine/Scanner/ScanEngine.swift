@@ -35,7 +35,7 @@ enum ScanEngine {
         let totalBytesCounted: Int64
     }
 
-    private static let scanWorkerQueue = DispatchQueue(
+    static let scanWorkerQueue = DispatchQueue(
         label: "app.stratum.scan-engine-worker",
         qos: .userInitiated,
         attributes: .concurrent
@@ -70,7 +70,7 @@ enum ScanEngine {
 
     // MARK: - Upgraded getattrlistbulk Walker
 
-    private final class ScanCancelFlag: @unchecked Sendable {
+    final class ScanCancelFlag: @unchecked Sendable {
         private let lock = NSLock()
         private var _cancelled = false
         var isCancelled: Bool {
@@ -85,7 +85,7 @@ enum ScanEngine {
         }
     }
 
-    private struct Frame {
+    struct Frame {
         let id: Int64
         let parentId: Int64?
         let path: String
@@ -98,7 +98,7 @@ enum ScanEngine {
         var fileCount: Int64
     }
 
-    private static func runBulkWalk(
+    static func runBulkWalk(
         volume: VolumeInfo,
         store: ScanStore,
         cancelFlag: ScanCancelFlag,
@@ -504,7 +504,7 @@ enum ScanEngine {
 
     /// Fast interior package summation using `getattrlistbulk` so `.app` and `.photoslibrary`
     /// leaf rows have accurate `own_size` and `file_count` without creating thousands of interior DB rows.
-    private static func sumPackageContentsFast(
+    static func sumPackageContentsFast(
         at packagePath: String,
         rootDev: dev_t,
         seenHardlinks: inout Set<UInt64>
@@ -612,7 +612,7 @@ enum ScanEngine {
         return (totalBytes, totalFiles)
     }
 
-    private static func makeDirInsertRow(from f: Frame) -> DirInsertRow {
+    static func makeDirInsertRow(from f: Frame) -> DirInsertRow {
         DirInsertRow(
             id: f.id,
             parentId: f.parentId,
@@ -626,49 +626,11 @@ enum ScanEngine {
         )
     }
 
-    private static func extractLowerExtension(from name: String) -> String {
+    static func extractLowerExtension(from name: String) -> String {
         guard let dot = name.lastIndex(of: "."), dot != name.startIndex else { return "" }
         let after = name.index(after: dot)
         guard after < name.endIndex else { return "" }
         return String(name[after...]).lowercased()
     }
 
-    // MARK: - Benchmark: FileManager.enumerator vs getattrlistbulk
-
-    static func benchmarkEnumeratorVsBulkWalker(at rootURL: URL) -> BenchmarkComparison {
-        // 1. Legacy FileManager.enumerator
-        let t0 = DispatchTime.now().uptimeNanoseconds
-        var enumFiles: Int64 = 0
-        var enumBytes: Int64 = 0
-        let keys: [URLResourceKey] = [.isDirectoryKey, .isRegularFileKey, .totalFileAllocatedSizeKey, .fileSizeKey]
-        if let enumerator = FileManager.default.enumerator(
-            at: rootURL,
-            includingPropertiesForKeys: keys,
-            options: [.skipsPackageDescendants]
-        ) {
-            while let next = enumerator.nextObject() as? URL {
-                if let vals = try? next.resourceValues(forKeys: Set(keys)), vals.isRegularFile == true {
-                    enumFiles += 1
-                    enumBytes += Int64(vals.totalFileAllocatedSize ?? vals.fileSize ?? 0)
-                }
-            }
-        }
-        let t1 = DispatchTime.now().uptimeNanoseconds
-        let enumMs = Double(t1 - t0) / 1_000_000.0
-
-        // 2. Upgraded getattrlistbulk walker
-        let t2 = DispatchTime.now().uptimeNanoseconds
-        var seen = Set<UInt64>()
-        let bulkStats = sumPackageContentsFast(at: rootURL.path, rootDev: 0, seenHardlinks: &seen)
-        let t3 = DispatchTime.now().uptimeNanoseconds
-        let bulkMs = max(0.01, Double(t3 - t2) / 1_000_000.0)
-
-        return BenchmarkComparison(
-            enumeratorDurationMs: enumMs,
-            bulkWalkerDurationMs: bulkMs,
-            speedupFactor: enumMs / bulkMs,
-            filesVisited: max(enumFiles, bulkStats.fileCount),
-            totalBytesCounted: bulkStats.totalBytes
-        )
-    }
 }
