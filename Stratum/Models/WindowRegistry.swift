@@ -26,6 +26,9 @@ final class WindowRegistry {
 
     @ObservationIgnored private var firstUnclaimed: AppState?
 
+    /// Opens a window; set by the first window, since only a view can reach SwiftUI's `openWindow`.
+    @ObservationIgnored var openWindow: ((WindowSeed) -> Void)?
+
     /// The state for a window, created on first request (so it is safe to call from a view body).
     func state(for seed: WindowSeed) -> AppState {
         if let existing = states[seed.id] { return existing }

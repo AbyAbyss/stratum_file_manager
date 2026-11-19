@@ -224,11 +224,13 @@ struct StratumApp: App {
 struct WindowRoot: View {
     let seed: WindowSeed
     @State private var appearance = AppearanceManager.shared
+    @Environment(\.openWindow) private var openWindow
 
     var body: some View {
         let appState = WindowRegistry.shared.state(for: seed)
         MainWindowView(appState: appState, appearance: appearance)
             .frame(minWidth: 980, minHeight: 640)
+            .onAppear { WindowRegistry.shared.openWindow = { openWindow(value: $0) } }
             .background(WindowAccessor(
                 onFocus: { WindowRegistry.shared.activate(appState) },
                 onClose: { WindowRegistry.shared.remove(seed) }

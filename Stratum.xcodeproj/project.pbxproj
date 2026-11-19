@@ -201,6 +201,7 @@
 		833426432DAD5964D0459F7F /* InspectorSidebarView+Tags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InspectorSidebarView+Tags.swift"; sourceTree = "<group>"; };
 		87C7A3EE713F01EEE36AC539 /* SmartOrganizerView+Duplicates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SmartOrganizerView+Duplicates.swift"; sourceTree = "<group>"; };
 		887A7368E23336748A3A595F /* SmartOrganizerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartOrganizerView.swift; sourceTree = "<group>"; };
+		8ADCEEE75DBE67291FEF78B8 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		8C127D2340E44B3F7AC90E04 /* StratumLogo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StratumLogo.swift; sourceTree = "<group>"; };
 		8F924A282C6877A3D0632FE9 /* ScanCoordinator+Queries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScanCoordinator+Queries.swift"; sourceTree = "<group>"; };
 		9321EECB6A74EE001937254F /* ToolbarView+PathBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ToolbarView+PathBar.swift"; sourceTree = "<group>"; };
@@ -420,6 +421,7 @@
 		732AEEA04D19725988EBA40C = {
 			isa = PBXGroup;
 			children = (
+				D6B0D15CCC6DA637EA9AF1E3 /* Config */,
 				25515DD6A0F1AA9164F0505F /* Stratum */,
 				E8E521705E33BF55214C07AD /* StratumTests */,
 				625664D9FDCB83D12AD2E9E5 /* Products */,
@@ -488,6 +490,14 @@
 				43391BD308ED4050C81F0954 /* SettingsView.swift */,
 			);
 			path = Settings;
+			sourceTree = "<group>";
+		};
+		D6B0D15CCC6DA637EA9AF1E3 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				8ADCEEE75DBE67291FEF78B8 /* Debug.xcconfig */,
+			);
+			path = Config;
 			sourceTree = "<group>";
 		};
 		DC6FB5AB6C7FCB2A4957B0B9 /* Groups */ = {
@@ -581,12 +591,6 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
-					2ED75FB8D05C38B2FDA8C7AB = {
-						ProvisioningStyle = Automatic;
-					};
-					72377CA8003A3B53E624732A = {
-						ProvisioningStyle = Automatic;
-					};
 				};
 			};
 			buildConfigurationList = AF678A50AC9A02519EB6B34E /* Build configuration list for PBXProject "Stratum" */;
@@ -803,6 +807,7 @@
 		};
 		42E449FBBA928246FCDFB174 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8ADCEEE75DBE67291FEF78B8 /* Debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -834,7 +839,6 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_APP_SANDBOX = NO;
@@ -937,7 +941,6 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_APP_SANDBOX = NO;
