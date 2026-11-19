@@ -10,6 +10,7 @@ struct AppearanceSettingsView: View {
         case all = "All Settings"
         case appearance = "Glass Themes & Appearance"
         case safetyAndScans = "Safety, Scans & Snapshots"
+        case about = "About"
 
         var id: String { rawValue }
     }
@@ -78,6 +79,10 @@ struct AppearanceSettingsView: View {
                         customSurfaceEditorSection
                         accentColorSection
                         windowMaterialSection
+                    }
+
+                    if activeTab == .all || activeTab == .about {
+                        AboutCard(appearance: appearance)
                     }
                 }
                 .padding(.horizontal, 24)

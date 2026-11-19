@@ -255,7 +255,7 @@ extension AppearanceSettingsView {
 
                     snapshotMetaRow(
                         label: "Version",
-                        value: "1.0.0"
+                        value: AppInfo.version
                     )
 
                     HStack(spacing: 10) {

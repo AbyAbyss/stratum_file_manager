@@ -1,0 +1,251 @@
+name: Release
+
+# Releases the version in project.yml (MARKETING_VERSION). Either:
+#   - push its tag:  git tag v1.3.0 && git push origin v1.3.0
+#   - or click "Run workflow" on the Actions tab (from main); the tag is
+#     created for you.
+# See docs/RELEASING.md.
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build & publish
+    runs-on: macos-15
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      # XcodeGen generates a current project format; pick a matching Xcode
+      # so xcodebuild can read it (the runner default can lag behind).
+      - name: Select Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      # project.yml is the single source of the version, so the release,
+      # its tag, and Settings → About always agree.
+      - name: Read version from project.yml
+        run: |
+          VERSION=$(sed -n 's/^ *MARKETING_VERSION: *"\(.*\)"/\1/p' project.yml)
+          TAG="v$VERSION"
+          if [ "$GITHUB_EVENT_NAME" = "push" ] && [ "$GITHUB_REF_NAME" != "$TAG" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match MARKETING_VERSION $VERSION in project.yml"
+            exit 1
+          fi
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            if [ "$GITHUB_REF" != "refs/heads/main" ]; then
+              echo "::error::Run the release from main, not $GITHUB_REF_NAME"
+              exit 1
+            fi
+            if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null; then
+              echo "::error::$TAG already exists. Bump MARKETING_VERSION in project.yml first."
+              exit 1
+            fi
+          fi
+          # Without the update key the release would ship with no updater,
+          # and everyone on it would have to update by hand again.
+          SPARKLE_KEY=$(sed -n 's/^ *SPARKLE_PUBLIC_KEY: *"\(.*\)"/\1/p' project.yml)
+          if [ -z "$SPARKLE_KEY" ]; then
+            echo "::error::SPARKLE_PUBLIC_KEY in project.yml is empty. Set it up first (docs/RELEASING.md, Auto-updates)."
+            exit 1
+          fi
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          echo "TAG=$TAG" >> "$GITHUB_ENV"
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Run tests
+        run: |
+          xcodebuild test \
+            -project Stratum.xcodeproj \
+            -scheme Stratum \
+            -destination 'platform=macOS' \
+            -derivedDataPath build
+
+      # Signing is optional: with the Apple secrets set (docs/RELEASING.md)
+      # the build is Developer ID signed and notarized; without them it is
+      # ad-hoc signed as before and users approve it on first launch.
+      - name: Import signing certificate
+        id: signing
+        env:
+          CERT_P12: ${{ secrets.DEVELOPER_ID_CERT_P12 }}
+          CERT_PASSWORD: ${{ secrets.DEVELOPER_ID_CERT_PASSWORD }}
+        run: |
+          if [ -z "$CERT_P12" ]; then
+            echo "No DEVELOPER_ID_CERT_P12 secret: building unsigned."
+            echo "signed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          KEYCHAIN="$RUNNER_TEMP/signing.keychain-db"
+          KEYCHAIN_PASSWORD=$(uuidgen)
+          echo "$CERT_P12" | base64 --decode > "$RUNNER_TEMP/cert.p12"
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          security import "$RUNNER_TEMP/cert.p12" -P "$CERT_PASSWORD" \
+            -A -t cert -f pkcs12 -k "$KEYCHAIN"
+          security set-key-partition-list -S apple-tool:,apple: \
+            -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN" >/dev/null
+          security list-keychains -d user -s "$KEYCHAIN" \
+            $(security list-keychains -d user | tr -d '"')
+          rm "$RUNNER_TEMP/cert.p12"
+          echo "signed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Build Release
+        env:
+          SIGNED: ${{ steps.signing.outputs.signed }}
+          TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          if [ "$SIGNED" = "true" ]; then
+            # The hardened runtime (required for notarization) only goes on
+            # signed builds: it enforces library validation, so an ad-hoc
+            # build with it can't load the embedded Sparkle.framework and
+            # quits at launch.
+            SIGNING=(CODE_SIGN_STYLE=Manual
+                     DEVELOPMENT_TEAM="$TEAM_ID"
+                     CODE_SIGN_IDENTITY="Developer ID Application"
+                     ENABLE_HARDENED_RUNTIME=YES
+                     OTHER_CODE_SIGN_FLAGS=--timestamp)
+          else
+            SIGNING=(CODE_SIGN_IDENTITY="-"
+                     CODE_SIGNING_REQUIRED=NO
+                     CODE_SIGNING_ALLOWED=YES)
+          fi
+          xcodebuild \
+            -project Stratum.xcodeproj \
+            -scheme Stratum \
+            -configuration Release \
+            -derivedDataPath build \
+            CURRENT_PROJECT_VERSION="${{ github.run_number }}" \
+            "${SIGNING[@]}" \
+            build
+
+      # Notarization needs every binary signed with Developer ID, the
+      # hardened runtime and a timestamp, including Sparkle's helpers, which
+      # ship pre-signed by their own team. Re-sign inside out, then the app.
+      - name: Re-sign Sparkle and the app
+        if: steps.signing.outputs.signed == 'true'
+        env:
+          TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          APP="build/Build/Products/Release/Stratum.app"
+          SPARKLE="$APP/Contents/Frameworks/Sparkle.framework/Versions/B"
+          IDENTITY="Developer ID Application"
+          sign() { codesign -f -s "$IDENTITY" -o runtime --timestamp "$@"; }
+          for helper in "$SPARKLE/XPCServices/Installer.xpc" "$SPARKLE/XPCServices/Downloader.xpc" \
+                        "$SPARKLE/Autoupdate" "$SPARKLE/Updater.app"; do
+            # Downloader.xpc only ships in some Sparkle versions
+            [ -e "$helper" ] || continue
+            case "$helper" in
+              *Downloader.xpc) sign --preserve-metadata=entitlements "$helper" ;;
+              *) sign "$helper" ;;
+            esac
+          done
+          sign "$APP/Contents/Frameworks/Sparkle.framework"
+          sign --preserve-metadata=entitlements "$APP"
+          codesign --verify --deep --strict --verbose=2 "$APP"
+
+      - name: Package DMG
+        env:
+          SIGNED: ${{ steps.signing.outputs.signed }}
+        run: |
+          APP="build/Build/Products/Release/Stratum.app"
+          STAGING="dmg-staging"
+          mkdir "$STAGING"
+          cp -R "$APP" "$STAGING/"
+          ln -s /Applications "$STAGING/Applications"
+          hdiutil create \
+            -volname "Stratum" \
+            -srcfolder "$STAGING" \
+            -ov -format UDZO \
+            "Stratum-${VERSION}.dmg"
+          if [ "$SIGNED" = "true" ]; then
+            codesign -s "Developer ID Application" --timestamp "Stratum-${VERSION}.dmg"
+          fi
+
+      - name: Notarize and staple
+        if: steps.signing.outputs.signed == 'true'
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
+        run: |
+          xcrun notarytool submit "Stratum-${VERSION}.dmg" \
+            --apple-id "$APPLE_ID" \
+            --team-id "$TEAM_ID" \
+            --password "$APP_PASSWORD" \
+            --wait
+          xcrun stapler staple "Stratum-${VERSION}.dmg"
+
+      # Sparkle installs an update only if its EdDSA signature matches the
+      # public key in the running app. Sign the final (stapled) DMG and
+      # publish an appcast next to it; the app reads the copy attached to
+      # the latest release (SUFeedURL in Info.plist).
+      - name: Sign update and write appcast
+        env:
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+          SPARKLE_TOOLS_VERSION: "2.6.4"
+        run: |
+          if [ -z "$SPARKLE_PRIVATE_KEY" ]; then
+            echo "No SPARKLE_PRIVATE_KEY secret: skipping the appcast."
+            exit 0
+          fi
+          curl -sSL -o sparkle.tar.xz \
+            "https://github.com/sparkle-project/Sparkle/releases/download/${SPARKLE_TOOLS_VERSION}/Sparkle-${SPARKLE_TOOLS_VERSION}.tar.xz"
+          mkdir sparkle-tools && tar -xf sparkle.tar.xz -C sparkle-tools
+          KEY_FILE="$RUNNER_TEMP/sparkle_key"
+          printf '%s' "$SPARKLE_PRIVATE_KEY" > "$KEY_FILE"
+          ATTRS=$(sparkle-tools/bin/sign_update --ed-key-file "$KEY_FILE" "Stratum-${VERSION}.dmg")
+          rm "$KEY_FILE"
+          REPO_URL="https://github.com/${GITHUB_REPOSITORY}"
+          cat > appcast.xml <<XML
+          <?xml version="1.0" encoding="utf-8"?>
+          <rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
+            <channel>
+              <title>Stratum</title>
+              <link>${REPO_URL}</link>
+              <item>
+                <title>Stratum ${VERSION}</title>
+                <pubDate>$(LC_ALL=C date -u "+%a, %d %b %Y %H:%M:%S +0000")</pubDate>
+                <sparkle:version>${{ github.run_number }}</sparkle:version>
+                <sparkle:shortVersionString>${VERSION}</sparkle:shortVersionString>
+                <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+                <sparkle:fullReleaseNotesLink>${REPO_URL}/releases/tag/${TAG}</sparkle:fullReleaseNotesLink>
+                <enclosure url="${REPO_URL}/releases/download/${TAG}/Stratum-${VERSION}.dmg"
+                           type="application/octet-stream"
+                           ${ATTRS} />
+              </item>
+            </channel>
+          </rss>
+          XML
+          cat appcast.xml
+
+      # For a button run the tag doesn't exist yet; --target creates it on
+      # the commit that was built.
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ASSETS=("Stratum-${VERSION}.dmg")
+          [ -f appcast.xml ] && ASSETS+=(appcast.xml)
+          gh release create "$TAG" \
+            "${ASSETS[@]}" \
+            --target "$GITHUB_SHA" \
+            --title "Stratum $VERSION" \
+            --generate-notes
+
+      - name: Remove signing keychain
+        if: always() && steps.signing.outputs.signed == 'true'
+        run: security delete-keychain "$RUNNER_TEMP/signing.keychain-db"

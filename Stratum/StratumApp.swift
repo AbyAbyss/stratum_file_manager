@@ -6,6 +6,10 @@ struct StratumApp: App {
     @State private var appState = AppState()
     @State private var appearance = AppearanceManager.shared
 
+    init() {
+        UpdateController.shared.start()
+    }
+
     var body: some Scene {
         WindowGroup {
             MainWindowView(appState: appState, appearance: appearance)
@@ -15,6 +19,14 @@ struct StratumApp: App {
         .windowStyle(.hiddenTitleBar)
         .defaultSize(width: 1340, height: 840)
         .commands {
+            CommandGroup(after: .appInfo) {
+                if UpdateController.shared.isAvailable {
+                    Button("Check for Updates…") {
+                        UpdateController.shared.checkForUpdates()
+                    }
+                }
+            }
+
             CommandGroup(replacing: .help) {
                 Button("Welcome Tour") {
                     appState.startWalkthrough()
