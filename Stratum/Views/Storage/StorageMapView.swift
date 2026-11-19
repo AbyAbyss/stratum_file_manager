@@ -73,7 +73,8 @@ struct StorageMapView: View {
                 withAnimation(.spring(response: 0.36, dampingFraction: 0.84)) { appState.screen = .browser }
             },
             trash: { item in
-                appState.moveURLsToTrash([(url: URL(fileURLWithPath: item.path), size: item.size)])
+                selectedID = nil
+                scanCoordinator.trashStorageItem(item.dir, path: item.path, appState: appState)
             }
         )
     }

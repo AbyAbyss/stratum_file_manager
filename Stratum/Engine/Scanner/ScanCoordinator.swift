@@ -636,6 +636,43 @@ final class ScanCoordinator {
         return pathResolver?.fullPath(of: dirId) ?? scannedRootPath
     }
 
+    /// Moves one Storage-map item to the Trash and updates the map straight away, instead of
+    /// leaving the tile and the folder totals stale until the next background scan.
+    func trashStorageItem(_ dir: DirRow, path: String, appState: AppState) {
+        let target = DeleteTargetItem(path: path, sizeBytes: dir.totalSize)
+        let patch = DeleteTarget(
+            dirId: dir.id >= 0 ? dir.id : nil,   // negative ids are synthesized from disk: no DB row
+            fileName: nil,
+            path: path,
+            size: dir.totalSize,
+            mtime: dir.mtime,
+            isProtected: ProtectedPaths.isProtected(path)
+        )
+        let db = activeDB
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            let outcome = DeleteService.moveToTrash([target])
+            if !outcome.removed.isEmpty, let db {
+                try? db.patchAfterDelete(targets: [patch], removedPaths: outcome.removedPaths)
+            }
+            Task { @MainActor in
+                guard let self else { return }
+                TransferQueueEngine.shared.recordTrashOutcome(outcome)
+                guard outcome.removed.first != nil else {
+                    if let reason = outcome.failed.first?.reason { appState.showToast("Cannot move to Trash: \(reason)") }
+                    return
+                }
+                withAnimation(.spring(response: 0.42, dampingFraction: 0.86)) {
+                    self.treemapChildren.removeAll { $0.id == dir.id }
+                    self.treemapBreadcrumb = self.treemapBreadcrumb.map { $0.removingBytes(dir.totalSize) }
+                }
+                self.refreshAllQueries(animated: true)
+                appState.refreshVolumes()
+                self.scheduleSmartBackgroundRefresh(delay: 2.0, force: true)
+                appState.showToast("Moved \(dir.name) to Trash (\(BulkDirectoryReader.fastFormatBytes(outcome.freedBytes)) freed, ⌘Z to undo)")
+            }
+        }
+    }
+
     func trashGroupInstances(_ instances: [GroupInstanceRow], appState: AppState) {
         guard !instances.isEmpty, let db = activeDB else { return }
         let totalToFree = instances.reduce(Int64(0)) { $0 + $1.dirRow.totalSize }

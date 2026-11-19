@@ -49,6 +49,16 @@ struct DirRow: Identifiable, Hashable, Sendable {
     let mtime: Date?
     let totalSize: Int64
     let descendantFileCount: Int64
+
+    /// A copy with `bytes` removed from the total, used to keep ancestors' sizes right
+    /// after something inside them is trashed.
+    func removingBytes(_ bytes: Int64) -> DirRow {
+        DirRow(
+            id: id, parentId: parentId, name: name, depth: depth, isHidden: isHidden,
+            isPackage: isPackage, mtime: mtime, totalSize: max(0, totalSize - bytes),
+            descendantFileCount: descendantFileCount
+        )
+    }
 }
 
 struct GroupRow: Identifiable, Hashable, Sendable {

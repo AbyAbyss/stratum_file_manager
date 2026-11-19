@@ -18,6 +18,7 @@
 		17824205AB53DB262C805705 /* SpotlightSearchEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0FBEC0AE3D0A5B632B671B /* SpotlightSearchEngine.swift */; };
 		1910B024DD5BF80652441E6E /* TreemapLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7F1926E2DADFC3CFC5973C7 /* TreemapLayoutTests.swift */; };
 		28FC0EF4C914ADCF47DA9B27 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 4A4B5D27AC7503A576EEBB55 /* GRDB */; };
+		3551ED9B28D38951826B0C4B /* DirRowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0507DF0213876EA54756EF72 /* DirRowTests.swift */; };
 		3BCA2F65C28116715CCE4761 /* ProtectedPaths.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAC98F38E8AC563AFB07AE55 /* ProtectedPaths.swift */; };
 		3E783579659A215ECA6FB714 /* PathResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF99EBBA3EE3783B8060988 /* PathResolver.swift */; };
 		3FCE741A0EF877F69065D641 /* FullDiskAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70B9CA2866DA85DFEC188E9 /* FullDiskAccess.swift */; };
@@ -73,6 +74,7 @@
 		00F376BA9840E77369EB57F8 /* ScanDatabaseQueries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanDatabaseQueries.swift; sourceTree = "<group>"; };
 		024F9CB204AB944FB1FAAFEF /* VisualEffectBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectBackground.swift; sourceTree = "<group>"; };
 		03547504F3B605532C2F5BCE /* Milestone1Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Milestone1Tests.swift; sourceTree = "<group>"; };
+		0507DF0213876EA54756EF72 /* DirRowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirRowTests.swift; sourceTree = "<group>"; };
 		06ADA8E13E813C385A25A55F /* StratumApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StratumApp.swift; sourceTree = "<group>"; };
 		0E730F98592F41F85E9C7686 /* StorageMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageMapView.swift; sourceTree = "<group>"; };
 		13E71AB20B2B84E7ABD952B1 /* MainWindowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindowView.swift; sourceTree = "<group>"; };
@@ -303,6 +305,7 @@
 		E8E521705E33BF55214C07AD /* StratumTests */ = {
 			isa = PBXGroup;
 			children = (
+				0507DF0213876EA54756EF72 /* DirRowTests.swift */,
 				03547504F3B605532C2F5BCE /* Milestone1Tests.swift */,
 				FEFA5DE73F08CFF21374CDA4 /* Milestone2Tests.swift */,
 				5DA2CFB988A15C07FF0FEEAD /* ScanEngineTests.swift */,
@@ -407,6 +410,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3551ED9B28D38951826B0C4B /* DirRowTests.swift in Sources */,
 				814F48E1AECF07A2B7A5620A /* Milestone1Tests.swift in Sources */,
 				0FDDAE7A9244C5CB174D1816 /* Milestone2Tests.swift in Sources */,
 				4F7682330F81DEBB2FE05855 /* ScanEngineTests.swift in Sources */,
