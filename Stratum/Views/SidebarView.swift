@@ -28,9 +28,9 @@ struct SidebarView: View {
 
     private var tools: [(label: String, icon: String, screen: AppScreen, shortcut: String)] {
         [
-            ("Smart Organizer", "wand.and.stars", .organizer, "⌘2"),
-            ("Groups", "infinity", .groups, "⌘3"),
-            ("Storage map", "rectangle.3.group", .storage, "⌘4"),
+            ("Smart Organizer", "wand.and.stars", .organizer, "⌥⌘2"),
+            ("Groups", "infinity", .groups, "⌥⌘3"),
+            ("Storage map", "rectangle.3.group", .storage, "⌥⌘4"),
             ("Settings", "slider.horizontal.3", .settings, "⌘,"),
         ]
     }

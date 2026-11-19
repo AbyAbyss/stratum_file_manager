@@ -177,6 +177,20 @@ struct StratumApp: App {
 
                 Divider()
 
+                // Screens. ⌘1-3 are the view modes (as in Finder), so screens use ⌥⌘.
+                Button("Browser") { appState.screen = .browser }
+                    .keyboardShortcut("1", modifiers: [.command, .option])
+                Button("Smart Organizer") { appState.screen = .organizer }
+                    .keyboardShortcut("2", modifiers: [.command, .option])
+                Button("Groups") { appState.screen = .groups }
+                    .keyboardShortcut("3", modifiers: [.command, .option])
+                Button("Storage Map") { appState.screen = .storage }
+                    .keyboardShortcut("4", modifiers: [.command, .option])
+                Button("Settings") { appState.screen = .settings }
+                    .keyboardShortcut(",", modifiers: [.command])
+
+                Divider()
+
                 Button("Copy Path") {
                     let paths = appState.selectedItems.isEmpty
                         ? appState.currentURL.path
