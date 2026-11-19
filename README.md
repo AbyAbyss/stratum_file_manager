@@ -164,12 +164,18 @@ Grab the latest **`Stratum-<version>.dmg`** from
 
 <br>
 
-Builds that aren't notarized need a one-time approval. Open **System Settings → Privacy &
-Security** and click **Open Anyway**, or run:
+Until the app is notarized, macOS says *"Stratum" Not Opened: Apple could not verify "Stratum" is
+free of malware*. Click **Done** (not *Move to Bin*), then either open **System Settings → Privacy &
+Security**, scroll down to the message about Stratum and click **Open Anyway**, or run this once in
+Terminal (adjust the path if the app is elsewhere):
 
 ```sh
 xattr -dr com.apple.quarantine /Applications/Stratum.app
 ```
+
+You only do this once per download. Because the build is not yet signed with an Apple Developer ID,
+macOS may also ask for Downloads, Documents or Desktop access again after an update. Granting
+**Full Disk Access** (below) avoids those repeated prompts.
 
 For the whole-disk Storage map and Groups, grant Stratum **Full Disk Access** (System Settings →
 Privacy & Security → Full Disk Access). The welcome tour walks you to the right pane. Without it,
