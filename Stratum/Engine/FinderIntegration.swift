@@ -29,7 +29,7 @@ struct FinderIntegration {
         let contents = workflowURL.appendingPathComponent("Contents", isDirectory: true)
         try FileManager.default.createDirectory(at: contents, withIntermediateDirectories: true)
         try Self.infoPlist().write(to: contents.appendingPathComponent("Info.plist"), options: .atomic)
-        try Self.workflowPlist(bundleIdentifier: bundleIdentifier).write(to: contents.appendingPathComponent("document.wflow"), options: .atomic)
+        try Self.workflowPlist(bundleIdentifier: bundleIdentifier, workflowPath: workflowURL.path).write(to: contents.appendingPathComponent("document.wflow"), options: .atomic)
     }
 
     func uninstall() throws {
@@ -51,8 +51,14 @@ struct FinderIntegration {
     }
 
     /// One "Run Shell Script" action that opens each selected folder in Stratum.
-    static func workflowPlist(bundleIdentifier: String) throws -> Data {
-        let script = "for f in \"$@\"; do\n  open -b \"\(bundleIdentifier)\" -- \"$f\"\ndone"
+    static func workflowPlist(bundleIdentifier: String, workflowPath: String) throws -> Data {
+        // If Stratum has been uninstalled, `open -b` fails: remove this Quick Action instead of
+        // leaving a dead entry in Finder's menu.
+        let script = """
+        for f in "$@"; do
+          open -b "\(bundleIdentifier)" -- "$f" || { rm -rf "\(workflowPath)"; break; }
+        done
+        """
         let action: [String: Any] = [
             "AMAccepts": ["Container": "List", "Optional": true, "Types": ["com.apple.cocoa.string"]],
             "AMActionVersion": "2.0.3",

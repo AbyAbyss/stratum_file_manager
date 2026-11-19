@@ -33,6 +33,7 @@ final class FinderIntegrationTests: XCTestCase {
         XCTAssertTrue(integration.isInstalled)
         let wflow = try String(contentsOf: integration.workflowURL.appendingPathComponent("Contents/document.wflow"), encoding: .utf8)
         XCTAssertTrue(wflow.contains("open -b \"app.test\""))
+        XCTAssertTrue(wflow.contains("rm -rf \"\(integration.workflowURL.path)\""), "removes itself when the app is gone")
         try integration.uninstall()
         XCTAssertFalse(integration.isInstalled)
     }
