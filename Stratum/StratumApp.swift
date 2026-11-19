@@ -4,23 +4,26 @@ import AppKit
 @main
 struct StratumApp: App {
     @NSApplicationDelegateAdaptor(StratumAppDelegate.self) private var appDelegate
-    @State private var appState = AppState()
-    @State private var appearance = AppearanceManager.shared
+    @State private var registry = WindowRegistry.shared
+
+    /// The window the user is working in; menu commands act on it.
+    private var appState: AppState { registry.active }
 
     init() {
         UpdateController.shared.start()
     }
 
     var body: some Scene {
-        WindowGroup {
-            MainWindowView(appState: appState, appearance: appearance)
-                .frame(minWidth: 980, minHeight: 640)
-                .background(WindowAccessor())
-                .onAppear { appDelegate.attach(appState) }
+        WindowGroup(for: WindowSeed.self) { $seed in
+            WindowRoot(seed: seed)
+        } defaultValue: {
+            WindowSeed()
         }
         .windowStyle(.hiddenTitleBar)
         .defaultSize(width: 1340, height: 840)
         .commands {
+            WindowCommands()
+
             CommandGroup(after: .appInfo) {
                 if UpdateController.shared.isAvailable {
                     Button("Check for Updates…") {
@@ -46,8 +49,13 @@ struct StratumApp: App {
                 }
                 .keyboardShortcut("n", modifiers: [.command, .shift])
 
-                Button("Close Tab") {
-                    appState.closeTab(appState.activeTabID)
+                // Closes the tab, or the window when it is the last tab. Other windows stay open.
+                Button(appState.tabs.count > 1 ? "Close Tab" : "Close Window") {
+                    if appState.tabs.count > 1 {
+                        appState.closeTab(appState.activeTabID)
+                    } else {
+                        NSApp.keyWindow?.performClose(nil)
+                    }
                 }
                 .keyboardShortcut("w", modifiers: [.command])
             }
@@ -212,7 +220,56 @@ struct StratumApp: App {
     }
 }
 
+/// One window's content. Each window owns its own `AppState`; the disk scan is shared.
+struct WindowRoot: View {
+    let seed: WindowSeed
+    @State private var appearance = AppearanceManager.shared
+
+    var body: some View {
+        let appState = WindowRegistry.shared.state(for: seed)
+        MainWindowView(appState: appState, appearance: appearance)
+            .frame(minWidth: 980, minHeight: 640)
+            .background(WindowAccessor(
+                onFocus: { WindowRegistry.shared.activate(appState) },
+                onClose: { WindowRegistry.shared.remove(seed) }
+            ))
+    }
+}
+
+/// File menu items for windows.
+struct WindowCommands: Commands {
+    @Environment(\.openWindow) private var openWindow
+
+    var body: some Commands {
+        CommandGroup(after: .newItem) {
+            Button("New Window") {
+                openWindow(value: WindowSeed(path: WindowRegistry.shared.active.currentURL.path))
+            }
+            .keyboardShortcut("n", modifiers: [.command])
+
+            Button("Move Tab to New Window") {
+                let state = WindowRegistry.shared.active
+                guard state.tabs.count > 1, let tab = state.tabs.first(where: { $0.id == state.activeTabID }) else { return }
+                openWindow(value: WindowSeed(path: tab.url.path))
+                state.closeTab(tab.id)
+            }
+            .keyboardShortcut("n", modifiers: [.command, .option])
+            .disabled(WindowRegistry.shared.active.tabs.count < 2)
+        }
+    }
+}
+
 struct WindowAccessor: NSViewRepresentable {
+    var onFocus: () -> Void = {}
+    var onClose: () -> Void = {}
+
+    func makeCoordinator() -> Coordinator { Coordinator() }
+
+    final class Coordinator {
+        var tokens: [NSObjectProtocol] = []
+        deinit { tokens.forEach(NotificationCenter.default.removeObserver) }
+    }
+
     func makeNSView(context: Context) -> NSView {
         let view = NSView()
         DispatchQueue.main.async {
@@ -223,6 +280,17 @@ struct WindowAccessor: NSViewRepresentable {
             window.isOpaque = false
             window.backgroundColor = .clear
             window.toolbar = nil
+
+            let center = NotificationCenter.default
+            context.coordinator.tokens = [
+                center.addObserver(forName: NSWindow.didBecomeKeyNotification, object: window, queue: .main) { _ in
+                    MainActor.assumeIsolated { onFocus() }
+                },
+                center.addObserver(forName: NSWindow.willCloseNotification, object: window, queue: .main) { _ in
+                    MainActor.assumeIsolated { onClose() }
+                }
+            ]
+            if window.isKeyWindow { onFocus() }
         }
         return view
     }

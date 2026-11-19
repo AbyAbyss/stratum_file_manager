@@ -10,6 +10,9 @@ extension ToolbarView {
                 }
             }
             Link(destination: AppInfo.releases) { Label("What's New", systemImage: "sparkles") }
+            Button("New Window", systemImage: "macwindow.badge.plus") {
+                openWindow(value: WindowSeed(path: appState.currentURL.path))
+            }
             Button("Welcome Tour", systemImage: "play.circle") {
                 appState.startWalkthrough()
             }

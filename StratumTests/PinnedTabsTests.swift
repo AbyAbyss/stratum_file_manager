@@ -37,3 +37,16 @@ final class FinderIntegrationTests: XCTestCase {
         XCTAssertFalse(integration.isInstalled)
     }
 }
+
+@MainActor
+final class WindowRegistryTests: XCTestCase {
+    func testEachWindowGetsItsOwnStateAndTheSameWindowKeepsIt() {
+        let registry = WindowRegistry.shared
+        let a = WindowSeed(), b = WindowSeed(path: NSTemporaryDirectory())
+        let stateA = registry.state(for: a), stateB = registry.state(for: b)
+        XCTAssertFalse(stateA === stateB)
+        XCTAssertTrue(registry.state(for: a) === stateA)
+        XCTAssertFalse(stateB.isPrimaryWindow)
+        registry.remove(a); registry.remove(b)
+    }
+}

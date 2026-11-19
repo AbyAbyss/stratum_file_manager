@@ -62,8 +62,8 @@ struct InspectorSidebarView: View {
                 .padding(14)
             }
         }
-        .frame(width: 306)
         .background(Color.primary.opacity(0.025))
+        .resizablePanel(key: "Stratum.inspectorWidth", defaultWidth: 306, range: 260...520, edge: .leading)
         .overlay(alignment: .leading) {
             Rectangle()
                 .fill(Color.primary.opacity(0.08))

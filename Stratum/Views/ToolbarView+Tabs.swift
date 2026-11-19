@@ -78,6 +78,15 @@ extension ToolbarView {
                             }
                         }
                         Divider()
+                        Button("Open in New Window") {
+                            openWindow(value: WindowSeed(path: tab.url.path))
+                        }
+                        if appState.tabs.count > 1 {
+                            Button("Move to New Window") {
+                                openWindow(value: WindowSeed(path: tab.url.path))
+                                appState.closeTab(tab.id)
+                            }
+                        }
                         Button("Duplicate Tab") {
                             appState.addNewTab(at: tab.url)
                         }

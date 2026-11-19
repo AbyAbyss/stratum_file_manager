@@ -110,10 +110,10 @@ struct SettingsView: View {
         .padding(.horizontal, 12)
         .padding(.top, 44)
         .padding(.bottom, 18)
-        .frame(width: 224)
         .frame(maxHeight: .infinity)
         .background(appearance.sidebarGlassColor.opacity(0.55))
         .overlay(alignment: .trailing) { Rectangle().fill(Color.primary.opacity(0.07)).frame(width: 1) }
+        .resizablePanel(key: "Stratum.settingsRailWidth", defaultWidth: 224, range: 190...320, edge: .trailing)
     }
 
     private func railRow(_ item: SettingsPageID) -> some View {

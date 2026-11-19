@@ -39,10 +39,10 @@ final class AppState {
     var showQuickFilter: Bool = false
     var showBatchRename: Bool = false
     var showFDASheet: Bool = false
-    var showStartupSplash: Bool = true
+    var showStartupSplash: Bool = false
     /// True on the very first launch (and when replayed from Help); replaces the splash and
     /// the Full Disk Access sheet while it is up.
-    var showWalkthrough: Bool = !Walkthrough.hasCompleted
+    var showWalkthrough: Bool = false
     var hasFullDiskAccess: Bool = true
 
     var showHiddenFiles: Bool = false {
@@ -127,6 +127,7 @@ final class AppState {
     }
     private static let pinnedTabsKey = "Stratum.pinnedTabPaths"
     private var savedPinnedTabPaths: [String] = []
+    let isPrimaryWindow: Bool
     var activeTabID: UUID = UUID()
 
     // Current folder items
@@ -198,9 +199,16 @@ final class AppState {
     private var loadTask: Task<Void, Never>?
     private var directoryWatcher: DirectoryWatcher?
 
-    init() {
+    /// `isPrimary` is the first window of a launch: only it plays the splash and welcome tour,
+    /// asks for Full Disk Access, and brings back pinned tabs. Windows opened later start quietly.
+    init(startURL: URL? = nil, isPrimary: Bool = true) {
         let home = FileManager.default.homeDirectoryForCurrentUser
-        let initialURL = Self.resolveDefaultStartDirectory(home: home)
+        let initialURL = startURL?.standardizedFileURL ?? Self.resolveDefaultStartDirectory(home: home)
+        self.isPrimaryWindow = isPrimary
+        if isPrimary {
+            showStartupSplash = true
+            showWalkthrough = !Walkthrough.hasCompleted
+        }
         let firstEntry = NavigationHistoryItem(screen: .browser, url: initialURL)
         let firstTab = BrowserTab(
             id: UUID(),
@@ -210,7 +218,7 @@ final class AppState {
             selectedIDs: []
         )
         // Pinned tabs from last time come back first; the usual start folder stays the active tab.
-        let restoredPins = (UserDefaults.standard.stringArray(forKey: Self.pinnedTabsKey) ?? []).compactMap { path -> BrowserTab? in
+        let restoredPins = (isPrimary ? UserDefaults.standard.stringArray(forKey: Self.pinnedTabsKey) ?? [] : []).compactMap { path -> BrowserTab? in
             var isDir: ObjCBool = false
             guard FileManager.default.fileExists(atPath: path, isDirectory: &isDir), isDir.boolValue else { return nil }
             let url = URL(fileURLWithPath: path, isDirectory: true)
@@ -224,10 +232,18 @@ final class AppState {
         if let savedPaths = UserDefaults.standard.stringArray(forKey: "Stratum.pinnedFolderPaths") {
             self.pinnedFolderURLs = savedPaths.map { URL(fileURLWithPath: $0, isDirectory: true) }
         }
+        // Pinning in one window shows up in the others.
+        NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: .main) { [weak self] _ in
+            MainActor.assumeIsolated {
+                guard let self, let paths = UserDefaults.standard.stringArray(forKey: "Stratum.pinnedFolderPaths"),
+                      paths != self.pinnedFolderURLs.map(\.path) else { return }
+                self.pinnedFolderURLs = paths.map { URL(fileURLWithPath: $0, isDirectory: true) }
+            }
+        }
 
         setupWatcher()
         refreshVolumes()
-        checkFDAOnLaunch()
+        if isPrimary { checkFDAOnLaunch() }
         loadDirectory(at: initialURL, recordHistory: false)
     }
 

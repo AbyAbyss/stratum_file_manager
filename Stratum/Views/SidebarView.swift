@@ -429,13 +429,13 @@ struct SidebarView: View {
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 14)
-        .frame(width: 236)
         .background(appearance.sidebarGlassColor)
         .overlay(alignment: .trailing) {
             Rectangle()
                 .fill(Color.primary.opacity(0.07))
                 .frame(width: 1)
         }
+        .resizablePanel(key: "Stratum.sidebarWidth", defaultWidth: 236, range: 190...400, edge: .trailing)
     }
 
     private func sidebarSection<Content: View>(_ title: String, @ViewBuilder content: () -> Content) -> some View {

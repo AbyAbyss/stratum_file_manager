@@ -2,6 +2,7 @@ import SwiftUI
 import AppKit
 
 struct ToolbarView: View {
+    @Environment(\.openWindow) var openWindow
     @Bindable var appState: AppState
     var appearance: AppearanceManager
     var transferEngine = TransferQueueEngine.shared
