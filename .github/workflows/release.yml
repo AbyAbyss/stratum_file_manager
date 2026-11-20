@@ -67,6 +67,10 @@ jobs:
         run: xcodegen generate
 
       - name: Run tests
+        env:
+          # xcodebuild forwards TEST_RUNNER_* to the tests (without the prefix); the timing tests
+          # use it to allow shared CI machines a looser budget.
+          TEST_RUNNER_CI: "1"
         run: |
           xcodebuild test \
             -project Stratum.xcodeproj \
