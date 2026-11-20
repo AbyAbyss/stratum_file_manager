@@ -86,7 +86,7 @@ Icons, list and columns; tabs; an inspector with preview, metadata and tags; and
 ## Make it yours
 
 Settings is four calm pages (Appearance, Safety, Scanning, About) with a live preview as you
-change things. Sixteen built-in themes (light, dark, or follow the system), twenty accent colors,
+change things. Seventeen built-in themes (light, dark, or follow the system), twenty accent colors,
 a custom accent, or one picked from your wallpaper. Window material, blur and translucency are
 adjustable, and respect Reduce Transparency and Increase Contrast.
 

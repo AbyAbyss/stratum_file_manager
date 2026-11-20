@@ -226,6 +226,20 @@ extension AppearanceManager {
             cardGlowIntensity: 40.0,
             blurStyle: .frostedPopover,
             isBuiltIn: true
+        ),
+        StratumThemePreset(
+            id: "studio-white",
+            name: "Studio White",
+            subtitle: "Crisp white cards on soft grey with a vivid violet accent, like a modern web app",
+            mode: .light,
+            windowTintHex: "#F4F5FA",
+            sidebarTintHex: "#FFFFFF",
+            cardTintHex: "#FFFFFF",
+            accentHex: "#7B61E8",
+            translucency: 15.0,
+            cardGlowIntensity: 25.0,
+            blurStyle: .frostedPopover,
+            isBuiltIn: true
         )
     ]
 
