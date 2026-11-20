@@ -198,6 +198,34 @@ extension AppearanceManager {
             cardGlowIntensity: 55.0,
             blurStyle: .frostedPopover,
             isBuiltIn: true
+        ),
+        StratumThemePreset(
+            id: "smoked-glass",
+            name: "Smoked Glass",
+            subtitle: "Translucent graphite glass that shows your wallpaper through, with a warm coral accent",
+            mode: .dark,
+            windowTintHex: "#2B2927",
+            sidebarTintHex: "#33302E",
+            cardTintHex: "#4A4643",
+            accentHex: "#F2603E",
+            translucency: 92.0,
+            cardGlowIntensity: 45.0,
+            blurStyle: .hudGlass,
+            isBuiltIn: true
+        ),
+        StratumThemePreset(
+            id: "frosted-pearl",
+            name: "Frosted Pearl",
+            subtitle: "Light, airy frosted glass with soft pearl tints and a coral accent",
+            mode: .light,
+            windowTintHex: "#F4F1EE",
+            sidebarTintHex: "#EAE5E1",
+            cardTintHex: "#FFFFFF",
+            accentHex: "#E8553A",
+            translucency: 90.0,
+            cardGlowIntensity: 40.0,
+            blurStyle: .frostedPopover,
+            isBuiltIn: true
         )
     ]
 
