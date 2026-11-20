@@ -136,11 +136,16 @@ final class AppearanceManager {
     /// mode that doesn't suit the current theme switches to the first theme that does; without
     /// that, Light over a dark theme gives a muddy grey-green window.
     func selectMode(_ mode: AppThemeOverride) {
-        let systemIsDark = NSApp.effectiveAppearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
-        if let match = Self.themeToSwitchTo(for: mode, activeID: activeThemeID, themes: allThemes, systemIsDark: systemIsDark) {
+        if let match = Self.themeToSwitchTo(for: mode, activeID: activeThemeID, themes: allThemes, systemIsDark: Self.systemIsDark) {
             applyThemePreset(match)
         }
         themeOverride = mode
+    }
+
+    /// What macOS itself is set to. Read from the global preference: the app's own appearance
+    /// is overridden by the theme, so `NSApp.effectiveAppearance` would only echo that back.
+    static var systemIsDark: Bool {
+        UserDefaults.standard.string(forKey: "AppleInterfaceStyle") == "Dark"
     }
 
     /// The theme to move to when `mode` doesn't suit the active one, or nil to keep it.
@@ -256,6 +261,27 @@ final class AppearanceManager {
 
         if accentMode == .wallpaper {
             sampleWallpaperColor()
+        }
+
+        // In Match system, follow macOS when it flips between light and dark (including the
+        // automatic day/night schedule). Only built-in themes are swapped; a custom theme stays.
+        DistributedNotificationCenter.default().addObserver(
+            forName: Notification.Name("AppleInterfaceThemeChangedNotification"),
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in
+                guard let self, self.themeOverride == .system,
+                      self.allThemes.first(where: { $0.id == self.activeThemeID })?.isBuiltIn == true else { return }
+                self.selectMode(.system)
+            }
+        }
+
+        // The look may have changed while the app was closed.
+        if themeOverride == .system, allThemes.first(where: { $0.id == activeThemeID })?.isBuiltIn == true,
+           let match = Self.themeToSwitchTo(for: .system, activeID: activeThemeID, themes: allThemes, systemIsDark: Self.systemIsDark) {
+            applyThemePreset(match)
+            themeOverride = .system
         }
     }
 
