@@ -51,3 +51,23 @@ final class WindowRegistryTests: XCTestCase {
         registry.remove(a); registry.remove(b)
     }
 }
+
+@MainActor
+final class ThemeModeTests: XCTestCase {
+    private let themes = AppearanceManager.builtInThemes
+
+    func testLightOverADarkThemeSwitchesToALightTheme() throws {
+        let match = try XCTUnwrap(AppearanceManager.themeToSwitchTo(for: .light, activeID: "cyberpunk-matrix", themes: themes, systemIsDark: true))
+        XCTAssertEqual(match.mode, .light)
+    }
+
+    func testDarkOverALightThemeSwitchesToADarkTheme() throws {
+        let match = try XCTUnwrap(AppearanceManager.themeToSwitchTo(for: .dark, activeID: "paper-white", themes: themes, systemIsDark: false))
+        XCTAssertNotEqual(match.mode, .light)
+    }
+
+    func testMatchingThemeIsKept() {
+        XCTAssertNil(AppearanceManager.themeToSwitchTo(for: .light, activeID: "paper-white", themes: themes, systemIsDark: true))
+        XCTAssertNil(AppearanceManager.themeToSwitchTo(for: .system, activeID: "paper-white", themes: themes, systemIsDark: false))
+    }
+}

@@ -36,7 +36,7 @@ struct SettingsAppearancePage: View {
             SettingsRow("Mode", detail: "Follow macOS, or choose light or dark.") {
                 SettingsSegmented(
                     options: [(AppThemeOverride.system, "Match system"), (.light, "Light"), (.dark, "Dark")],
-                    selection: $appearance.themeMode,
+                    selection: Binding(get: { appearance.themeMode }, set: { appearance.selectMode($0) }),
                     appearance: appearance
                 )
             }

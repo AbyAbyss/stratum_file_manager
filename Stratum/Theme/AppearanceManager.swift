@@ -132,6 +132,25 @@ final class AppearanceManager {
         set { themeOverride = newValue }
     }
 
+    /// Picks Light, Dark or Match system. Each theme carries its own dark or light tints, so a
+    /// mode that doesn't suit the current theme switches to the first theme that does; without
+    /// that, Light over a dark theme gives a muddy grey-green window.
+    func selectMode(_ mode: AppThemeOverride) {
+        let systemIsDark = NSApp.effectiveAppearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
+        if let match = Self.themeToSwitchTo(for: mode, activeID: activeThemeID, themes: allThemes, systemIsDark: systemIsDark) {
+            applyThemePreset(match)
+        }
+        themeOverride = mode
+    }
+
+    /// The theme to move to when `mode` doesn't suit the active one, or nil to keep it.
+    static func themeToSwitchTo(for mode: AppThemeOverride, activeID: String, themes: [StratumThemePreset], systemIsDark: Bool) -> StratumThemePreset? {
+        let wantsDark = mode == .system ? systemIsDark : mode == .dark
+        guard let current = themes.first(where: { $0.id == activeID }),
+              (current.mode != .light) != wantsDark else { return nil }
+        return themes.first { ($0.mode != .light) == wantsDark }
+    }
+
     var accentSource: AccentMode {
         get { accentMode }
         set { accentMode = newValue }
