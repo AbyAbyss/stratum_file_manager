@@ -59,7 +59,11 @@ final class ScanEngineTests: XCTestCase {
         )
         let store = ScanStore()
         let outcome = try await ScanEngine.scan(volume: vol, store: store) { _ in }
-        defer { try? fm.removeItem(at: outcome.dbURL) }
+        defer {
+            for suffix in ["", "-shm", "-wal"] {
+                try? fm.removeItem(atPath: outcome.dbURL.path + suffix)
+            }
+        }
 
         let db = try ScanDatabase(url: outcome.dbURL)
         let rootId = try XCTUnwrap(try db.rootDirId())

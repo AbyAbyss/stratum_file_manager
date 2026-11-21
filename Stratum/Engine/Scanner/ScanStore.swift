@@ -18,6 +18,11 @@ struct ScanStore: Sendable {
         try? FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
     }
 
+    init(root: URL, legacyWimysRoot: URL) {
+        self.root = root
+        self.legacyWimysRoot = legacyWimysRoot
+    }
+
     func inProgressURL(startedAt: Date) -> URL {
         root.appendingPathComponent("in-progress-\(Int(startedAt.timeIntervalSince1970)).sqlite")
     }
@@ -48,6 +53,30 @@ struct ScanStore: Sendable {
             let a = (try? lhs.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate ?? .distantPast
             let b = (try? rhs.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate ?? .distantPast
             return a > b
+        }
+    }
+
+    /// Every scan writes a full snapshot, so without this the store grows by one per refresh.
+    /// Keeps the newest `keepPerVolume` snapshots of each volume and drops stray `-shm`/`-wal` files.
+    func pruneOldSnapshots(keepPerVolume: Int = 2) {
+        let fm = FileManager.default
+        guard let entries = try? fm.contentsOfDirectory(at: root, includingPropertiesForKeys: nil) else { return }
+
+        // File names are "<volume>-<start timestamp>.sqlite".
+        var byVolume: [String: [(started: Int, url: URL)]] = [:]
+        for url in entries where url.pathExtension == "sqlite" && !url.lastPathComponent.hasPrefix("in-progress-") {
+            let stem = url.deletingPathExtension().lastPathComponent
+            guard let dash = stem.lastIndex(of: "-"), let started = Int(stem[stem.index(after: dash)...]) else { continue }
+            byVolume[String(stem[..<dash]), default: []].append((started, url))
+        }
+        for snapshots in byVolume.values {
+            for old in snapshots.sorted(by: { $0.started > $1.started }).dropFirst(keepPerVolume) {
+                try? fm.removeItem(at: old.url)
+            }
+        }
+        for url in entries where ["sqlite-shm", "sqlite-wal"].contains(url.pathExtension) {
+            let database = url.deletingPathExtension().appendingPathExtension("sqlite")
+            if !fm.fileExists(atPath: database.path) { try? fm.removeItem(at: url) }
         }
     }
 

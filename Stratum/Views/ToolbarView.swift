@@ -11,6 +11,7 @@ struct ToolbarView: View {
     @State var showToolbarTagsPopover = false
     @State private var showThemePicker = false
     @State var density: ToolbarDensity = .full
+    @State var tabStripWidth: CGFloat = 0
     @Namespace var toolbarMotionNamespace
 
     var body: some View {

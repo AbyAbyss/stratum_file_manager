@@ -130,6 +130,7 @@ final class ScanCoordinator {
     func refreshSnapshotStats() {
         let storeRef = self.store
         DispatchQueue.global(qos: .utility).async { [weak self] in
+            storeRef.pruneOldSnapshots()
             let urls = storeRef.listCompleted()
             var bytes: Int64 = 0
             for url in urls {
