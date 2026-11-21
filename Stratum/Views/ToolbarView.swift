@@ -9,6 +9,7 @@ struct ToolbarView: View {
     var scanCoordinator = ScanCoordinator.shared
 
     @State var showToolbarTagsPopover = false
+    @State private var showThemePicker = false
     @State var density: ToolbarDensity = .full
     @Namespace var toolbarMotionNamespace
 
@@ -179,18 +180,26 @@ struct ToolbarView: View {
                             showToolbarTagsPopover = true
                         }
 
-                        // Quick Theme Switcher Menu
-                        Menu {
-                            themeMenuItems
+                        // Quick Theme Switcher: previews each theme live as you move through the list.
+                        Button {
+                            showThemePicker = true
                         } label: {
                             Image(systemName: "paintpalette")
                                 .font(.system(size: 13.5, weight: .medium))
                                 .foregroundStyle(appearance.accentColor)
                                 .frame(width: 30, height: 30)
+                                .contentShape(Rectangle())
                         }
-                        .menuStyle(.borderlessButton)
-                        .frame(width: 30, height: 30)
+                        .buttonStyle(StratumInteractiveButtonStyle(hoverScale: 1.08, pressScale: 0.90))
                         .stratumHelp("Switch Glass Theme or Customize Appearance")
+                        .popover(isPresented: $showThemePicker, arrowEdge: .bottom) {
+                            ThemePickerPopover(
+                                appearance: appearance,
+                                isPresented: $showThemePicker,
+                                onCommit: { appState.showToast("Applied \($0.name)") },
+                                onCustomize: { openSettings() }
+                            )
+                        }
                     }
 
                     toolbarIconButton("sidebar.right", label: "Toggle inspector (⌥⌘I)") {

@@ -22,6 +22,7 @@
 		17824205AB53DB262C805705 /* SpotlightSearchEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0FBEC0AE3D0A5B632B671B /* SpotlightSearchEngine.swift */; };
 		1910B024DD5BF80652441E6E /* TreemapLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7F1926E2DADFC3CFC5973C7 /* TreemapLayoutTests.swift */; };
 		1A97DCAA2BB63F65689BB53A /* SmartOrganizerView+Declutter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEF64ADCE10868408035973 /* SmartOrganizerView+Declutter.swift */; };
+		1ABA5D770503B3251D4ED136 /* ThemePickerPopover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 439F35B164C9C54101710C10 /* ThemePickerPopover.swift */; };
 		1F18D506E83B2AF869D968F8 /* ResizablePanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C6E7BBAD4ACC898B0DBA8D /* ResizablePanel.swift */; };
 		20C88B0D84973B1BA8136B4B /* CommandPaletteView+Footer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B17FC60B4B24B2AB1B2E83A /* CommandPaletteView+Footer.swift */; };
 		28FC0EF4C914ADCF47DA9B27 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 4A4B5D27AC7503A576EEBB55 /* GRDB */; };
@@ -172,6 +173,7 @@
 		3DEF64ADCE10868408035973 /* SmartOrganizerView+Declutter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SmartOrganizerView+Declutter.swift"; sourceTree = "<group>"; };
 		4161AED29411869CB610C283 /* AppInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfo.swift; sourceTree = "<group>"; };
 		43391BD308ED4050C81F0954 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		439F35B164C9C54101710C10 /* ThemePickerPopover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePickerPopover.swift; sourceTree = "<group>"; };
 		47BE3D6A83CE7D7D17E90003 /* InspectorSidebarView+PreviewCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InspectorSidebarView+PreviewCard.swift"; sourceTree = "<group>"; };
 		4BF99EBBA3EE3783B8060988 /* PathResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathResolver.swift; sourceTree = "<group>"; };
 		4D660A71F10121D486541A1B /* PinnedTabsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinnedTabsTests.swift; sourceTree = "<group>"; };
@@ -394,6 +396,7 @@
 				C22CF0063D58C2198BD1FA8B /* StatusBarView.swift */,
 				C1DF1816425268DA2425AE25 /* StratumButtonStyles.swift */,
 				8C127D2340E44B3F7AC90E04 /* StratumLogo.swift */,
+				439F35B164C9C54101710C10 /* ThemePickerPopover.swift */,
 				6A4E5C499ACCA9963A80F14F /* ToolbarView.swift */,
 				5161D5AA97C54072B2FB8426 /* ToolbarView+HelpMenu.swift */,
 				9321EECB6A74EE001937254F /* ToolbarView+PathBar.swift */,
@@ -765,6 +768,7 @@
 				831AD063E89F42348D80C3ED /* StratumTableRowView.swift in Sources */,
 				9F5CC695C6CC58412C9A8E45 /* TableCellViews.swift in Sources */,
 				A15EA21C2518471A4C559068 /* TerminalLauncher.swift in Sources */,
+				1ABA5D770503B3251D4ED136 /* ThemePickerPopover.swift in Sources */,
 				30BFFD1A9A2AE3D71F9959D5 /* ToolbarView+HelpMenu.swift in Sources */,
 				415E258140F6B868A16892FF /* ToolbarView+PathBar.swift in Sources */,
 				2D0F93EC0F2B0534DEB1BECA /* ToolbarView+Tabs.swift in Sources */,

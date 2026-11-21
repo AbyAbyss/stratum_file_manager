@@ -303,6 +303,48 @@ final class AppearanceManager {
         }
     }
 
+    /// Everything `applyThemePreset` changes, so a theme preview can be undone exactly, even
+    /// when the look before it was a hand-tuned one that matches no preset.
+    struct LookSnapshot {
+        var activeThemeID: String
+        var themeOverride: AppThemeOverride
+        var windowTintHex: String
+        var sidebarTintHex: String
+        var cardTintHex: String
+        var customHex: String
+        var accentMode: AccentMode
+        var translucency: Double
+        var cardGlowIntensity: Double
+        var blurStyle: GlassBlurStyle
+        var enableBlur: Bool
+    }
+
+    func captureLook() -> LookSnapshot {
+        LookSnapshot(
+            activeThemeID: activeThemeID, themeOverride: themeOverride,
+            windowTintHex: windowTintHex, sidebarTintHex: sidebarTintHex, cardTintHex: cardTintHex,
+            customHex: customHex, accentMode: accentMode,
+            translucency: translucency, cardGlowIntensity: cardGlowIntensity,
+            blurStyle: blurStyle, enableBlur: enableBlur
+        )
+    }
+
+    func restoreLook(_ look: LookSnapshot) {
+        withAnimation(.spring(response: 0.36, dampingFraction: 0.84)) {
+            activeThemeID = look.activeThemeID
+            themeOverride = look.themeOverride
+            windowTintHex = look.windowTintHex
+            sidebarTintHex = look.sidebarTintHex
+            cardTintHex = look.cardTintHex
+            customHex = look.customHex
+            accentMode = look.accentMode
+            translucency = look.translucency
+            cardGlowIntensity = look.cardGlowIntensity
+            blurStyle = look.blurStyle
+            enableBlur = look.enableBlur
+        }
+    }
+
     func saveCurrentAsCustomTheme(named name: String) {
         let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
         let finalName = trimmed.isEmpty ? "Custom Glass Theme \(customThemes.count + 1)" : trimmed
