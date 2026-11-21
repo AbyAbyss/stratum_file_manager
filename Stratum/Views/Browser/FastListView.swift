@@ -67,7 +67,25 @@ struct FastListView: NSViewRepresentable {
 
         context.coordinator.tableView = tableView
         scrollView.documentView = tableView
+
+        // Drop the less important columns as the list narrows, instead of clipping them.
+        scrollView.contentView.postsFrameChangedNotifications = true
+        let coordinator = context.coordinator
+        coordinator.resizeObserver = NotificationCenter.default.addObserver(
+            forName: NSView.frameDidChangeNotification, object: scrollView.contentView, queue: .main
+        ) { [weak coordinator, weak scrollView] _ in
+            MainActor.assumeIsolated {
+                guard let scrollView else { return }
+                coordinator?.fitColumns(toWidth: scrollView.contentView.bounds.width)
+            }
+        }
         return scrollView
+    }
+
+    static func dismantleNSView(_ nsView: NSScrollView, coordinator: Coordinator) {
+        if let observer = coordinator.resizeObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
     }
 
     func updateNSView(_ nsView: NSScrollView, context: Context) {
@@ -102,7 +120,21 @@ struct FastListView: NSViewRepresentable {
         var appState: AppState
         var items: [FileItem] = []
         weak var tableView: NSTableView?
+        var resizeObserver: NSObjectProtocol?
         private var isUpdatingSelection = false
+
+        /// Shows only the columns that fit: Kind goes first, then Size, then Modified.
+        func fitColumns(toWidth width: CGFloat) {
+            guard let tableView else { return }
+            var needed = tableView.tableColumns.reduce(CGFloat(0)) { $0 + $1.minWidth }
+            for id in ["Kind", "Size", "Modified"] {
+                guard let column = tableView.tableColumn(withIdentifier: NSUserInterfaceItemIdentifier(id)) else { continue }
+                let hide = needed > width
+                if column.isHidden != hide { column.isHidden = hide }
+                if hide { needed -= column.minWidth }
+            }
+            tableView.sizeToFit()
+        }
 
         init(appState: AppState) {
             self.appState = appState

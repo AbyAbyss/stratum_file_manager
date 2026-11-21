@@ -138,10 +138,15 @@ extension ToolbarView {
             // Hugs the path when it fits; scrolls, showing the current folder, when it doesn't.
             ViewThatFits(in: .horizontal) {
                 pathSegments
-                ScrollView(.horizontal, showsIndicators: false) {
-                    pathSegments
+                ScrollViewReader { proxy in
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        pathSegments
+                    }
+                    .defaultScrollAnchor(.trailing)
+                    .onChange(of: appState.currentURL, initial: true) { _, url in
+                        proxy.scrollTo(url.path, anchor: .trailing)
+                    }
                 }
-                .defaultScrollAnchor(.trailing)
             }
             .background(
                 RoundedRectangle(cornerRadius: 9, style: .continuous)

@@ -274,22 +274,12 @@ struct SmartOrganizerView: View {
                 }
             }
 
-            // Mode tabs: the "view in Browser" button shrinks to an icon first, then the tabs scroll.
+            // Mode tabs: the "view in Browser" button shrinks to an icon first, then the tabs
+            // that aren't selected do.
             ViewThatFits(in: .horizontal) {
-                HStack(spacing: 8) {
-                    modeTabs.fixedSize()
-                    Spacer(minLength: 8)
-                    viewInBrowserButton(showsTitle: true).fixedSize()
-                }
-                HStack(spacing: 8) {
-                    modeTabs.fixedSize()
-                    Spacer(minLength: 8)
-                    viewInBrowserButton(showsTitle: false)
-                }
-                HStack(spacing: 8) {
-                    ScrollView(.horizontal, showsIndicators: false) { modeTabs.fixedSize() }
-                    viewInBrowserButton(showsTitle: false)
-                }
+                modeRow(titledTabs: true, titledButton: true)
+                modeRow(titledTabs: true, titledButton: false)
+                modeRow(titledTabs: false, titledButton: false)
             }
         }
         .padding(.horizontal, 24)
@@ -358,8 +348,16 @@ struct SmartOrganizerView: View {
         }
     }
 
-    /// 3-Mode Segmented Pill Switcher
-    private var modeTabs: some View {
+    private func modeRow(titledTabs: Bool, titledButton: Bool) -> some View {
+        HStack(spacing: 8) {
+            modeTabs(showsAllTitles: titledTabs).fixedSize()
+            Spacer(minLength: 8)
+            viewInBrowserButton(showsTitle: titledButton).fixedSize()
+        }
+    }
+
+    /// 3-Mode Segmented Pill Switcher. In a narrow window only the selected tab keeps its title.
+    private func modeTabs(showsAllTitles: Bool) -> some View {
         HStack(spacing: 8) {
             ForEach(StudioMode.allCases) { mode in
                 let isSelected = (activeMode == mode)
@@ -372,10 +370,12 @@ struct SmartOrganizerView: View {
                         Image(systemName: mode.icon)
                             .font(.system(size: 12.5, weight: .semibold))
                             .foregroundStyle(isSelected ? .white : appearance.accentColor)
-                        Text(mode.rawValue)
-                            .font(.system(size: 12.5, weight: isSelected ? .semibold : .medium))
-                            .foregroundStyle(isSelected ? .white : .primary)
-                            .lineLimit(1)
+                        if showsAllTitles || isSelected {
+                            Text(mode.rawValue)
+                                .font(.system(size: 12.5, weight: isSelected ? .semibold : .medium))
+                                .foregroundStyle(isSelected ? .white : .primary)
+                                .lineLimit(1)
+                        }
 
                         if mode == .shelf && !appState.shelfURLs.isEmpty {
                             Text("\(appState.shelfURLs.count)")
@@ -406,6 +406,7 @@ struct SmartOrganizerView: View {
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(StratumInteractiveButtonStyle())
+                .help(mode.rawValue)
             }
         }
     }

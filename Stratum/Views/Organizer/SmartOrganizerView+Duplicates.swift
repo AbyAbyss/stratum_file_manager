@@ -9,74 +9,18 @@ extension SmartOrganizerView {
         let totalReclaimable = duplicateClusters.reduce(Int64(0)) { $0 + $1.reclaimableBytes }
 
         return VStack(alignment: .leading, spacing: 14) {
-            HStack(spacing: 14) {
+            AdaptiveStack(spacing: 14) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("SHA-256 Verified Duplicate Files")
                         .font(.system(size: 16, weight: .bold))
                     Text("Found \(duplicateClusters.count) identical file sets (\(BulkDirectoryReader.fastFormatBytes(totalReclaimable)) reclaimable) across your workspace.")
                         .font(.system(size: 12.5))
                         .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
+                .frame(minWidth: 0, idealWidth: 260, maxWidth: .infinity, alignment: .leading)
 
-                Spacer()
-
-                Button {
-                    autoSelectRedundantDuplicates()
-                } label: {
-                    HStack(spacing: 5) {
-                        Image(systemName: "checkmark.circle.badge.questionmark")
-                            .font(.system(size: 11.5, weight: .semibold))
-                        Text("Auto-Select Redundant Copies (Keep Original)")
-                            .font(.system(size: 12, weight: .semibold))
-                    }
-                    .padding(.horizontal, 12)
-                    .frame(height: 32)
-                    .background(
-                        RoundedRectangle(cornerRadius: 8, style: .continuous)
-                            .fill(appearance.selectionFillColor)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                    .strokeBorder(appearance.selectionBorderColor, lineWidth: 1)
-                            )
-                    )
-                }
-                .buttonStyle(StratumInteractiveButtonStyle())
-                .disabled(duplicateClusters.isEmpty)
-
-                if !selectedDuplicatePaths.isEmpty {
-                    Button {
-                        trashSelectedDuplicates()
-                    } label: {
-                        HStack(spacing: 6) {
-                            Image(systemName: "trash.fill")
-                                .font(.system(size: 11.5))
-                            Text("Trash \(selectedDuplicatePaths.count) Selected (\(BulkDirectoryReader.fastFormatBytes(selectedDuplicatesBytes)))")
-                                .font(.system(size: 12, weight: .semibold).monospacedDigit())
-                        }
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 14)
-                        .frame(height: 32)
-                        .background(
-                            RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                .fill(appearance.accentColor)
-                        )
-                    }
-                    .buttonStyle(StratumInteractiveButtonStyle())
-                }
-
-                Button {
-                    scanForExactDuplicates()
-                } label: {
-                    Image(systemName: "arrow.clockwise")
-                        .font(.system(size: 12, weight: .semibold))
-                        .frame(width: 32, height: 32)
-                        .background(
-                            RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                .fill(Color.primary.opacity(0.06))
-                        )
-                }
-                .buttonStyle(StratumInteractiveButtonStyle())
-                .help("Rescan for duplicate files")
+                duplicateActions.fixedSize()
             }
             .padding(16)
             .background(
@@ -117,12 +61,17 @@ extension SmartOrganizerView {
                             HStack {
                                 Text(cluster.fileName)
                                     .font(.system(size: 13.5, weight: .semibold))
-                                Text("· \(cluster.items.count) identical copies · \(BulkDirectoryReader.fastFormatBytes(cluster.sizeBytes)) each")
+                                    .lineLimit(1)
+                                    .truncationMode(.middle)
+                                Text("· \(cluster.items.count) copies · \(BulkDirectoryReader.fastFormatBytes(cluster.sizeBytes)) each")
                                     .font(.system(size: 12).monospacedDigit())
                                     .foregroundStyle(.secondary)
-                                Spacer()
+                                    .lineLimit(1)
+                                    .fixedSize()
+                                Spacer(minLength: 8)
                                 Text("SHA-256: \(cluster.hashHex.prefix(12))…")
                                     .font(.system(size: 11, design: .monospaced))
+                                    .lineLimit(1)
                                     .foregroundStyle(.tertiary)
                             }
 
@@ -200,6 +149,71 @@ extension SmartOrganizerView {
                     }
                 }
             }
+        }
+    }
+
+    /// Auto-select, trash-selected and rescan buttons of the duplicates banner.
+    private var duplicateActions: some View {
+        HStack(spacing: 14) {
+            Button {
+                autoSelectRedundantDuplicates()
+            } label: {
+                HStack(spacing: 5) {
+                    Image(systemName: "checkmark.circle.badge.questionmark")
+                        .font(.system(size: 11.5, weight: .semibold))
+                    Text("Auto-Select Redundant Copies")
+                        .font(.system(size: 12, weight: .semibold))
+                        .lineLimit(1)
+                }
+                .padding(.horizontal, 12)
+                .frame(height: 32)
+                .background(
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .fill(appearance.selectionFillColor)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                .strokeBorder(appearance.selectionBorderColor, lineWidth: 1)
+                        )
+                )
+            }
+            .buttonStyle(StratumInteractiveButtonStyle())
+            .disabled(duplicateClusters.isEmpty)
+            .help("Select every copy except the original in each set")
+
+            if !selectedDuplicatePaths.isEmpty {
+                Button {
+                    trashSelectedDuplicates()
+                } label: {
+                    HStack(spacing: 6) {
+                        Image(systemName: "trash.fill")
+                            .font(.system(size: 11.5))
+                        Text("Trash \(selectedDuplicatePaths.count) Selected (\(BulkDirectoryReader.fastFormatBytes(selectedDuplicatesBytes)))")
+                            .font(.system(size: 12, weight: .semibold).monospacedDigit())
+                    }
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 14)
+                    .frame(height: 32)
+                    .background(
+                        RoundedRectangle(cornerRadius: 8, style: .continuous)
+                            .fill(appearance.accentColor)
+                    )
+                }
+                .buttonStyle(StratumInteractiveButtonStyle())
+            }
+
+            Button {
+                scanForExactDuplicates()
+            } label: {
+                Image(systemName: "arrow.clockwise")
+                    .font(.system(size: 12, weight: .semibold))
+                    .frame(width: 32, height: 32)
+                    .background(
+                        RoundedRectangle(cornerRadius: 8, style: .continuous)
+                            .fill(Color.primary.opacity(0.06))
+                    )
+            }
+            .buttonStyle(StratumInteractiveButtonStyle())
+            .help("Rescan for duplicate files")
         }
     }
 }
