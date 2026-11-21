@@ -33,6 +33,10 @@ final class AppState {
     }
 
     var showSidebar: Bool = true
+    /// The sidebar shows icons only. Remembered between launches.
+    var sidebarCollapsed: Bool = UserDefaults.standard.bool(forKey: "Stratum.sidebarCollapsed") {
+        didSet { UserDefaults.standard.set(sidebarCollapsed, forKey: "Stratum.sidebarCollapsed") }
+    }
     var showInspector: Bool = true
     /// False while the window is too narrow for the sidebar and the inspector together.
     /// Set by the main window as it resizes.

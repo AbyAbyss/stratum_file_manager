@@ -5,6 +5,8 @@ enum WindowMetrics {
     static let minWidth: Double = 720
     static let minHeight: Double = 500
     static let sidebarMinWidth: Double = 190
+    /// Width of the sidebar when it is collapsed to icons.
+    static let sidebarRailWidth: Double = 56
     static let inspectorMinWidth: Double = 260
     /// The file listing never gets narrower than this while a side panel is showing.
     static let browserListMinWidth: Double = 400

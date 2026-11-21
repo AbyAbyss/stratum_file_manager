@@ -5,6 +5,9 @@ struct SidebarView: View {
     @Bindable var appState: AppState
     var appearance: AppearanceManager
 
+    /// Icons only; labels move to tooltips.
+    private var isCollapsed: Bool { appState.sidebarCollapsed }
+
     private var homeURL: URL {
         FileManager.default.homeDirectoryForCurrentUser
     }
@@ -41,26 +44,28 @@ struct SidebarView: View {
                 VStack(alignment: .leading, spacing: 18) {
                     // Favorites + Custom Pinned Folders
                     VStack(alignment: .leading, spacing: 3) {
-                        HStack {
-                            Text("FAVORITES")
-                                .font(.system(size: 10, weight: .bold))
-                                .tracking(0.8)
-                                .foregroundStyle(.secondary.opacity(0.8))
-                            Spacer()
-                            Button {
-                                appState.togglePinFolder(appState.currentURL)
-                            } label: {
-                                Image(systemName: appState.isPinned(appState.currentURL) ? "pin.slash" : "plus")
+                        if !isCollapsed {
+                            HStack {
+                                Text("FAVORITES")
                                     .font(.system(size: 10, weight: .bold))
-                                    .foregroundStyle(.secondary)
-                                    .frame(width: 18, height: 18)
-                                    .contentShape(Rectangle())
+                                    .tracking(0.8)
+                                    .foregroundStyle(.secondary.opacity(0.8))
+                                Spacer()
+                                Button {
+                                    appState.togglePinFolder(appState.currentURL)
+                                } label: {
+                                    Image(systemName: appState.isPinned(appState.currentURL) ? "pin.slash" : "plus")
+                                        .font(.system(size: 10, weight: .bold))
+                                        .foregroundStyle(.secondary)
+                                        .frame(width: 18, height: 18)
+                                        .contentShape(Rectangle())
+                                }
+                                .buttonStyle(.plain)
+                                .stratumHelp("Pin or unpin current folder")
                             }
-                            .buttonStyle(.plain)
-                            .stratumHelp("Pin or unpin current folder")
+                            .padding(.horizontal, 10)
+                            .padding(.bottom, 3)
                         }
-                        .padding(.horizontal, 10)
-                        .padding(.bottom, 3)
 
                         ForEach(favorites, id: \.url.path) { fav in
                             let isActive = (appState.screen == .browser && appState.activeSmartFolderName == nil && appState.selectedTagFilter == nil && appState.currentURL.standardizedFileURL == fav.url.standardizedFileURL)
@@ -221,7 +226,7 @@ struct SidebarView: View {
                                     }
                                 }
 
-                                if vol.isEjectable {
+                                if vol.isEjectable && !isCollapsed {
                                     Button {
                                         appState.ejectVolume(vol)
                                     } label: {
@@ -249,14 +254,18 @@ struct SidebarView: View {
                                         .font(.system(size: 13.5, weight: .medium))
                                         .foregroundStyle(appearance.accentColor)
                                         .frame(width: 16)
-                                    Text("iCloud Drive")
-                                        .font(.system(size: 13, weight: isActive ? .semibold : .regular))
-                                    Spacer()
-                                    Image(systemName: "checkmark.circle.fill")
-                                        .font(.system(size: 11))
-                                        .foregroundStyle(Color(nsColor: NSColor(hex: "#5FD38D") ?? .systemGreen))
+                                    if !isCollapsed {
+                                        Text("iCloud Drive")
+                                            .font(.system(size: 13, weight: isActive ? .semibold : .regular))
+                                            .lineLimit(1)
+                                        Spacer()
+                                        Image(systemName: "checkmark.circle.fill")
+                                            .font(.system(size: 11))
+                                            .foregroundStyle(Color(nsColor: NSColor(hex: "#5FD38D") ?? .systemGreen))
+                                    }
                                 }
-                                .padding(.horizontal, 10)
+                                .padding(.horizontal, isCollapsed ? 0 : 10)
+                                .frame(maxWidth: isCollapsed ? .infinity : nil)
                                 .frame(height: 30)
                                 .background(
                                     RoundedRectangle(cornerRadius: 8, style: .continuous)
@@ -265,98 +274,101 @@ struct SidebarView: View {
                                 .contentShape(Rectangle())
                             }
                             .buttonStyle(.plain)
+                            .help("iCloud Drive")
                         }
                     }
 
                     // 2-Column Tags Grid
-                    VStack(alignment: .leading, spacing: 6) {
-                        HStack {
-                            Text("TAGS")
-                                .font(.system(size: 10, weight: .bold))
-                                .tracking(0.8)
-                                .foregroundStyle(.secondary.opacity(0.8))
-                            Spacer()
-                            if appState.selectedTagFilter != nil {
-                                Button("Clear") {
-                                    appState.selectedTagFilter = nil
-                                }
-                                .buttonStyle(.plain)
-                                .font(.system(size: 10.5, weight: .semibold))
-                                .foregroundStyle(appearance.accentColor)
-                            }
-                        }
-                        .padding(.horizontal, 10)
-
-                        LazyVGrid(
-                            columns: [
-                                GridItem(.flexible(), spacing: 6),
-                                GridItem(.flexible(), spacing: 6)
-                            ],
-                            spacing: 6
-                        ) {
-                            ForEach(FinderTag.presets) { tag in
-                                let isActive = (appState.selectedTagFilter == tag.name)
-                                let tagColor = Color(nsColor: NSColor(hex: tag.hexColor) ?? .systemBlue)
-
-                                Button {
-                                    if appState.selectedTagFilter == tag.name {
+                    if !isCollapsed {
+                        VStack(alignment: .leading, spacing: 6) {
+                            HStack {
+                                Text("TAGS")
+                                    .font(.system(size: 10, weight: .bold))
+                                    .tracking(0.8)
+                                    .foregroundStyle(.secondary.opacity(0.8))
+                                Spacer()
+                                if appState.selectedTagFilter != nil {
+                                    Button("Clear") {
                                         appState.selectedTagFilter = nil
-                                    } else {
-                                        appState.selectedTagFilter = tag.name
                                     }
-                                } label: {
-                                    HStack(spacing: 7) {
-                                        Circle()
-                                            .fill(tagColor)
-                                            .frame(width: 8.5, height: 8.5)
-                                            .shadow(color: tagColor.opacity(0.55), radius: 3)
-
-                                        Text(tag.name)
-                                            .font(.system(size: 11.5, weight: isActive ? .semibold : .medium))
-                                            .foregroundStyle(isActive ? Color.primary : Color.primary.opacity(0.88))
-                                            .lineLimit(1)
-                                            .fixedSize(horizontal: true, vertical: false)
-
-                                        Spacer(minLength: 0)
-
-                                        if isActive {
-                                            Image(systemName: "checkmark")
-                                                .font(.system(size: 9, weight: .bold))
-                                                .foregroundStyle(appearance.accentColor)
-                                        }
-                                    }
-                                    .padding(.horizontal, 9)
-                                    .frame(maxWidth: .infinity, minHeight: 28)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                            .fill(isActive ? appearance.selectionFillColor : appearance.cardGlassFillColor)
-                                            .overlay(
-                                                RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                                    .strokeBorder(
-                                                        isActive ? appearance.selectionBorderColor : Color.primary.opacity(0.08),
-                                                        lineWidth: 1
-                                                    )
-                                            )
-                                    )
-                                    .contentShape(Rectangle())
+                                    .buttonStyle(.plain)
+                                    .font(.system(size: 10.5, weight: .semibold))
+                                    .foregroundStyle(appearance.accentColor)
                                 }
-                                .buttonStyle(.plain)
-                                .contextMenu {
-                                    Button(isActive ? "Clear Tag Filter" : "Filter by \(tag.name)") {
-                                        appState.selectedTagFilter = isActive ? nil : tag.name
+                            }
+                            .padding(.horizontal, 10)
+
+                            LazyVGrid(
+                                columns: [
+                                    GridItem(.flexible(), spacing: 6),
+                                    GridItem(.flexible(), spacing: 6)
+                                ],
+                                spacing: 6
+                            ) {
+                                ForEach(FinderTag.presets) { tag in
+                                    let isActive = (appState.selectedTagFilter == tag.name)
+                                    let tagColor = Color(nsColor: NSColor(hex: tag.hexColor) ?? .systemBlue)
+
+                                    Button {
+                                        if appState.selectedTagFilter == tag.name {
+                                            appState.selectedTagFilter = nil
+                                        } else {
+                                            appState.selectedTagFilter = tag.name
+                                        }
+                                    } label: {
+                                        HStack(spacing: 7) {
+                                            Circle()
+                                                .fill(tagColor)
+                                                .frame(width: 8.5, height: 8.5)
+                                                .shadow(color: tagColor.opacity(0.55), radius: 3)
+
+                                            Text(tag.name)
+                                                .font(.system(size: 11.5, weight: isActive ? .semibold : .medium))
+                                                .foregroundStyle(isActive ? Color.primary : Color.primary.opacity(0.88))
+                                                .lineLimit(1)
+                                                .fixedSize(horizontal: true, vertical: false)
+
+                                            Spacer(minLength: 0)
+
+                                            if isActive {
+                                                Image(systemName: "checkmark")
+                                                    .font(.system(size: 9, weight: .bold))
+                                                    .foregroundStyle(appearance.accentColor)
+                                            }
+                                        }
+                                        .padding(.horizontal, 9)
+                                        .frame(maxWidth: .infinity, minHeight: 28)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                                .fill(isActive ? appearance.selectionFillColor : appearance.cardGlassFillColor)
+                                                .overlay(
+                                                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                                        .strokeBorder(
+                                                            isActive ? appearance.selectionBorderColor : Color.primary.opacity(0.08),
+                                                            lineWidth: 1
+                                                        )
+                                                )
+                                        )
+                                        .contentShape(Rectangle())
                                     }
-                                    if !appState.selectedItems.isEmpty {
-                                        Divider()
-                                        Button("Apply \"\(tag.name)\" to \(appState.selectedItems.count) Selected Item(s)") {
-                                            for item in appState.selectedItems {
-                                                appState.toggleTag(tag, on: item)
+                                    .buttonStyle(.plain)
+                                    .contextMenu {
+                                        Button(isActive ? "Clear Tag Filter" : "Filter by \(tag.name)") {
+                                            appState.selectedTagFilter = isActive ? nil : tag.name
+                                        }
+                                        if !appState.selectedItems.isEmpty {
+                                            Divider()
+                                            Button("Apply \"\(tag.name)\" to \(appState.selectedItems.count) Selected Item(s)") {
+                                                for item in appState.selectedItems {
+                                                    appState.toggleTag(tag, on: item)
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
+                            .padding(.horizontal, 6)
                         }
-                        .padding(.horizontal, 6)
                     }
                 }
             }
@@ -364,7 +376,11 @@ struct SidebarView: View {
             Spacer(minLength: 0)
 
             // Disk Usage Glass Card at bottom of sidebar (matches reference design)
-            if let boot = appState.bootVolume {
+            if let boot = appState.bootVolume, isCollapsed {
+                sidebarRow(label: "\(boot.name) · \(BulkDirectoryReader.fastFormatBytes(boot.freeBytes)) free", icon: "internaldrive", badge: nil, isActive: appState.screen == .storage) {
+                    appState.screen = .storage
+                }
+            } else if let boot = appState.bootVolume {
                 Button {
                     appState.screen = .storage
                 } label: {
@@ -442,7 +458,7 @@ struct SidebarView: View {
                 .help("Open the Storage Map")
             }
         }
-        .padding(.horizontal, 12)
+        .padding(.horizontal, isCollapsed ? 8 : 12)
         .padding(.vertical, 14)
         .background(appearance.sidebarGlassColor)
         .overlay(alignment: .trailing) {
@@ -450,17 +466,27 @@ struct SidebarView: View {
                 .fill(Color.primary.opacity(0.07))
                 .frame(width: 1)
         }
-        .resizablePanel(key: "Stratum.sidebarWidth", defaultWidth: 236, range: WindowMetrics.sidebarMinWidth...400, edge: .trailing)
+        .resizablePanel(key: "Stratum.sidebarWidth", defaultWidth: 236, range: WindowMetrics.sidebarMinWidth...400, edge: .trailing,
+                        collapsedWidth: WindowMetrics.sidebarRailWidth, isCollapsed: $appState.sidebarCollapsed)
     }
 
     private func sidebarSection<Content: View>(_ title: String, @ViewBuilder content: () -> Content) -> some View {
         VStack(alignment: .leading, spacing: 3) {
-            Text(title)
-                .font(.system(size: 10, weight: .bold))
-                .tracking(0.8)
-                .foregroundStyle(.secondary.opacity(0.8))
-                .padding(.horizontal, 10)
-                .padding(.bottom, 3)
+            if isCollapsed {
+                // The rail has no room for a title; a hairline keeps the groups apart.
+                Rectangle()
+                    .fill(Color.primary.opacity(0.10))
+                    .frame(height: 1)
+                    .padding(.horizontal, 8)
+                    .padding(.bottom, 6)
+            } else {
+                Text(title)
+                    .font(.system(size: 10, weight: .bold))
+                    .tracking(0.8)
+                    .foregroundStyle(.secondary.opacity(0.8))
+                    .padding(.horizontal, 10)
+                    .padding(.bottom, 3)
+            }
             content()
         }
     }
@@ -475,7 +501,13 @@ struct SidebarView: View {
     ) -> some View {
         Button(action: action) {
             Group {
-                if let badge {
+                if isCollapsed {
+                    Image(systemName: icon)
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundStyle(isActive ? appearance.accentColor : appearance.accentColor.opacity(0.78))
+                        .stratumSymbolPop(value: isActive)
+                        .frame(maxWidth: .infinity)
+                } else if let badge {
                     // A narrow sidebar drops the badge so the label stays readable.
                     ViewThatFits(in: .horizontal) {
                         sidebarRowContent(label: label, icon: icon, badge: badge, isShortcutBadge: isShortcutBadge, isActive: isActive)
@@ -485,7 +517,7 @@ struct SidebarView: View {
                     sidebarRowContent(label: label, icon: icon, badge: nil, isShortcutBadge: false, isActive: isActive)
                 }
             }
-            .padding(.horizontal, 10)
+            .padding(.horizontal, isCollapsed ? 0 : 10)
             .frame(height: 31)
             .background(
                 RoundedRectangle(cornerRadius: 9, style: .continuous)
@@ -502,6 +534,7 @@ struct SidebarView: View {
         }
         .buttonStyle(.plain)
         .help(label)
+        .accessibilityLabel(label)
     }
 
     private func sidebarRowContent(label: String, icon: String, badge: String?, isShortcutBadge: Bool, isActive: Bool) -> some View {

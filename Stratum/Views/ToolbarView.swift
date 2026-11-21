@@ -64,9 +64,16 @@ struct ToolbarView: View {
 
                 // Sidebar toggle + Back / Forward / Up (Unified History across Folders, Workspace Modes & Smart Folders)
                 HStack(spacing: 2) {
-                    toolbarIconButton("sidebar.left", label: "Toggle sidebar") {
+                    toolbarIconButton("sidebar.left", label: "Collapse sidebar to icons, or expand it") {
                         withAnimation(.spring(response: 0.32, dampingFraction: 0.82)) {
-                            appState.showSidebar.toggle()
+                            appState.toggleSidebarCollapsed()
+                        }
+                    }
+                    .contextMenu {
+                        Button(appState.showSidebar ? "Hide Sidebar" : "Show Sidebar") {
+                            withAnimation(.spring(response: 0.32, dampingFraction: 0.82)) {
+                                appState.showSidebar.toggle()
+                            }
                         }
                     }
                     toolbarIconButton("chevron.left", label: "Back", disabled: !appState.canGoBack) {

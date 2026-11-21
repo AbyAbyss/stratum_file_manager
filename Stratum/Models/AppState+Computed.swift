@@ -3,19 +3,30 @@ import AppKit
 import SwiftUI
 
 extension AppState {
-    /// The inspector is wanted and there is room for it. In a narrow window the sidebar wins
-    /// and the inspector steps aside without forgetting the user's choice.
+    /// The inspector is wanted and there is room for it. In a narrow window the full sidebar
+    /// wins and the inspector steps aside without forgetting the user's choice.
     var isInspectorVisible: Bool {
-        showInspector && (windowFitsBothPanels || !showSidebar)
+        showInspector && (windowFitsBothPanels || !showSidebar || sidebarCollapsed)
     }
 
-    /// Shows or hides the inspector. In a narrow window, showing it closes the sidebar to make room.
+    /// Shows or hides the inspector. In a narrow window, showing it collapses the sidebar to
+    /// icons to make room.
     func toggleInspector() {
         if isInspectorVisible {
             showInspector = false
         } else {
             showInspector = true
-            if !windowFitsBothPanels { showSidebar = false }
+            if !windowFitsBothPanels { sidebarCollapsed = true }
+        }
+    }
+
+    /// The toolbar's sidebar button: switches between the full sidebar and the icon rail,
+    /// and brings a hidden sidebar back.
+    func toggleSidebarCollapsed() {
+        if showSidebar {
+            sidebarCollapsed.toggle()
+        } else {
+            showSidebar = true
         }
     }
 
