@@ -237,11 +237,21 @@ final class ScanCoordinator {
         }
     }
 
+    /// Background refreshes are being skipped because the Mac is on battery
+    /// ("Only while on power" in Settings > Scanning).
+    var isAutoRefreshPausedOnBattery: Bool {
+        autoRefreshEnabled && onlyOnPower && PowerSource.isOnBattery
+    }
+
     /// Foreground scan (user explicitly clicked Scan or switched scope) or silent background refresh (`silent: true`).
     func startScan(at url: URL, name: String? = nil, silent: Bool = false) {
         if silent {
             guard autoRefreshEnabled, !isScanning, !isBackgroundRefreshing else { return }
-            if onlyOnPower && PowerSource.isOnBattery { return }
+            if isAutoRefreshPausedOnBattery {
+                // Catch up once power is back: the periodic monitor retries while this is set.
+                pendingSmartRefresh = true
+                return
+            }
             isBackgroundRefreshing = true
         } else {
             scanTask?.cancel()

@@ -207,7 +207,9 @@ struct ScanRefreshControl: View {
             Text("Showing current data meanwhile")
         } else if let date = coordinator.lastScanDate {
             TimelineView(.everyMinute) { _ in
-                Text("Updated \(date.formatted(.relative(presentation: .numeric, unitsStyle: .abbreviated)))")
+                // Say why old data isn't refreshing itself, so it doesn't look broken.
+                Text("Updated \(date.formatted(.relative(presentation: .numeric, unitsStyle: .abbreviated)))"
+                     + (coordinator.isAutoRefreshPausedOnBattery ? " · paused on battery" : ""))
             }
         } else {
             Text("Not scanned yet")
