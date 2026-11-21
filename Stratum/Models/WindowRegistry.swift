@@ -41,7 +41,17 @@ final class WindowRegistry {
             state = AppState(startURL: seed.path.map { URL(fileURLWithPath: $0, isDirectory: true) }, isPrimary: false)
         }
         states[seed.id] = state
+        newest = (state, Date())
         return state
+    }
+
+    @ObservationIgnored private var newest: (state: AppState, created: Date)?
+
+    /// A window that has only just opened. SwiftUI opens a blank one for every folder handed to
+    /// the app, so that is where the folder belongs.
+    var freshWindow: AppState? {
+        guard let newest, Date().timeIntervalSince(newest.created) < 2 else { return nil }
+        return newest.state
     }
 
     func activate(_ state: AppState) {

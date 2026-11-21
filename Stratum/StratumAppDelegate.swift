@@ -14,7 +14,6 @@ final class StratumAppDelegate: NSObject, NSApplicationDelegate {
 
     private var pending: [URL] = []
     private var isDuplicate = false
-    private let launchDate = Date()
 
     override init() {
         super.init()
@@ -47,26 +46,30 @@ final class StratumAppDelegate: NSObject, NSApplicationDelegate {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { NSApp.terminate(nil) }
     }
 
-    func application(_ sender: NSApplication, openFiles filenames: [String]) {
+    // SwiftUI forwards open requests here; the older `application(_:openFiles:)` is never called.
+    func application(_ application: NSApplication, open urls: [URL]) {
+        let files = urls.filter(\.isFileURL)
         if isDuplicate {
             DistributedNotificationCenter.default().postNotificationName(
-                Self.handoffName, object: nil, userInfo: ["paths": filenames], deliverImmediately: true
+                Self.handoffName, object: nil, userInfo: ["paths": files.map(\.path)], deliverImmediately: true
             )
         } else {
-            pending += filenames.map { URL(fileURLWithPath: $0) }
+            pending += files
             flushPending()
         }
-        sender.reply(toOpenOrPrint: .success)
     }
 
     func flushPending() {
         guard !isDuplicate, !pending.isEmpty, WindowRegistry.shared.windowCount > 0 else { return }
         let urls = pending
         pending = []
-        // While starting up, the folder goes into the first window; afterwards it gets a window of its own.
-        let isStartingUp = Date().timeIntervalSince(launchDate) < 3
         for url in urls {
-            if !isStartingUp, let open = WindowRegistry.shared.openWindow {
+            if let fresh = WindowRegistry.shared.freshWindow {
+                // The folder replaces the blank window's starting tab rather than sitting beside it.
+                let starter = fresh.tabs.count == 1 && !fresh.tabs[0].isPinned ? fresh.tabs[0].id : nil
+                fresh.openFromOutside(url)
+                if let starter, fresh.tabs.count > 1 { fresh.closeTab(starter) }
+            } else if let open = WindowRegistry.shared.openWindow {
                 open(WindowSeed(path: Self.folder(of: url).path))
             } else {
                 WindowRegistry.shared.active.openFromOutside(url)

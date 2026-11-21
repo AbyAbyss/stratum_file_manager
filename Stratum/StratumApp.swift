@@ -230,7 +230,11 @@ struct WindowRoot: View {
         let appState = WindowRegistry.shared.state(for: seed)
         MainWindowView(appState: appState, appearance: appearance)
             .frame(minWidth: WindowMetrics.minWidth, minHeight: WindowMetrics.minHeight)
-            .onAppear { WindowRegistry.shared.openWindow = { openWindow(value: $0) } }
+            .onAppear {
+                WindowRegistry.shared.openWindow = { openWindow(value: $0) }
+                // A folder passed at launch arrives before any window exists; open it now.
+                StratumAppDelegate.shared?.flushPending()
+            }
             .background(WindowAccessor(
                 onFocus: { WindowRegistry.shared.activate(appState) },
                 onClose: { WindowRegistry.shared.remove(seed) }
