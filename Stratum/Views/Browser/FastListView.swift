@@ -32,28 +32,28 @@ struct FastListView: NSViewRepresentable {
         tableView.setDraggingSourceOperationMask([.copy, .move], forLocal: false)
 
         let nameCol = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("Name"))
-        nameCol.title = "Name"
+        nameCol.headerCell = InsetHeaderCell(title: "Name", inset: 12)
         nameCol.minWidth = 220
         nameCol.width = 340
         nameCol.resizingMask = .autoresizingMask
         tableView.addTableColumn(nameCol)
 
         let modCol = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("Modified"))
-        modCol.title = "Modified"
+        modCol.headerCell = InsetHeaderCell(title: "Modified", inset: 6)
         modCol.minWidth = 120
         modCol.width = 140
         modCol.resizingMask = .userResizingMask
         tableView.addTableColumn(modCol)
 
         let sizeCol = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("Size"))
-        sizeCol.title = "Size"
+        sizeCol.headerCell = InsetHeaderCell(title: "Size", inset: 6)
         sizeCol.minWidth = 75
         sizeCol.width = 90
         sizeCol.resizingMask = .userResizingMask
         tableView.addTableColumn(sizeCol)
 
         let kindCol = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("Kind"))
-        kindCol.title = "Kind"
+        kindCol.headerCell = InsetHeaderCell(title: "Kind", inset: 6)
         kindCol.minWidth = 110
         kindCol.width = 140
         kindCol.resizingMask = .userResizingMask
@@ -348,5 +348,28 @@ final class KeyHandlingTableView: NSTableView {
             return
         }
         super.keyDown(with: event)
+    }
+}
+
+/// A column header whose title starts where the column's row content starts.
+private final class InsetHeaderCell: NSTableHeaderCell {
+    private let inset: CGFloat
+
+    init(title: String, inset: CGFloat) {
+        self.inset = inset
+        super.init(textCell: title)
+    }
+
+    required init(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func drawInterior(withFrame cellFrame: NSRect, in controlView: NSView) {
+        // The stock cell already pads its title by 2pt.
+        let shift = inset - 2
+        var frame = cellFrame
+        frame.origin.x += shift
+        frame.size.width -= shift
+        super.drawInterior(withFrame: frame, in: controlView)
     }
 }
