@@ -34,6 +34,9 @@ final class AppState {
 
     var showSidebar: Bool = true
     var showInspector: Bool = true
+    /// False while the window is too narrow for the sidebar and the inspector together.
+    /// Set by the main window as it resizes.
+    var windowFitsBothPanels: Bool = true
     var showCommandPalette: Bool = false
     var showGoToFolder: Bool = false
     var showQuickFilter: Bool = false

@@ -2,7 +2,8 @@ import SwiftUI
 import AppKit
 
 /// Lets a side panel be resized by dragging its inner edge. Double-click the edge to reset.
-/// The width is remembered between launches under `key`.
+/// The width is remembered between launches under `key`. The panel can be laid out narrower than
+/// that (down to the range's lower bound) by `SidePanelLayout` when the window is small.
 private struct ResizablePanel: ViewModifier {
     var key: String
     var defaultWidth: Double
@@ -25,7 +26,7 @@ private struct ResizablePanel: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .frame(width: width)
+            .frame(minWidth: range.lowerBound, idealWidth: width, maxWidth: width)
             .overlay(alignment: edge == .trailing ? .trailing : .leading) { handle }
     }
 

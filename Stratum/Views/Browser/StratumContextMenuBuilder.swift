@@ -58,7 +58,7 @@ final class StratumContextMenuBuilder: NSObject {
         }
 
         menu.addItem(makeItem("Quick Look", symbol: "eye", action: #selector(ctxQuickLook)))
-        menu.addItem(makeItem(appState.showInspector ? "Hide Inspector" : "Show in Inspector", symbol: "info.circle", action: #selector(ctxToggleInspector)))
+        menu.addItem(makeItem(appState.isInspectorVisible ? "Hide Inspector" : "Show in Inspector", symbol: "info.circle", action: #selector(ctxToggleInspector)))
 
         menu.addItem(.separator())
 
@@ -237,7 +237,7 @@ final class StratumContextMenuBuilder: NSObject {
     }
 
     @objc private func ctxToggleInspector() {
-        currentAppState?.showInspector.toggle()
+        currentAppState?.toggleInspector()
     }
 
     @objc private func ctxCutItems() {

@@ -31,6 +31,9 @@ extension ToolbarView {
                                     Text(isActive ? appState.currentFolderTitle : tab.title)
                                         .font(.system(size: 12.5, weight: isActive ? .semibold : .regular))
                                         .foregroundStyle(isActive ? .primary : .secondary)
+                                        .lineLimit(1)
+                                        .truncationMode(.middle)
+                                        .frame(maxWidth: 180)
                                         .padding(.trailing, 2)
                                 }
                             }

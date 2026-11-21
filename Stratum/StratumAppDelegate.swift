@@ -7,15 +7,15 @@ import SwiftUI
 /// Stratum is a single-instance app. If a second copy is started anyway (for example `open -n`),
 /// it hands its folders to the copy that is already running and quits, so there is only ever one
 /// Dock icon, and the running copy opens a window on the requested folder.
+@MainActor
 final class StratumAppDelegate: NSObject, NSApplicationDelegate {
-    @MainActor static weak var shared: StratumAppDelegate?
+    static weak var shared: StratumAppDelegate?
     private static let handoffName = Notification.Name("app.stratum.filemanager.openFolders")
 
     private var pending: [URL] = []
     private var isDuplicate = false
     private let launchDate = Date()
 
-    @MainActor
     override init() {
         super.init()
         Self.shared = self
@@ -30,7 +30,6 @@ final class StratumAppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    @MainActor
     func applicationWillFinishLaunching(_ notification: Notification) {
         // The test runner launches the app as its host; that must not hand off to a real copy.
         guard ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil,
@@ -42,14 +41,12 @@ final class StratumAppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    @MainActor
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Folders passed at launch arrive just before this; give them a moment to be handed off.
         guard isDuplicate else { return }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { NSApp.terminate(nil) }
     }
 
-    @MainActor
     func application(_ sender: NSApplication, openFiles filenames: [String]) {
         if isDuplicate {
             DistributedNotificationCenter.default().postNotificationName(
@@ -62,7 +59,6 @@ final class StratumAppDelegate: NSObject, NSApplicationDelegate {
         sender.reply(toOpenOrPrint: .success)
     }
 
-    @MainActor
     func flushPending() {
         guard !isDuplicate, !pending.isEmpty, WindowRegistry.shared.windowCount > 0 else { return }
         let urls = pending

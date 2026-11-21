@@ -77,25 +77,36 @@ struct SettingsRow<Trailing: View>: View {
     }
 
     var body: some View {
-        HStack(alignment: .center, spacing: 16) {
-            VStack(alignment: .leading, spacing: 3) {
-                Text(title)
-                    .font(.system(size: 13.5, weight: .medium))
-                    .fixedSize(horizontal: false, vertical: true)
-                if let detail {
-                    Text(detail)
-                        .font(.system(size: 12))
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
+        // Control beside the text when there is room, under it when there isn't.
+        ViewThatFits(in: .horizontal) {
+            HStack(alignment: .center, spacing: 28) {
+                // A modest ideal width lets a long explanation wrap instead of forcing the stack.
+                labels.frame(minWidth: 0, idealWidth: 200, maxWidth: .infinity, alignment: .leading)
+                trailing
             }
-            .layoutPriority(1)
-            Spacer(minLength: 12)
-            trailing
+            VStack(alignment: .leading, spacing: 10) {
+                labels
+                trailing
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
         .frame(minHeight: 52)
+    }
+
+    private var labels: some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Text(title)
+                .font(.system(size: 13.5, weight: .medium))
+                .fixedSize(horizontal: false, vertical: true)
+            if let detail {
+                Text(detail)
+                    .font(.system(size: 12))
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
     }
 }
 

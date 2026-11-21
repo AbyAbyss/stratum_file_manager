@@ -11,7 +11,7 @@ struct BrowserContainerView: View {
     @State private var navigationToken = 0
 
     var body: some View {
-        HStack(spacing: 0) {
+        SidePanelLayout(panelEdge: .trailing, mainMinWidth: WindowMetrics.browserListMinWidth) {
             VStack(spacing: 0) {
                 browserHeader
 
@@ -52,12 +52,12 @@ struct BrowserContainerView: View {
             }
             .background(Color(nsColor: .windowBackgroundColor).opacity(appearance.contentBackgroundOpacity))
 
-            if appState.showInspector {
+            if appState.isInspectorVisible {
                 InspectorSidebarView(appState: appState, appearance: appearance)
                     .transition(.move(edge: .trailing).combined(with: .opacity))
             }
         }
-        .animation(.spring(response: 0.38, dampingFraction: 0.86), value: appState.showInspector)
+        .animation(.spring(response: 0.38, dampingFraction: 0.86), value: appState.isInspectorVisible)
         .onChange(of: appState.currentURL) { _, _ in beginNavigation() }
         .onChange(of: appState.isLoadingDirectory) { _, loading in
             if !loading { endNavigation() }
@@ -149,189 +149,201 @@ struct BrowserContainerView: View {
         }
     }
 
+    // MARK: - Header
+
+    /// How much room the header's controls take: every sort field as its own pill, one sort
+    /// menu, or icons only.
+    private enum HeaderControlStyle { case full, compact, iconOnly }
+
     private var browserHeader: some View {
-        HStack(alignment: .bottom, spacing: 12) {
-            VStack(alignment: .leading, spacing: 3) {
-                HStack(spacing: 8) {
-                    Text(appState.currentFolderTitle)
-                        .font(.system(size: 22, weight: .semibold))
-                        .tracking(-0.2)
-
-                    let isPinned = appState.isPinned(appState.currentURL)
-                    Button {
-                        appState.togglePinFolder(appState.currentURL)
-                    } label: {
-                        Image(systemName: isPinned ? "pin.fill" : "pin")
-                            .font(.system(size: 11.5, weight: .semibold))
-                            .foregroundStyle(isPinned ? appearance.accentColor : .secondary)
-                            .frame(width: 24, height: 24)
-                            .background(
-                                Circle()
-                                    .fill(isPinned ? appearance.selectionFillColor : Color.primary.opacity(0.05))
-                            )
-                            .contentShape(Circle())
-                    }
-                    .buttonStyle(.plain)
-                    .stratumHelp(isPinned ? "Unpin folder from Sidebar" : "Pin folder to Sidebar Favorites")
-                }
-
-                HStack(spacing: 5) {
-                    Text("\(appState.displayedItems.count) \(appState.displayedItems.count == 1 ? "item" : "items")")
-                    if appState.currentFolderTotalBytes > 0 {
-                        Text("·")
-                        Text(BulkDirectoryReader.fastFormatBytes(appState.currentFolderTotalBytes))
-                    }
-                    if appState.isCurrentFolderInICloud {
-                        Text("·")
-                        Image(systemName: "checkmark")
-                            .font(.system(size: 10, weight: .bold))
-                            .foregroundStyle(Color(nsColor: NSColor(hex: "#5FD38D") ?? .systemGreen))
-                        Text("Synced to iCloud")
-                    }
-                    if let smartName = appState.activeSmartFolderName {
-                        Text("·")
-                        Button {
-                            appState.exitSmartFolder()
-                        } label: {
-                            HStack(spacing: 4) {
-                                Image(systemName: "sparkles")
-                                    .font(.system(size: 10, weight: .bold))
-                                Text("Smart Folder across Mac (\(smartName)) · Exit")
-                                Image(systemName: "xmark.circle.fill")
-                            }
-                            .foregroundStyle(appearance.accentColor)
-                        }
-                        .buttonStyle(.plain)
-                    }
-                    if let activeTag = appState.selectedTagFilter {
-                        Text("·")
-                        Button {
-                            appState.selectedTagFilter = nil
-                        } label: {
-                            HStack(spacing: 4) {
-                                Text("Filtered by tag: \(activeTag)")
-                                Image(systemName: "xmark.circle.fill")
-                            }
-                            .foregroundStyle(appearance.accentColor)
-                        }
-                        .buttonStyle(.plain)
-                    }
-                }
-                .font(.system(size: 12).monospacedDigit())
-                .foregroundStyle(.secondary)
-            }
-
-            Spacer()
-
-            HStack(spacing: 6) {
-                // Quick Create Menu (+ New)
-                Menu {
-                    Button {
-                        appState.createNewFolder()
-                    } label: {
-                        Label("New Folder", systemImage: "folder.badge.plus")
-                    }
-                    if !appState.selectedItems.isEmpty {
-                        Button {
-                            appState.createNewFolderWithSelection()
-                        } label: {
-                            Label("New Folder with Selection (\(appState.selectedItems.count))", systemImage: "folder.fill.badge.plus")
-                        }
-                    }
-                    Divider()
-                    Button {
-                        appState.createNewFile(baseName: "README", ext: "md", contents: "# \(appState.currentFolderTitle)\n\n")
-                    } label: {
-                        Label("New Markdown (.md)", systemImage: "doc.text")
-                    }
-                    Button {
-                        appState.createNewFile(baseName: "Untitled", ext: "txt", contents: "")
-                    } label: {
-                        Label("New Text File (.txt)", systemImage: "doc.plaintext")
-                    }
-                    Button {
-                        appState.createNewFile(baseName: "script", ext: "py", contents: "#!/usr/bin/env python3\n\ndef main():\n    pass\n\nif __name__ == \"__main__\":\n    main()\n")
-                    } label: {
-                        Label("New Python Script (.py)", systemImage: "chevron.left.forwardslash.chevron.right")
-                    }
-                    Button {
-                        appState.createNewFile(baseName: "run", ext: "sh", contents: "#!/usr/bin/env zsh\nset -euo pipefail\n\n")
-                    } label: {
-                        Label("New Shell Script (.sh)", systemImage: "terminal")
-                    }
-                    Button {
-                        appState.createNewFile(baseName: "config", ext: "json", contents: "{\n  \n}\n")
-                    } label: {
-                        Label("New JSON (.json)", systemImage: "curlybraces")
-                    }
-                } label: {
-                    HStack(spacing: 4) {
-                        Image(systemName: "plus")
-                            .font(.system(size: 10.5, weight: .bold))
-                        Text("New")
-                            .font(.system(size: 12, weight: .medium))
-                    }
-                    .padding(.horizontal, 10)
-                    .frame(height: 26)
-                    .background(
-                        Capsule()
-                            .fill(appearance.selectionFillColor)
-                            .overlay(
-                                Capsule()
-                                    .strokeBorder(appearance.selectionBorderColor, lineWidth: 1)
-                            )
-                    )
-                }
-                .menuStyle(.borderlessButton)
-                .fixedSize()
-
-                sortPill(field: .name)
-                sortPill(field: .kind)
-                sortPill(field: .modified)
-                sortPill(field: .size)
-
-                Button {
-                    appState.groupByKind.toggle()
-                } label: {
-                    HStack(spacing: 5) {
-                        Image(systemName: "square.grid.3x1.below.line.grid.1x2")
-                            .font(.system(size: 10, weight: .semibold))
-                        Text("Grouped")
-                            .font(.system(size: 12))
-                    }
-                    .padding(.horizontal, 10)
-                    .frame(height: 26)
-                    .background(
-                        Capsule()
-                            .fill(appState.groupByKind ? appearance.selectionFillColor : Color.primary.opacity(0.05))
-                            .overlay(
-                                Capsule()
-                                    .strokeBorder(
-                                        appState.groupByKind ? appearance.selectionBorderColor : Color.primary.opacity(0.10),
-                                        lineWidth: 1
-                                    )
-                            )
-                    )
-                    .contentShape(Capsule())
-                }
-                .buttonStyle(.plain)
-                .help("Group items by kind in Grid View")
-            }
+        // The roomiest set of controls that fits next to the title.
+        ViewThatFits(in: .horizontal) {
+            headerRow(.full)
+            headerRow(.compact)
+            headerRow(.iconOnly)
         }
         .padding(.horizontal, 22)
         .padding(.top, 16)
         .padding(.bottom, 12)
     }
 
+    private func headerRow(_ style: HeaderControlStyle) -> some View {
+        HStack(alignment: .bottom, spacing: 12) {
+            // The title asks for a modest width so a long folder name truncates instead of
+            // forcing the compact controls; it still takes all the room that is left.
+            headerTitles
+                .frame(minWidth: 0, idealWidth: 190, maxWidth: .infinity, alignment: .leading)
+            headerControls(style)
+                .fixedSize()
+        }
+    }
+
+    private var headerTitles: some View {
+        VStack(alignment: .leading, spacing: 3) {
+            HStack(spacing: 8) {
+                Text(appState.currentFolderTitle)
+                    .font(.system(size: 22, weight: .semibold))
+                    .tracking(-0.2)
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+
+                let isPinned = appState.isPinned(appState.currentURL)
+                Button {
+                    appState.togglePinFolder(appState.currentURL)
+                } label: {
+                    Image(systemName: isPinned ? "pin.fill" : "pin")
+                        .font(.system(size: 11.5, weight: .semibold))
+                        .foregroundStyle(isPinned ? appearance.accentColor : .secondary)
+                        .frame(width: 24, height: 24)
+                        .background(
+                            Circle()
+                                .fill(isPinned ? appearance.selectionFillColor : Color.primary.opacity(0.05))
+                        )
+                        .contentShape(Circle())
+                }
+                .buttonStyle(.plain)
+                .stratumHelp(isPinned ? "Unpin folder from Sidebar" : "Pin folder to Sidebar Favorites")
+            }
+
+            HStack(spacing: 5) {
+                Text("\(appState.displayedItems.count) \(appState.displayedItems.count == 1 ? "item" : "items")")
+                    .layoutPriority(1)
+                if appState.currentFolderTotalBytes > 0 {
+                    Text("·")
+                    Text(BulkDirectoryReader.fastFormatBytes(appState.currentFolderTotalBytes))
+                        .layoutPriority(1)
+                }
+                if appState.isCurrentFolderInICloud {
+                    Text("·")
+                    Image(systemName: "checkmark")
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundStyle(Color(nsColor: NSColor(hex: "#5FD38D") ?? .systemGreen))
+                    Text("Synced to iCloud")
+                }
+                if let smartName = appState.activeSmartFolderName {
+                    Text("·")
+                    Button {
+                        appState.exitSmartFolder()
+                    } label: {
+                        HStack(spacing: 4) {
+                            Image(systemName: "sparkles")
+                                .font(.system(size: 10, weight: .bold))
+                            Text("Smart Folder: \(smartName)")
+                            Image(systemName: "xmark.circle.fill")
+                        }
+                        .foregroundStyle(appearance.accentColor)
+                    }
+                    .buttonStyle(.plain)
+                    .help("Searching across your Mac. Click to exit the Smart Folder.")
+                }
+                if let activeTag = appState.selectedTagFilter {
+                    Text("·")
+                    Button {
+                        appState.selectedTagFilter = nil
+                    } label: {
+                        HStack(spacing: 4) {
+                            Text("Tag: \(activeTag)")
+                            Image(systemName: "xmark.circle.fill")
+                        }
+                        .foregroundStyle(appearance.accentColor)
+                    }
+                    .buttonStyle(.plain)
+                    .help("Click to clear the tag filter")
+                }
+            }
+            .font(.system(size: 12).monospacedDigit())
+            .foregroundStyle(.secondary)
+            .lineLimit(1)
+        }
+    }
+
+    private func headerControls(_ style: HeaderControlStyle) -> some View {
+        HStack(spacing: 6) {
+            newItemMenu(showsTitle: style != .iconOnly)
+
+            if style == .full {
+                ForEach(SortField.allCases, id: \.self) { sortPill(field: $0) }
+            } else {
+                sortMenu(showsTitle: style == .compact)
+            }
+
+            groupToggle(showsTitle: style == .full)
+        }
+    }
+
+    private func headerPill(isActive: Bool) -> some View {
+        Capsule()
+            .fill(isActive ? appearance.selectionFillColor : Color.primary.opacity(0.05))
+            .overlay(
+                Capsule()
+                    .strokeBorder(isActive ? appearance.selectionBorderColor : Color.primary.opacity(0.10), lineWidth: 1)
+            )
+    }
+
+    /// Quick Create Menu (+ New)
+    private func newItemMenu(showsTitle: Bool) -> some View {
+        Menu {
+            Button {
+                appState.createNewFolder()
+            } label: {
+                Label("New Folder", systemImage: "folder.badge.plus")
+            }
+            if !appState.selectedItems.isEmpty {
+                Button {
+                    appState.createNewFolderWithSelection()
+                } label: {
+                    Label("New Folder with Selection (\(appState.selectedItems.count))", systemImage: "folder.fill.badge.plus")
+                }
+            }
+            Divider()
+            Button {
+                appState.createNewFile(baseName: "README", ext: "md", contents: "# \(appState.currentFolderTitle)\n\n")
+            } label: {
+                Label("New Markdown (.md)", systemImage: "doc.text")
+            }
+            Button {
+                appState.createNewFile(baseName: "Untitled", ext: "txt", contents: "")
+            } label: {
+                Label("New Text File (.txt)", systemImage: "doc.plaintext")
+            }
+            Button {
+                appState.createNewFile(baseName: "script", ext: "py", contents: "#!/usr/bin/env python3\n\ndef main():\n    pass\n\nif __name__ == \"__main__\":\n    main()\n")
+            } label: {
+                Label("New Python Script (.py)", systemImage: "chevron.left.forwardslash.chevron.right")
+            }
+            Button {
+                appState.createNewFile(baseName: "run", ext: "sh", contents: "#!/usr/bin/env zsh\nset -euo pipefail\n\n")
+            } label: {
+                Label("New Shell Script (.sh)", systemImage: "terminal")
+            }
+            Button {
+                appState.createNewFile(baseName: "config", ext: "json", contents: "{\n  \n}\n")
+            } label: {
+                Label("New JSON (.json)", systemImage: "curlybraces")
+            }
+        } label: {
+            HStack(spacing: 4) {
+                Image(systemName: "plus")
+                    .font(.system(size: 10.5, weight: .bold))
+                if showsTitle {
+                    Text("New")
+                        .font(.system(size: 12, weight: .medium))
+                }
+            }
+            .padding(.horizontal, 10)
+            .frame(height: 26)
+            .background(headerPill(isActive: true))
+        }
+        .menuStyle(.button)
+        .buttonStyle(.plain)
+        .fixedSize()
+        .stratumHelp("New folder or file")
+    }
+
     private func sortPill(field: SortField) -> some View {
         let isActive = (appState.sortField == field)
         return Button {
-            if appState.sortField == field {
-                appState.sortAscending.toggle()
-            } else {
-                appState.sortField = field
-                appState.sortAscending = true
-            }
+            sort(by: field)
         } label: {
             HStack(spacing: 4) {
                 Text(field.rawValue)
@@ -342,20 +354,73 @@ struct BrowserContainerView: View {
             .foregroundStyle(isActive ? .primary : .secondary)
             .padding(.horizontal, 10)
             .frame(height: 26)
-            .background(
-                Capsule()
-                    .fill(isActive ? appearance.selectionFillColor : Color.primary.opacity(0.05))
-                    .overlay(
-                        Capsule()
-                            .strokeBorder(
-                                isActive ? appearance.selectionBorderColor : Color.primary.opacity(0.10),
-                                lineWidth: 1
-                            )
-                    )
-            )
+            .background(headerPill(isActive: isActive))
             .contentShape(Capsule())
         }
         .buttonStyle(.plain)
+    }
+
+    /// All sort fields in one menu, for when the separate pills don't fit.
+    private func sortMenu(showsTitle: Bool) -> some View {
+        Menu {
+            ForEach(SortField.allCases, id: \.self) { field in
+                Toggle(field.rawValue, isOn: Binding(
+                    get: { appState.sortField == field },
+                    set: { _ in sort(by: field) }
+                ))
+            }
+            Divider()
+            Toggle("Ascending", isOn: Binding(get: { appState.sortAscending }, set: { _ in appState.sortAscending = true }))
+            Toggle("Descending", isOn: Binding(get: { !appState.sortAscending }, set: { _ in appState.sortAscending = false }))
+        } label: {
+            HStack(spacing: 4) {
+                Image(systemName: "arrow.up.arrow.down")
+                    .font(.system(size: 10, weight: .semibold))
+                if showsTitle {
+                    Text(appState.sortField.rawValue)
+                        .font(.system(size: 12, weight: .semibold))
+                }
+            }
+            .padding(.horizontal, 10)
+            .frame(height: 26)
+            .background(headerPill(isActive: true))
+        }
+        .menuStyle(.button)
+        .buttonStyle(.plain)
+        .menuIndicator(.hidden)
+        .fixedSize()
+        .stratumHelp("Sort by \(appState.sortField.rawValue), \(appState.sortAscending ? "ascending" : "descending")")
+    }
+
+    /// Picks a sort field; picking the current one again flips the direction.
+    private func sort(by field: SortField) {
+        if appState.sortField == field {
+            appState.sortAscending.toggle()
+        } else {
+            appState.sortField = field
+            appState.sortAscending = true
+        }
+    }
+
+    private func groupToggle(showsTitle: Bool) -> some View {
+        Button {
+            appState.groupByKind.toggle()
+        } label: {
+            HStack(spacing: 5) {
+                Image(systemName: "square.grid.3x1.below.line.grid.1x2")
+                    .font(.system(size: 10, weight: .semibold))
+                if showsTitle {
+                    Text("Grouped")
+                        .font(.system(size: 12))
+                }
+            }
+            .padding(.horizontal, 10)
+            .frame(height: 26)
+            .background(headerPill(isActive: appState.groupByKind))
+            .contentShape(Capsule())
+        }
+        .buttonStyle(.plain)
+        .stratumHelp("Group items by kind in Grid View")
     }
 
     private var quickFilterBar: some View {
@@ -396,6 +461,15 @@ struct BrowserContainerView: View {
     // MARK: - Multi-Select Floating Action Bar
 
     private var multiSelectFloatingBar: some View {
+        // Labelled buttons when they fit, icons with tooltips when they don't.
+        ViewThatFits(in: .horizontal) {
+            floatingBar(showsTitles: true)
+            floatingBar(showsTitles: false)
+        }
+        .padding(.horizontal, 12)
+    }
+
+    private func floatingBar(showsTitles: Bool) -> some View {
         let sel = appState.selectedItems
         let totalBytes = sel.reduce(Int64(0)) { $0 + $1.size }
 
@@ -404,11 +478,13 @@ struct BrowserContainerView: View {
                 Text("\(sel.count) selected")
                     .font(.system(size: 12.5, weight: .semibold).monospacedDigit())
                     .foregroundStyle(.white)
+                    .lineLimit(1)
+                    .fixedSize()
                     .padding(.horizontal, 9)
                     .padding(.vertical, 3)
                     .background(Capsule().fill(appearance.accentColor))
 
-                if totalBytes > 0 {
+                if totalBytes > 0 && showsTitles {
                     Text(BulkDirectoryReader.fastFormatBytes(totalBytes))
                         .font(.system(size: 12).monospacedDigit())
                         .foregroundStyle(.secondary)
@@ -418,23 +494,23 @@ struct BrowserContainerView: View {
             Divider()
                 .frame(height: 18)
 
-            floatingBarButton("Group in Folder", icon: "folder.badge.plus") {
+            floatingBarButton("Group in Folder", icon: "folder.badge.plus", showsTitle: showsTitles) {
                 appState.createNewFolderWithSelection()
             }
 
-            floatingBarButton("Batch Rename", icon: "pencil.and.outline") {
+            floatingBarButton("Batch Rename", icon: "pencil.and.outline", showsTitle: showsTitles) {
                 appState.showBatchRename = true
             }
 
-            floatingBarButton("Park on Shelf", icon: "tray.and.arrow.down") {
+            floatingBarButton("Park on Shelf", icon: "tray.and.arrow.down", showsTitle: showsTitles) {
                 appState.addToShelf(sel.map(\.url))
             }
 
-            floatingBarButton("Zip", icon: "archivebox") {
+            floatingBarButton("Zip", icon: "archivebox", showsTitle: showsTitles) {
                 appState.compressSelection()
             }
 
-            floatingBarButton("Copy Path", icon: "link") {
+            floatingBarButton("Copy Path", icon: "link", showsTitle: showsTitles) {
                 let paths = sel.map(\.id).joined(separator: "\n")
                 TerminalLauncher.copyPathToPasteboard(paths)
                 appState.showToast("Copied \(sel.count) paths")
@@ -446,8 +522,10 @@ struct BrowserContainerView: View {
                 HStack(spacing: 4) {
                     Image(systemName: "trash")
                         .font(.system(size: 11.5, weight: .semibold))
-                    Text("Trash")
-                        .font(.system(size: 12, weight: .semibold))
+                    if showsTitles {
+                        Text("Trash")
+                            .font(.system(size: 12, weight: .semibold))
+                    }
                 }
                 .foregroundStyle(Color(nsColor: NSColor(hex: "#FF8A8A") ?? .systemRed))
                 .padding(.horizontal, 10)
@@ -463,6 +541,7 @@ struct BrowserContainerView: View {
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            .stratumHelp("Move to Trash")
 
             Button {
                 appState.selectedItemIDs = []
@@ -489,13 +568,15 @@ struct BrowserContainerView: View {
         .shadow(color: .black.opacity(0.35), radius: 14, y: 6)
     }
 
-    private func floatingBarButton(_ title: String, icon: String, action: @escaping () -> Void) -> some View {
+    private func floatingBarButton(_ title: String, icon: String, showsTitle: Bool, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             HStack(spacing: 5) {
                 Image(systemName: icon)
                     .font(.system(size: 11.5, weight: .medium))
-                Text(title)
-                    .font(.system(size: 12, weight: .medium))
+                if showsTitle {
+                    Text(title)
+                        .font(.system(size: 12, weight: .medium))
+                }
             }
             .padding(.horizontal, 10)
             .frame(height: 28)
@@ -510,7 +591,6 @@ struct BrowserContainerView: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .stratumHelp(title)
     }
 }
-
-// MARK: - Shared Rich Context Menu Controller (Used by Grid, List, and Column Views)

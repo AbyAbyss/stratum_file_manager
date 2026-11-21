@@ -17,7 +17,9 @@ struct SettingsLivePreview: View {
             Circle().fill(appearance.accentColor.opacity(0.25)).frame(width: 140).blur(radius: 46).offset(x: 190, y: -50)
 
             miniWindow
-                .frame(width: 440, height: 168)
+                .frame(maxWidth: 440)
+                .frame(height: 168)
+                .padding(.horizontal, 16)
                 .shadow(color: .black.opacity(0.35), radius: 22, y: 10)
         }
         .frame(height: 224)

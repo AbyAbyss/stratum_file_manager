@@ -8,26 +8,27 @@ extension SmartOrganizerView {
     var folderOrganizerSection: some View {
         VStack(alignment: .leading, spacing: 18) {
             // 1. Summary Action Banner
-            HStack(spacing: 16) {
-                ZStack {
-                    Circle()
-                        .fill(appearance.accentColor.opacity(0.18))
-                        .frame(width: 48, height: 48)
-                    Image(systemName: "wand.and.stars")
-                        .font(.system(size: 20, weight: .semibold))
-                        .foregroundStyle(appearance.accentColor)
-                }
+            AdaptiveStack(spacing: 16) {
+                HStack(spacing: 16) {
+                    ZStack {
+                        Circle()
+                            .fill(appearance.accentColor.opacity(0.18))
+                            .frame(width: 48, height: 48)
+                        Image(systemName: "wand.and.stars")
+                            .font(.system(size: 20, weight: .semibold))
+                            .foregroundStyle(appearance.accentColor)
+                    }
 
-                VStack(alignment: .leading, spacing: 3) {
-                    Text("\(targetFolderURL.lastPathComponent) has \(totalOrganizableFiles) loose \(totalOrganizableFiles == 1 ? "file" : "files") (\(BulkDirectoryReader.fastFormatBytes(totalOrganizableBytes)))")
-                        .font(.system(size: 16, weight: .bold))
-                        .contentTransition(.numericText())
-                    Text("Nothing is moved automatically — click any category below (or Organize All) to create its folder inside \(targetFolderURL.path).")
-                        .font(.system(size: 12.5))
-                        .foregroundStyle(.secondary)
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text("\(targetFolderURL.lastPathComponent) has \(totalOrganizableFiles) loose \(totalOrganizableFiles == 1 ? "file" : "files") (\(BulkDirectoryReader.fastFormatBytes(totalOrganizableBytes)))")
+                            .font(.system(size: 16, weight: .bold))
+                            .contentTransition(.numericText())
+                        Text("Nothing is moved automatically — click any category below (or Organize All) to create its folder inside \(targetFolderURL.path).")
+                            .font(.system(size: 12.5))
+                            .foregroundStyle(.secondary)
+                    }
+                    .frame(minWidth: 0, idealWidth: 280, maxWidth: .infinity, alignment: .leading)
                 }
-
-                Spacer()
 
                 if !lastOrganizeMoves.isEmpty {
                     Button {
@@ -38,6 +39,7 @@ extension SmartOrganizerView {
                                 .font(.system(size: 11.5, weight: .semibold))
                             Text("Undo Last Move (\(lastOrganizeMoves.count))")
                                 .font(.system(size: 12, weight: .semibold))
+                                .lineLimit(1)
                         }
                         .padding(.horizontal, 12)
                         .frame(height: 34)
@@ -51,6 +53,7 @@ extension SmartOrganizerView {
                         )
                     }
                     .buttonStyle(StratumInteractiveButtonStyle())
+                    .fixedSize()
                 }
 
                 Button {
@@ -61,6 +64,7 @@ extension SmartOrganizerView {
                             .font(.system(size: 12.5, weight: .bold))
                         Text("Organize All Categories (\(totalOrganizableFiles))")
                             .font(.system(size: 13, weight: .semibold))
+                            .lineLimit(1)
                     }
                     .foregroundStyle(.white)
                     .padding(.horizontal, 16)
@@ -73,6 +77,7 @@ extension SmartOrganizerView {
                 }
                 .buttonStyle(StratumInteractiveButtonStyle())
                 .disabled(totalOrganizableFiles == 0)
+                .fixedSize()
             }
             .padding(16)
             .background(
@@ -92,17 +97,18 @@ extension SmartOrganizerView {
                             .foregroundStyle(Color(nsColor: NSColor(hex: "#5FD38D") ?? .systemGreen))
                         Text("Created Category Folders in \(targetFolderURL.lastPathComponent)")
                             .font(.system(size: 14, weight: .bold))
-                        Text("· Folders you clicked to create · Open in Browser or Unpack back to \(targetFolderURL.lastPathComponent)")
+                            .lineLimit(1)
+                            .layoutPriority(1)
+                        Text("· Open in Browser or Unpack back to \(targetFolderURL.lastPathComponent)")
                             .font(.system(size: 12))
                             .foregroundStyle(.secondary)
-                        Spacer()
+                            .lineLimit(1)
+                        Spacer(minLength: 0)
                     }
 
                     LazyVGrid(
-                        columns: [
-                            GridItem(.flexible(), spacing: 14),
-                            GridItem(.flexible(), spacing: 14)
-                        ],
+                        // As many cards per row as fit; one column in a narrow window.
+                        columns: [GridItem(.adaptive(minimum: 330), spacing: 14, alignment: .top)],
                         spacing: 14
                     ) {
                         ForEach(organizedFolders) { org in
@@ -123,9 +129,11 @@ extension SmartOrganizerView {
                                         HStack(spacing: 6) {
                                             Text("\(org.folderName)/")
                                                 .font(.system(size: 14, weight: .bold))
+                                                .lineLimit(1)
                                             Text("CREATED BY YOU")
                                                 .font(.system(size: 9.5, weight: .bold))
                                                 .foregroundStyle(badgeTint)
+                                                .fixedSize()
                                                 .padding(.horizontal, 6)
                                                 .padding(.vertical, 1.5)
                                                 .background(Capsule().fill(tint.opacity(0.16)))
@@ -178,8 +186,9 @@ extension SmartOrganizerView {
                                         HStack(spacing: 5) {
                                             Image(systemName: "folder.fill")
                                                 .font(.system(size: 11, weight: .semibold))
-                                            Text("Open \"\(org.folderName)\" in Browser")
+                                            Text("Open in Browser")
                                                 .font(.system(size: 11.5, weight: .semibold))
+                                                .lineLimit(1)
                                         }
                                         .foregroundStyle(.white)
                                         .frame(maxWidth: .infinity)
@@ -190,13 +199,16 @@ extension SmartOrganizerView {
                                         )
                                     }
                                     .buttonStyle(StratumInteractiveButtonStyle())
+                                    .help("Open \"\(org.folderName)\" in the Browser")
 
                                     Button {
                                         appState.navigate(to: targetFolderURL)
                                         appState.selectedItemIDs = [org.folderURL.path]
                                     } label: {
-                                        Text("Highlight in \(targetFolderURL.lastPathComponent)")
+                                        Text("Highlight")
                                             .font(.system(size: 11.5, weight: .medium))
+                                            .lineLimit(1)
+                                            .fixedSize()
                                             .padding(.horizontal, 10)
                                             .frame(height: 30)
                                             .background(
@@ -205,6 +217,7 @@ extension SmartOrganizerView {
                                             )
                                     }
                                     .buttonStyle(StratumInteractiveButtonStyle())
+                                    .help("Highlight this folder in \(targetFolderURL.lastPathComponent)")
 
                                     Button {
                                         unpackOrganizedFolder(org)
@@ -214,6 +227,8 @@ extension SmartOrganizerView {
                                                 .font(.system(size: 10.5, weight: .bold))
                                             Text("Unpack")
                                                 .font(.system(size: 11.5, weight: .medium))
+                                                .lineLimit(1)
+                                                .fixedSize()
                                         }
                                         .foregroundStyle(.secondary)
                                         .padding(.horizontal, 10)
@@ -246,12 +261,11 @@ extension SmartOrganizerView {
                 VStack(alignment: .leading, spacing: 10) {
                     Text("Loose Files in \(targetFolderURL.lastPathComponent) — Click a Category to Create Folder & Move")
                         .font(.system(size: 14, weight: .bold))
+                        .fixedSize(horizontal: false, vertical: true)
 
                     LazyVGrid(
-                        columns: [
-                            GridItem(.flexible(), spacing: 14),
-                            GridItem(.flexible(), spacing: 14)
-                        ],
+                        // As many cards per row as fit; one column in a narrow window.
+                        columns: [GridItem(.adaptive(minimum: 330), spacing: 14, alignment: .top)],
                         spacing: 14
                     ) {
                         ForEach(organizerBuckets) { bucket in
@@ -270,6 +284,7 @@ extension SmartOrganizerView {
                                     VStack(alignment: .leading, spacing: 1) {
                                         Text(bucket.title)
                                             .font(.system(size: 13.5, weight: .semibold))
+                                            .lineLimit(1)
                                         Text("\(bucket.items.count) \(bucket.items.count == 1 ? "file" : "files") · \(BulkDirectoryReader.fastFormatBytes(bucket.totalBytes))")
                                             .font(.system(size: 11.5).monospacedDigit())
                                             .foregroundStyle(.secondary)
@@ -318,8 +333,9 @@ extension SmartOrganizerView {
                                         HStack(spacing: 5) {
                                             Image(systemName: "folder.badge.plus")
                                                 .font(.system(size: 11, weight: .semibold))
-                                            Text("Create & Move to \"\(bucket.folderName)/\"")
+                                            Text("Create Folder & Move")
                                                 .font(.system(size: 11.5, weight: .semibold))
+                                                .lineLimit(1)
                                         }
                                         .foregroundStyle(.white)
                                         .frame(maxWidth: .infinity)
@@ -330,6 +346,7 @@ extension SmartOrganizerView {
                                         )
                                     }
                                     .buttonStyle(StratumInteractiveButtonStyle())
+                                    .help("Create \"\(bucket.folderName)/\" and move these files into it")
 
                                     if bucket.isCleanupCandidate {
                                         Button {
@@ -344,6 +361,8 @@ extension SmartOrganizerView {
                                                     .font(.system(size: 11, weight: .semibold))
                                                 Text("Trash All")
                                                     .font(.system(size: 11.5, weight: .semibold))
+                                                    .lineLimit(1)
+                                                    .fixedSize()
                                             }
                                             .foregroundStyle(Color(nsColor: NSColor(hex: "#FF6B6B") ?? .systemRed))
                                             .padding(.horizontal, 12)

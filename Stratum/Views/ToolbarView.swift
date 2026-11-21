@@ -9,6 +9,7 @@ struct ToolbarView: View {
     var scanCoordinator = ScanCoordinator.shared
 
     @State var showToolbarTagsPopover = false
+    @State var density: ToolbarDensity = .full
     @Namespace var toolbarMotionNamespace
 
     var body: some View {
@@ -28,10 +29,13 @@ struct ToolbarView: View {
                             accentColor: appearance.accentColor,
                             isAnimated: true
                         )
-                        Text("STRATUM")
-                            .font(.system(size: 11.5, weight: .bold, design: .rounded))
-                            .tracking(0.8)
-                            .foregroundStyle(.primary)
+                        if density == .full {
+                            Text("STRATUM")
+                                .font(.system(size: 11.5, weight: .bold, design: .rounded))
+                                .tracking(0.8)
+                                .foregroundStyle(.primary)
+                                .fixedSize()
+                        }
                     }
                     .padding(.horizontal, 10)
                     .padding(.vertical, 4)
@@ -85,6 +89,7 @@ struct ToolbarView: View {
                 // Path bar in Browser mode, or Screen Breadcrumb in Workspace Modes
                 if appState.screen == .browser {
                     pathBar
+                        .layoutPriority(1)
                         .transition(.opacity.combined(with: .move(edge: .leading)))
                 } else {
                     HStack(spacing: 8) {
@@ -120,9 +125,11 @@ struct ToolbarView: View {
 
                         Text(appState.screen.title)
                             .font(.system(size: 13.5, weight: .bold))
+                            .lineLimit(1)
                             .padding(.horizontal, 2)
                             .contentTransition(.interpolate)
                     }
+                    .layoutPriority(1)
                     .transition(.opacity.combined(with: .move(edge: .trailing)))
                 }
 
@@ -146,75 +153,53 @@ struct ToolbarView: View {
                     )
                 }
 
-                // Action buttons: New folder, Terminal, Smart Organizer, Share, Tags, Theme Picker, Inspector, Settings
+                // Action buttons. In a narrow window the less-used ones move into the "…" menu.
                 HStack(spacing: 2) {
                     toolbarIconButton("folder.badge.plus", label: "New folder (⇧⌘N)") {
                         appState.createNewFolder()
                     }
-                    toolbarIconButton("terminal", label: "Open current folder in Terminal") {
-                        TerminalLauncher.openInTerminal(url: appState.currentURL)
-                    }
-                    toolbarIconButton("wand.and.stars", label: "Smart Clean & Organizer") {
-                        withAnimation(.spring(response: 0.34, dampingFraction: 0.84)) {
-                            appState.screen = (appState.screen == .organizer) ? .browser : .organizer
+                    if density > .minimal {
+                        toolbarIconButton("terminal", label: "Open current folder in Terminal") {
+                            TerminalLauncher.openInTerminal(url: appState.currentURL)
                         }
-                    }
-                    toolbarIconButton("square.and.arrow.up", label: "Share") {
-                        shareSelectedItems()
-                    }
-                    toolbarIconButton("tag", label: "Tags") {
-                        showToolbarTagsPopover = true
-                    }
-                    .popover(isPresented: $showToolbarTagsPopover) {
-                        toolbarTagPopoverContent
-                    }
+                        toolbarIconButton("wand.and.stars", label: "Smart Clean & Organizer") {
+                            toggleOrganizer()
+                        }
+                        toolbarIconButton("square.and.arrow.up", label: "Share") {
+                            shareSelectedItems()
+                        }
+                        toolbarIconButton("tag", label: "Tags") {
+                            showToolbarTagsPopover = true
+                        }
 
-                    // Quick Theme Switcher Menu
-                    Menu {
-                        Text("Glass Themes")
-                            .font(.caption)
-                        ForEach(appearance.allThemes) { preset in
-                            Button {
-                                appearance.applyThemePreset(preset)
-                                appState.showToast("Applied \(preset.name) (\(preset.accentHex))")
-                            } label: {
-                                HStack {
-                                    Text(preset.name)
-                                    if appearance.activeThemeID == preset.id {
-                                        Image(systemName: "checkmark")
-                                    }
-                                }
-                            }
-                        }
-                        Divider()
-                        Button {
-                            withAnimation(.spring(response: 0.34, dampingFraction: 0.84)) {
-                                appState.screen = .settings
-                            }
+                        // Quick Theme Switcher Menu
+                        Menu {
+                            themeMenuItems
                         } label: {
-                            Label("Customize Theme, Blur & Glass…", systemImage: "slider.horizontal.3")
+                            Image(systemName: "paintpalette")
+                                .font(.system(size: 13.5, weight: .medium))
+                                .foregroundStyle(appearance.accentColor)
+                                .frame(width: 30, height: 30)
                         }
-                    } label: {
-                        Image(systemName: "paintpalette")
-                            .font(.system(size: 13.5, weight: .medium))
-                            .foregroundStyle(appearance.accentColor)
-                            .frame(width: 30, height: 30)
+                        .menuStyle(.borderlessButton)
+                        .frame(width: 30, height: 30)
+                        .stratumHelp("Switch Glass Theme or Customize Appearance")
                     }
-                    .menuStyle(.borderlessButton)
-                    .frame(width: 30, height: 30)
-                    .stratumHelp("Switch Glass Theme or Customize Appearance")
 
-                    toolbarIconButton("sidebar.right", label: "Toggle inspector (⌘I)") {
+                    toolbarIconButton("sidebar.right", label: "Toggle inspector (⌥⌘I)") {
                         withAnimation(.spring(response: 0.32, dampingFraction: 0.84)) {
-                            appState.showInspector.toggle()
+                            appState.toggleInspector()
                         }
                     }
-                    toolbarIconButton("slider.horizontal.3", label: "Settings (⌘,)") {
-                        withAnimation(.spring(response: 0.34, dampingFraction: 0.84)) {
-                            appState.screen = .settings
+                    if density > .minimal {
+                        toolbarIconButton("slider.horizontal.3", label: "Settings (⌘,)") {
+                            openSettings()
                         }
                     }
                     helpMenu
+                }
+                .popover(isPresented: $showToolbarTagsPopover, arrowEdge: .bottom) {
+                    toolbarTagPopoverContent
                 }
 
                 // Live transfer pill
@@ -235,7 +220,10 @@ struct ToolbarView: View {
                                         .frame(width: max(4, 28 * job.progressFraction), height: 5)
                                         .animation(.spring(response: 0.25, dampingFraction: 0.8), value: job.progressFraction)
                                 }
-                                Text("\(job.titleText) · \(job.isPaused ? "Paused" : "\(job.progressPercent)%")")
+                                Text(density >= .regular
+                                     ? "\(job.titleText) · \(job.isPaused ? "Paused" : "\(job.progressPercent)%")"
+                                     : (job.isPaused ? "Paused" : "\(job.progressPercent)%"))
+                                    .lineLimit(1)
                                     .font(.system(size: 11.5, weight: .semibold).monospacedDigit())
                                     .contentTransition(.numericText())
                             }
@@ -263,48 +251,58 @@ struct ToolbarView: View {
                     .transition(.scale.combined(with: .opacity))
                 }
 
-                // Search / Command Palette button (Cmd+K)
-                Button {
-                    withAnimation(.spring(response: 0.3, dampingFraction: 0.82)) {
-                        appState.showCommandPalette = true
+                // Search / Command Palette (⌘K): a field when there is room, an icon when there isn't.
+                if density >= .regular {
+                    Button {
+                        openCommandPalette()
+                    } label: {
+                        HStack(spacing: 7) {
+                            Image(systemName: "magnifyingglass")
+                                .font(.system(size: 12, weight: .semibold))
+                                .foregroundStyle(.secondary)
+                            Text("Search & commands")
+                                .font(.system(size: 12.5))
+                                .foregroundStyle(.secondary)
+                                .lineLimit(1)
+                            Spacer(minLength: 4)
+                            Text("⌘K")
+                                .font(.system(size: 10.5, weight: .semibold))
+                                .foregroundStyle(.secondary)
+                                .padding(.horizontal, 5)
+                                .padding(.vertical, 1.5)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 5, style: .continuous)
+                                        .fill(Color.primary.opacity(0.10))
+                                )
+                                .fixedSize()
+                        }
+                        .padding(.horizontal, 10)
+                        .frame(width: 210, height: 30)
+                        .background(
+                            RoundedRectangle(cornerRadius: 9, style: .continuous)
+                                .fill(appearance.cardGlassFillColor)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 9, style: .continuous)
+                                        .strokeBorder(Color.primary.opacity(0.09), lineWidth: 1)
+                                )
+                        )
+                        .contentShape(Rectangle())
                     }
-                } label: {
-                    HStack(spacing: 7) {
-                        Image(systemName: "magnifyingglass")
-                            .font(.system(size: 12, weight: .semibold))
-                            .foregroundStyle(.secondary)
-                        Text("Search or run a com…")
-                            .font(.system(size: 12.5))
-                            .foregroundStyle(.secondary)
-                            .lineLimit(1)
-                        Spacer(minLength: 4)
-                        Text("⌘K")
-                            .font(.system(size: 10.5, weight: .semibold))
-                            .foregroundStyle(.secondary)
-                            .padding(.horizontal, 5)
-                            .padding(.vertical, 1.5)
-                            .background(
-                                RoundedRectangle(cornerRadius: 5, style: .continuous)
-                                    .fill(Color.primary.opacity(0.10))
-                            )
+                    .buttonStyle(StratumInteractiveButtonStyle(hoverScale: 1.02, pressScale: 0.97))
+                } else {
+                    toolbarIconButton("magnifyingglass", label: "Search or run a command (⌘K)") {
+                        openCommandPalette()
                     }
-                    .padding(.horizontal, 10)
-                    .frame(width: 210, height: 30)
-                    .background(
-                        RoundedRectangle(cornerRadius: 9, style: .continuous)
-                            .fill(appearance.cardGlassFillColor)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 9, style: .continuous)
-                                    .strokeBorder(Color.primary.opacity(0.09), lineWidth: 1)
-                            )
-                    )
-                    .contentShape(Rectangle())
                 }
-                .buttonStyle(StratumInteractiveButtonStyle(hoverScale: 1.02, pressScale: 0.97))
             }
             .padding(.horizontal, 14)
             .padding(.vertical, 8)
-            .frame(minHeight: 52)
+            // Measured on a frame that takes the offered width, so an over-full row can't
+            // report its own (too wide) size and stay over-full.
+            .frame(minWidth: 0, maxWidth: .infinity, minHeight: 52)
+            .onGeometryChange(for: ToolbarDensity.self) { ToolbarDensity(toolbarWidth: $0.size.width) } action: { newDensity in
+                withAnimation(.easeOut(duration: 0.18)) { density = newDensity }
+            }
             .background(appearance.sidebarGlassColor.opacity(0.55))
             .overlay(alignment: .bottom) {
                 Rectangle()
@@ -317,6 +315,48 @@ struct ToolbarView: View {
                 tabStrip
                     .transition(.move(edge: .top).combined(with: .opacity))
             }
+        }
+    }
+
+    /// Items of the theme switcher; a toolbar menu when there is room, a submenu of "…" when not.
+    @ViewBuilder
+    var themeMenuItems: some View {
+        ForEach(appearance.allThemes) { preset in
+            Button {
+                appearance.applyThemePreset(preset)
+                appState.showToast("Applied \(preset.name) (\(preset.accentHex))")
+            } label: {
+                HStack {
+                    Text(preset.name)
+                    if appearance.activeThemeID == preset.id {
+                        Image(systemName: "checkmark")
+                    }
+                }
+            }
+        }
+        Divider()
+        Button {
+            openSettings()
+        } label: {
+            Label("Customize Theme, Blur & Glass…", systemImage: "slider.horizontal.3")
+        }
+    }
+
+    func toggleOrganizer() {
+        withAnimation(.spring(response: 0.34, dampingFraction: 0.84)) {
+            appState.screen = (appState.screen == .organizer) ? .browser : .organizer
+        }
+    }
+
+    func openSettings() {
+        withAnimation(.spring(response: 0.34, dampingFraction: 0.84)) {
+            appState.screen = .settings
+        }
+    }
+
+    private func openCommandPalette() {
+        withAnimation(.spring(response: 0.3, dampingFraction: 0.82)) {
+            appState.showCommandPalette = true
         }
     }
 
@@ -381,5 +421,27 @@ struct ToolbarView: View {
         let picker = NSSharingServicePicker(items: urls)
         picker.show(relativeTo: .zero, of: contentView, preferredEdge: .minY)
     }
+}
 
+/// How much the toolbar shows, from the full set of controls down to the essentials.
+/// Each step frees enough width for the next-narrower window range.
+enum ToolbarDensity: Int, Comparable {
+    /// Secondary actions live in the "…" menu.
+    case minimal
+    /// Search is an icon.
+    case compact
+    /// The brand shows its emblem only.
+    case regular
+    case full
+
+    init(toolbarWidth: CGFloat) {
+        switch toolbarWidth {
+        case ..<960: self = .minimal
+        case ..<1100: self = .compact
+        case ..<1190: self = .regular
+        default: self = .full
+        }
+    }
+
+    static func < (lhs: Self, rhs: Self) -> Bool { lhs.rawValue < rhs.rawValue }
 }

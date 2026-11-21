@@ -45,11 +45,14 @@ struct SettingsView: View {
     var scanCoordinator = ScanCoordinator.shared
 
     @State private var page: SettingsPageID = .appearance
+    /// In a narrow window the rail becomes a row of tabs above the page.
+    @State private var isCompact = false
     @Namespace private var railNamespace
 
     var body: some View {
-        HStack(spacing: 0) {
-            rail
+        let layout = isCompact ? AnyLayout(VStackLayout(spacing: 0)) : AnyLayout(HStackLayout(spacing: 0))
+        return layout {
+            if isCompact { tabBar } else { rail }
 
             ScrollView {
                 VStack(alignment: .leading, spacing: 28) {
@@ -63,8 +66,8 @@ struct SettingsView: View {
                     pageContent
                 }
                 .frame(maxWidth: 760, alignment: .leading)
-                .padding(.horizontal, 36)
-                .padding(.top, 40)
+                .padding(.horizontal, isCompact ? 20 : 36)
+                .padding(.top, isCompact ? 24 : 40)
                 .padding(.bottom, 44)
                 .frame(maxWidth: .infinity)
                 .id(page)
@@ -74,6 +77,7 @@ struct SettingsView: View {
             .background(Color(nsColor: .windowBackgroundColor).opacity(appearance.contentBackgroundOpacity))
         }
         .animation(.easeOut(duration: 0.2), value: page)
+        .onGeometryChange(for: Bool.self) { $0.size.width < 700 } action: { isCompact = $0 }
     }
 
     @ViewBuilder
@@ -114,6 +118,22 @@ struct SettingsView: View {
         .background(appearance.sidebarGlassColor.opacity(0.55))
         .overlay(alignment: .trailing) { Rectangle().fill(Color.primary.opacity(0.07)).frame(width: 1) }
         .resizablePanel(key: "Stratum.settingsRailWidth", defaultWidth: 224, range: 190...320, edge: .trailing)
+    }
+
+    /// The rail's pages as a row of tabs, for narrow windows.
+    private var tabBar: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 4) {
+                ForEach(SettingsPageID.allCases) { item in
+                    railRow(item).fixedSize()
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 10)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(appearance.sidebarGlassColor.opacity(0.55))
+        .overlay(alignment: .bottom) { Rectangle().fill(Color.primary.opacity(0.07)).frame(height: 1) }
     }
 
     private func railRow(_ item: SettingsPageID) -> some View {

@@ -12,6 +12,8 @@ struct GroupsByNameView: View {
     @State var checkedPaths: Set<String> = []
     @State var searchQuery: String = ""
     @State var bubblesAppeared: Bool = false
+    /// The bubble chart stacks above the groups list instead of sitting beside it.
+    @State private var isNarrow = false
     /// How many folder rows each expanded group renders. Grows on "Show more".
     @State var visibleRows: [String: Int] = [:]
     static let initialRows = 12
@@ -122,10 +124,13 @@ struct GroupsByNameView: View {
                     ScanningStateView(coordinator: scanCoordinator, appearance: appearance, resultName: "folder groups")
                         .frame(height: 460)
                 } else {
-                    // Main Content: Left Bubble Chart + Right Groups Accordion List
-                    HStack(alignment: .top, spacing: 14) {
+                    // Main Content: bubble chart beside the groups list, or above it in a narrow window.
+                    let layout = isNarrow
+                        ? AnyLayout(VStackLayout(alignment: .leading, spacing: 14))
+                        : AnyLayout(HStackLayout(alignment: .top, spacing: 14))
+                    layout {
                         bubbleChartCard
-                            .frame(minWidth: 360, maxWidth: 420)
+                            .frame(minWidth: isNarrow ? nil : 360, maxWidth: isNarrow ? .infinity : 420)
 
                         // Built a few frames after the rest of the screen so the switch stays snappy.
                         DeferredContent(delay: 70) { groupsAccordionCard }
@@ -138,6 +143,7 @@ struct GroupsByNameView: View {
             .padding(.vertical, 20)
         }
         .background(Color(nsColor: .windowBackgroundColor).opacity(appearance.contentBackgroundOpacity))
+        .onGeometryChange(for: Bool.self) { $0.size.width < 800 } action: { isNarrow = $0 }
         .onAppear {
             if let first = scanCoordinator.groups.first {
                 expandedGroupNames.insert(first.name)
@@ -152,100 +158,143 @@ struct GroupsByNameView: View {
     // MARK: - Header Bar
 
     var headerBar: some View {
-        HStack(alignment: .bottom, spacing: 12) {
-            VStack(alignment: .leading, spacing: 3) {
-                Text("Groups by name")
-                    .font(.system(size: 22, weight: .bold))
-                Text("Folders with the same name across \(formatTilde(scanCoordinator.scannedRootPath)), totalled. Click any folder row or checkbox to select for cleanup.")
-                    .font(.system(size: 13))
-                    .foregroundStyle(.secondary)
+        // One row when it fits; otherwise the title sits above the controls, and the scope
+        // buttons fold into a menu if the row is still too wide.
+        ViewThatFits(in: .horizontal) {
+            HStack(alignment: .bottom, spacing: 12) {
+                headerTitles
+                    .frame(minWidth: 0, idealWidth: 320, maxWidth: .infinity, alignment: .leading)
+                headerControls(scopeAsMenu: false).fixedSize()
             }
-
-            Spacer()
-
-            ScanRefreshControl(coordinator: scanCoordinator, appearance: appearance)
-
-            // Quick Scope Scan Buttons
-            HStack(spacing: 5) {
-                let home = FileManager.default.homeDirectoryForCurrentUser
-                scopeButton("Desktop", url: home.appendingPathComponent("Desktop"))
-                scopeButton("Home (~)", url: home)
-
-                Button {
-                    let panel = NSOpenPanel()
-                    panel.canChooseFiles = false
-                    panel.canChooseDirectories = true
-                    panel.allowsMultipleSelection = false
-                    panel.prompt = "Scan Folder"
-                    if panel.runModal() == .OK, let url = panel.url {
-                        scanCoordinator.startScan(at: url)
-                    }
-                } label: {
-                    HStack(spacing: 5) {
-                        Image(systemName: "folder.badge.gearshape")
-                            .font(.system(size: 11, weight: .semibold))
-                        Text("Choose Folder…")
-                            .font(.system(size: 12, weight: .medium))
-                    }
-                    .padding(.horizontal, 10)
-                    .frame(height: 28)
-                    .background(
-                        RoundedRectangle(cornerRadius: 8, style: .continuous)
-                            .fill(Color.primary.opacity(0.06))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                    .strokeBorder(Color.primary.opacity(0.09), lineWidth: 1)
-                            )
-                    )
-                    .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
+            VStack(alignment: .leading, spacing: 12) {
+                headerTitles
+                headerControls(scopeAsMenu: false).fixedSize()
             }
-
-            // Filter Segmented Control (All / Stale)
-            HStack(spacing: 2) {
-                Button {
-                    showStaleOnly = false
-                } label: {
-                    Text("All")
-                        .font(.system(size: 12, weight: .medium))
-                        .foregroundStyle(!showStaleOnly ? .white : .secondary)
-                        .padding(.horizontal, 12)
-                        .frame(height: 26)
-                        .background(
-                            RoundedRectangle(cornerRadius: 7, style: .continuous)
-                                .fill(!showStaleOnly ? appearance.accentColor : Color.clear)
-                        )
-                        .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
-
-                Button {
-                    showStaleOnly = true
-                } label: {
-                    Text("Stale / Dev caches")
-                        .font(.system(size: 12, weight: .medium))
-                        .foregroundStyle(showStaleOnly ? .white : .secondary)
-                        .padding(.horizontal, 12)
-                        .frame(height: 26)
-                        .background(
-                            RoundedRectangle(cornerRadius: 7, style: .continuous)
-                                .fill(showStaleOnly ? appearance.accentColor : Color.clear)
-                        )
-                        .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
+            VStack(alignment: .leading, spacing: 12) {
+                headerTitles
+                headerControls(scopeAsMenu: true).fixedSize()
             }
-            .padding(2)
-            .background(
-                RoundedRectangle(cornerRadius: 9, style: .continuous)
-                    .fill(Color.primary.opacity(0.06))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 9, style: .continuous)
-                            .strokeBorder(Color.primary.opacity(0.07), lineWidth: 1)
-                    )
-            )
         }
+    }
+
+    private var headerTitles: some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Text("Groups by name")
+                .font(.system(size: 22, weight: .bold))
+                .lineLimit(1)
+            Text("Folders with the same name across \(formatTilde(scanCoordinator.scannedRootPath)), totalled. Click any folder row or checkbox to select for cleanup.")
+                .font(.system(size: 13))
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
+    private func headerControls(scopeAsMenu: Bool) -> some View {
+        HStack(spacing: 12) {
+            ScanRefreshControl(coordinator: scanCoordinator, appearance: appearance)
+            if scopeAsMenu { scopeMenu } else { scopeButtons }
+            staleFilterPicker
+        }
+    }
+
+    private func chooseFolderToScan() {
+        let panel = NSOpenPanel()
+        panel.canChooseFiles = false
+        panel.canChooseDirectories = true
+        panel.allowsMultipleSelection = false
+        panel.prompt = "Scan Folder"
+        if panel.runModal() == .OK, let url = panel.url {
+            scanCoordinator.startScan(at: url)
+        }
+    }
+
+    /// Quick Scope Scan Buttons
+    private var scopeButtons: some View {
+        HStack(spacing: 5) {
+            let home = FileManager.default.homeDirectoryForCurrentUser
+            scopeButton("Desktop", url: home.appendingPathComponent("Desktop"))
+            scopeButton("Home (~)", url: home)
+
+            Button {
+                chooseFolderToScan()
+            } label: {
+                scopeLabel("Choose Folder…")
+            }
+            .buttonStyle(.plain)
+        }
+    }
+
+    /// The scope buttons as one menu, for narrow windows.
+    private var scopeMenu: some View {
+        let home = FileManager.default.homeDirectoryForCurrentUser
+        return Menu {
+            Button("Desktop") { scanCoordinator.startScan(at: home.appendingPathComponent("Desktop"), name: "Desktop") }
+            Button("Home (~)") { scanCoordinator.startScan(at: home, name: "Home (~)") }
+            Divider()
+            Button("Choose Folder…") { chooseFolderToScan() }
+        } label: {
+            scopeLabel("Scope")
+        }
+        .menuStyle(.button)
+        .buttonStyle(.plain)
+        .menuIndicator(.hidden)
+        .help("Choose which folder to scan")
+    }
+
+    private func scopeLabel(_ title: String) -> some View {
+        HStack(spacing: 5) {
+            Image(systemName: "folder.badge.gearshape")
+                .font(.system(size: 11, weight: .semibold))
+            Text(title)
+                .font(.system(size: 12, weight: .medium))
+        }
+        .padding(.horizontal, 10)
+        .frame(height: 28)
+        .background(
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .fill(Color.primary.opacity(0.06))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .strokeBorder(Color.primary.opacity(0.09), lineWidth: 1)
+                )
+        )
+        .contentShape(Rectangle())
+    }
+
+    /// Filter Segmented Control (All / Stale)
+    private var staleFilterPicker: some View {
+        HStack(spacing: 2) {
+            staleFilterButton("All", staleOnly: false)
+            staleFilterButton("Stale / Dev caches", staleOnly: true)
+        }
+        .padding(2)
+        .background(
+            RoundedRectangle(cornerRadius: 9, style: .continuous)
+                .fill(Color.primary.opacity(0.06))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 9, style: .continuous)
+                        .strokeBorder(Color.primary.opacity(0.07), lineWidth: 1)
+                )
+        )
+    }
+
+    private func staleFilterButton(_ title: String, staleOnly: Bool) -> some View {
+        let isSelected = showStaleOnly == staleOnly
+        return Button {
+            showStaleOnly = staleOnly
+        } label: {
+            Text(title)
+                .font(.system(size: 12, weight: .medium))
+                .foregroundStyle(isSelected ? .white : .secondary)
+                .padding(.horizontal, 12)
+                .frame(height: 26)
+                .background(
+                    RoundedRectangle(cornerRadius: 7, style: .continuous)
+                        .fill(isSelected ? appearance.accentColor : Color.clear)
+                )
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
     }
 
     func scopeButton(_ title: String, url: URL) -> some View {
@@ -272,39 +321,54 @@ struct GroupsByNameView: View {
     }
 
     var quickToolbarRow: some View {
-        HStack(spacing: 10) {
-            // Filter search box
-            HStack(spacing: 7) {
-                Image(systemName: "magnifyingglass")
-                    .font(.system(size: 12))
-                    .foregroundStyle(.secondary)
-                TextField("Filter groups or project paths…", text: $searchQuery)
-                    .textFieldStyle(.plain)
-                    .font(.system(size: 12.5))
-                if !searchQuery.isEmpty {
-                    Button {
-                        searchQuery = ""
-                    } label: {
-                        Image(systemName: "xmark.circle.fill")
-                            .foregroundStyle(.secondary)
-                    }
-                    .buttonStyle(.plain)
-                }
+        // Filter and selection helpers side by side, or the helpers on their own scrolling row.
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 10) {
+                groupFilterField.frame(width: 280)
+                Spacer(minLength: 0)
+                quickSelectPills.fixedSize()
             }
-            .padding(.horizontal, 11)
-            .frame(width: 280, height: 30)
-            .background(
-                RoundedRectangle(cornerRadius: 8, style: .continuous)
-                    .fill(Color.primary.opacity(0.05))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 8, style: .continuous)
-                            .strokeBorder(Color.primary.opacity(0.08), lineWidth: 1)
-                    )
-            )
+            VStack(alignment: .leading, spacing: 10) {
+                groupFilterField
+                ScrollView(.horizontal, showsIndicators: false) { quickSelectPills.fixedSize() }
+            }
+        }
+    }
 
-            Spacer()
+    private var groupFilterField: some View {
+        // Filter search box
+        HStack(spacing: 7) {
+            Image(systemName: "magnifyingglass")
+                .font(.system(size: 12))
+                .foregroundStyle(.secondary)
+            TextField("Filter groups or project paths…", text: $searchQuery)
+                .textFieldStyle(.plain)
+                .font(.system(size: 12.5))
+            if !searchQuery.isEmpty {
+                Button {
+                    searchQuery = ""
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundStyle(.secondary)
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(.horizontal, 11)
+        .frame(height: 30)
+        .background(
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .fill(Color.primary.opacity(0.05))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .strokeBorder(Color.primary.opacity(0.08), lineWidth: 1)
+                )
+        )
+    }
 
-            // Quick batch selection helpers
+    /// Quick batch selection helpers
+    private var quickSelectPills: some View {
+        HStack(spacing: 10) {
             quickSelectPill("Select All Visible", icon: "checkmark.circle") {
                 for grp in displayedGroups {
                     let insts = filteredInstances(for: grp.name)

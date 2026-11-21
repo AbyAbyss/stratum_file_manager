@@ -41,7 +41,8 @@ struct MainWindowView: View {
             VStack(spacing: 0) {
                 ToolbarView(appState: appState, appearance: appearance)
 
-                HStack(spacing: 0) {
+                // The sidebar gives up width before the content gets cramped.
+                SidePanelLayout(panelEdge: .leading, mainMinWidth: contentMinWidth) {
                     if appState.showSidebar {
                         SidebarView(appState: appState, appearance: appearance)
                             .transition(.move(edge: .leading).combined(with: .opacity))
@@ -59,6 +60,7 @@ struct MainWindowView: View {
                 }
                 .animation(.spring(response: 0.32, dampingFraction: 0.84), value: appState.showSidebar)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .clipped()
 
                 if appState.screen == .browser {
                     StatusBarView(appState: appState, appearance: appearance)
@@ -126,6 +128,9 @@ struct MainWindowView: View {
             }
         }
         .ignoresSafeArea(.container, edges: .top)
+        .onGeometryChange(for: Bool.self) { $0.size.width >= WindowMetrics.bothPanelsMinWidth } action: {
+            appState.windowFitsBothPanels = $0
+        }
         .sheet(isPresented: $appState.showFDASheet) {
             FirstRunFDASheet(appState: appState, appearance: appearance)
         }
@@ -150,6 +155,13 @@ struct MainWindowView: View {
         }
     }
 
+    /// Width the sidebar must leave for the current screen.
+    private var contentMinWidth: CGFloat {
+        appState.screen == .browser && appState.isInspectorVisible
+            ? WindowMetrics.browserListMinWidth + WindowMetrics.inspectorMinWidth
+            : WindowMetrics.browserListMinWidth
+    }
+
     @ViewBuilder
     private var contentArea: some View {
         switch appState.screen {
@@ -166,11 +178,3 @@ struct MainWindowView: View {
         }
     }
 }
-
-// MARK: - Stratum Isometric 3D Layered Logo View
-
-// MARK: - Startup Splash Animation View
-
-// MARK: - Custom macOS Dock AppIcon Generator
-
-// MARK: - Reusable Motion Graphics & Interactive Modifiers

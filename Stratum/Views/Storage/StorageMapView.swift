@@ -18,6 +18,7 @@ struct StorageMapView: View {
     private static let maxTiles = 14
 
     @State private var mode: Mode = .folders
+    @State private var showsInsights = true
     /// The category the user picked; until then the biggest one with large files is shown.
     @State private var pickedCategory: FileTypeCategory?
     @State private var selectedID: Int64?
@@ -88,10 +89,16 @@ struct StorageMapView: View {
                 Divider().opacity(0.5)
                 content
             }
-            Divider().opacity(0.5)
-            StorageInsightsPanel(appState: appState, appearance: appearance)
-                .frame(width: 310)
+            // The insights are a read-only extra; a narrow window gives the map the room.
+            if showsInsights {
+                Divider().opacity(0.5)
+                StorageInsightsPanel(appState: appState, appearance: appearance)
+                    .frame(width: 310)
+            }
         }
+        // Measured on a frame that takes the offered width, not the width the content asks for.
+        .frame(minWidth: 0, maxWidth: .infinity)
+        .onGeometryChange(for: Bool.self) { $0.size.width >= 760 } action: { showsInsights = $0 }
         .focusable()
         .focused($focused)
         .focusEffectDisabled()
@@ -465,5 +472,3 @@ struct StorageMapView: View {
         return .handled
     }
 }
-
-// MARK: - Pieces

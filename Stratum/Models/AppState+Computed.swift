@@ -3,6 +3,22 @@ import AppKit
 import SwiftUI
 
 extension AppState {
+    /// The inspector is wanted and there is room for it. In a narrow window the sidebar wins
+    /// and the inspector steps aside without forgetting the user's choice.
+    var isInspectorVisible: Bool {
+        showInspector && (windowFitsBothPanels || !showSidebar)
+    }
+
+    /// Shows or hides the inspector. In a narrow window, showing it closes the sidebar to make room.
+    func toggleInspector() {
+        if isInspectorVisible {
+            showInspector = false
+        } else {
+            showInspector = true
+            if !windowFitsBothPanels { showSidebar = false }
+        }
+    }
+
     // MARK: - Computed Properties
 
     var activeTabIndex: Int? {

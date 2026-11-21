@@ -369,18 +369,26 @@ struct SidebarView: View {
                     appState.screen = .storage
                 } label: {
                     VStack(alignment: .leading, spacing: 8) {
-                        HStack {
-                            HStack(spacing: 6) {
-                                Image(systemName: "internaldrive")
-                                    .font(.system(size: 11.5, weight: .semibold))
-                                    .foregroundStyle(appearance.accentColor)
-                                Text(boot.name)
-                                    .font(.system(size: 12, weight: .bold))
-                            }
-                            Spacer()
-                            Text("\(BulkDirectoryReader.fastFormatBytes(boot.freeBytes)) free")
-                                .font(.system(size: 11, weight: .semibold).monospacedDigit())
+                        // The volume name stays whole; the free space drops out first (the line
+                        // below still gives the numbers).
+                        let volumeName = HStack(spacing: 6) {
+                            Image(systemName: "internaldrive")
+                                .font(.system(size: 11.5, weight: .semibold))
                                 .foregroundStyle(appearance.accentColor)
+                            Text(boot.name)
+                                .font(.system(size: 12, weight: .bold))
+                                .lineLimit(1)
+                        }
+                        ViewThatFits(in: .horizontal) {
+                            HStack {
+                                volumeName
+                                Spacer(minLength: 8)
+                                Text("\(BulkDirectoryReader.fastFormatBytes(boot.freeBytes)) free")
+                                    .font(.system(size: 11, weight: .semibold).monospacedDigit())
+                                    .foregroundStyle(appearance.accentColor)
+                                    .lineLimit(1)
+                            }
+                            volumeName.frame(maxWidth: .infinity, alignment: .leading)
                         }
 
                         GeometryReader { geo in
@@ -402,15 +410,21 @@ struct SidebarView: View {
                         }
                         .frame(height: 5)
 
-                        HStack {
-                            Text("\(BulkDirectoryReader.fastFormatBytes(boot.usedBytes)) used of \(BulkDirectoryReader.fastFormatBytes(boot.totalBytes))")
-                                .font(.system(size: 10.5).monospacedDigit())
-                                .foregroundStyle(.secondary)
-                                .lineLimit(1)
-                            Spacer(minLength: 4)
-                            Text("open storage ↗")
-                                .font(.system(size: 10.5, weight: .medium))
-                                .foregroundStyle(.secondary)
+                        // "open storage" is a hint; the numbers win when both don't fit.
+                        let usage = Text("\(BulkDirectoryReader.fastFormatBytes(boot.usedBytes)) used of \(BulkDirectoryReader.fastFormatBytes(boot.totalBytes))")
+                            .font(.system(size: 10.5).monospacedDigit())
+                            .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                        ViewThatFits(in: .horizontal) {
+                            HStack {
+                                usage
+                                Spacer(minLength: 8)
+                                Text("open storage ↗")
+                                    .font(.system(size: 10.5, weight: .medium))
+                                    .foregroundStyle(.secondary)
+                                    .lineLimit(1)
+                            }
+                            usage.frame(maxWidth: .infinity, alignment: .leading)
                         }
                     }
                     .padding(12)
@@ -425,6 +439,7 @@ struct SidebarView: View {
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
+                .help("Open the Storage Map")
             }
         }
         .padding(.horizontal, 12)
@@ -435,7 +450,7 @@ struct SidebarView: View {
                 .fill(Color.primary.opacity(0.07))
                 .frame(width: 1)
         }
-        .resizablePanel(key: "Stratum.sidebarWidth", defaultWidth: 236, range: 190...400, edge: .trailing)
+        .resizablePanel(key: "Stratum.sidebarWidth", defaultWidth: 236, range: WindowMetrics.sidebarMinWidth...400, edge: .trailing)
     }
 
     private func sidebarSection<Content: View>(_ title: String, @ViewBuilder content: () -> Content) -> some View {
@@ -459,33 +474,15 @@ struct SidebarView: View {
         action: @escaping () -> Void
     ) -> some View {
         Button(action: action) {
-            HStack(spacing: 10) {
-                Image(systemName: icon)
-                    .font(.system(size: 13, weight: .medium))
-                    .foregroundStyle(isActive ? appearance.accentColor : appearance.accentColor.opacity(0.78))
-                    .stratumSymbolPop(value: isActive)
-                    .frame(width: 16)
-                Text(label)
-                    .font(.system(size: 13, weight: isActive ? .semibold : .regular))
-                    .foregroundStyle(isActive ? Color.primary : Color.primary.opacity(0.86))
-                    .lineLimit(1)
-                Spacer()
+            Group {
                 if let badge {
-                    if isShortcutBadge && isActive {
-                        Text(badge)
-                            .font(.system(size: 10, weight: .bold).monospacedDigit())
-                            .foregroundStyle(appearance.accentColor)
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 2)
-                            .background(
-                                RoundedRectangle(cornerRadius: 5, style: .continuous)
-                                    .fill(appearance.accentColor.opacity(0.18))
-                            )
-                    } else {
-                        Text(badge)
-                            .font(.system(size: 10.5, weight: .medium).monospacedDigit())
-                            .foregroundStyle(.secondary)
+                    // A narrow sidebar drops the badge so the label stays readable.
+                    ViewThatFits(in: .horizontal) {
+                        sidebarRowContent(label: label, icon: icon, badge: badge, isShortcutBadge: isShortcutBadge, isActive: isActive)
+                        sidebarRowContent(label: label, icon: icon, badge: nil, isShortcutBadge: false, isActive: isActive)
                     }
+                } else {
+                    sidebarRowContent(label: label, icon: icon, badge: nil, isShortcutBadge: false, isActive: isActive)
                 }
             }
             .padding(.horizontal, 10)
@@ -504,5 +501,38 @@ struct SidebarView: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .help(label)
+    }
+
+    private func sidebarRowContent(label: String, icon: String, badge: String?, isShortcutBadge: Bool, isActive: Bool) -> some View {
+        HStack(spacing: 10) {
+            Image(systemName: icon)
+                .font(.system(size: 13, weight: .medium))
+                .foregroundStyle(isActive ? appearance.accentColor : appearance.accentColor.opacity(0.78))
+                .stratumSymbolPop(value: isActive)
+                .frame(width: 16)
+            Text(label)
+                .font(.system(size: 13, weight: isActive ? .semibold : .regular))
+                .foregroundStyle(isActive ? Color.primary : Color.primary.opacity(0.86))
+                .lineLimit(1)
+            Spacer(minLength: 6)
+            if let badge {
+                if isShortcutBadge && isActive {
+                    Text(badge)
+                        .font(.system(size: 10, weight: .bold).monospacedDigit())
+                        .foregroundStyle(appearance.accentColor)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(
+                            RoundedRectangle(cornerRadius: 5, style: .continuous)
+                                .fill(appearance.accentColor.opacity(0.18))
+                        )
+                } else {
+                    Text(badge)
+                        .font(.system(size: 10.5, weight: .medium).monospacedDigit())
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
     }
 }

@@ -136,8 +136,8 @@ struct StratumApp: App {
                 }
                 .keyboardShortcut("s", modifiers: [.command, .control])
 
-                Button(appState.showInspector ? "Hide Inspector" : "Show Inspector") {
-                    appState.showInspector.toggle()
+                Button(appState.isInspectorVisible ? "Hide Inspector" : "Show Inspector") {
+                    appState.toggleInspector()
                 }
                 .keyboardShortcut("i", modifiers: [.command, .option])
 
@@ -229,7 +229,7 @@ struct WindowRoot: View {
     var body: some View {
         let appState = WindowRegistry.shared.state(for: seed)
         MainWindowView(appState: appState, appearance: appearance)
-            .frame(minWidth: 980, minHeight: 640)
+            .frame(minWidth: WindowMetrics.minWidth, minHeight: WindowMetrics.minHeight)
             .onAppear { WindowRegistry.shared.openWindow = { openWindow(value: $0) } }
             .background(WindowAccessor(
                 onFocus: { WindowRegistry.shared.activate(appState) },

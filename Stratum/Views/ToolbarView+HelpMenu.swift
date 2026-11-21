@@ -4,6 +4,17 @@ extension ToolbarView {
     /// Updates, the welcome tour, and the project's support links, one click from anywhere.
     var helpMenu: some View {
         Menu {
+            if density == .minimal {
+                Button("Open in Terminal", systemImage: "terminal") {
+                    TerminalLauncher.openInTerminal(url: appState.currentURL)
+                }
+                Button("Smart Clean & Organizer", systemImage: "wand.and.stars") { toggleOrganizer() }
+                Button("Share…", systemImage: "square.and.arrow.up") { shareSelectedItems() }
+                Button("Tags…", systemImage: "tag") { showToolbarTagsPopover = true }
+                Menu("Theme", systemImage: "paintpalette") { themeMenuItems }
+
+                Divider()
+            }
             if UpdateController.shared.isAvailable {
                 Button("Check for Updates…", systemImage: "arrow.triangle.2.circlepath") {
                     UpdateController.shared.checkForUpdates()
@@ -25,9 +36,7 @@ extension ToolbarView {
 
             Divider()
 
-            Button("Settings…", systemImage: "gearshape") {
-                withAnimation(.spring(response: 0.34, dampingFraction: 0.84)) { appState.screen = .settings }
-            }
+            Button("Settings…", systemImage: "gearshape") { openSettings() }
             Link(destination: AppInfo.author) { Label("Made by \(AppInfo.authorName)", systemImage: "person.crop.circle") }
         } label: {
             Image(systemName: "ellipsis.circle")
@@ -38,6 +47,6 @@ extension ToolbarView {
         .menuStyle(.borderlessButton)
         .menuIndicator(.hidden)
         .frame(width: 30, height: 30)
-        .stratumHelp("Updates, support and links")
+        .stratumHelp(density == .minimal ? "More actions, updates and links" : "Updates, support and links")
     }
 }

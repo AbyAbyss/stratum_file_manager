@@ -260,132 +260,36 @@ struct SmartOrganizerView: View {
     // MARK: - Top Header & Mode Switcher
 
     var topModeHeaderBar: some View {
-        let home = FileManager.default.homeDirectoryForCurrentUser
-        return VStack(spacing: 12) {
-            HStack(alignment: .center, spacing: 14) {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Smart Clean & Organizer Studio")
-                        .font(.system(size: 22, weight: .bold))
-                    Text("Target folder: \(targetFolderURL.path) · Click any category below to create its folder & move files, find SHA-256 duplicates, or use the Drop Shelf.")
-                        .font(.system(size: 12.5))
-                        .foregroundStyle(.secondary)
+        VStack(alignment: .leading, spacing: 12) {
+            // Title beside the folder pills when both fit, above them when they don't.
+            ViewThatFits(in: .horizontal) {
+                HStack(alignment: .center, spacing: 14) {
+                    headerTitles
+                        .frame(minWidth: 0, idealWidth: 340, maxWidth: .infinity, alignment: .leading)
+                    scopePills.fixedSize()
                 }
-
-                Spacer()
-
-                // Scope Selector Pills
-                HStack(spacing: 6) {
-                    folderScopePill("Downloads", url: home.appendingPathComponent("Downloads"))
-                    folderScopePill("Desktop", url: home.appendingPathComponent("Desktop"))
-                    folderScopePill("Documents", url: home.appendingPathComponent("Documents"))
-
-                    Button {
-                        let panel = NSOpenPanel()
-                        panel.canChooseFiles = false
-                        panel.canChooseDirectories = true
-                        panel.allowsMultipleSelection = false
-                        panel.prompt = "Choose Folder"
-                        if panel.runModal() == .OK, let url = panel.url {
-                            targetFolderURL = url
-                            reloadTargetFolder()
-                            if activeMode == .duplicates {
-                                scanForExactDuplicates()
-                            }
-                        }
-                    } label: {
-                        HStack(spacing: 5) {
-                            Image(systemName: "folder.badge.gearshape")
-                                .font(.system(size: 11, weight: .semibold))
-                            Text("Choose Folder…")
-                                .font(.system(size: 12, weight: .medium))
-                        }
-                        .padding(.horizontal, 10)
-                        .frame(height: 28)
-                        .background(
-                            RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                .fill(Color.primary.opacity(0.06))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                        .strokeBorder(Color.primary.opacity(0.09), lineWidth: 1)
-                                )
-                        )
-                    }
-                    .buttonStyle(StratumInteractiveButtonStyle())
+                VStack(alignment: .leading, spacing: 10) {
+                    headerTitles
+                    ScrollView(.horizontal, showsIndicators: false) { scopePills.fixedSize() }
                 }
             }
 
-            // 3-Mode Segmented Pill Switcher
-            HStack(spacing: 8) {
-                ForEach(StudioMode.allCases) { mode in
-                    let isSelected = (activeMode == mode)
-                    Button {
-                        withAnimation(.spring(response: 0.32, dampingFraction: 0.82)) {
-                            activeMode = mode
-                        }
-                    } label: {
-                        HStack(spacing: 7) {
-                            Image(systemName: mode.icon)
-                                .font(.system(size: 12.5, weight: .semibold))
-                                .foregroundStyle(isSelected ? .white : appearance.accentColor)
-                            Text(mode.rawValue)
-                                .font(.system(size: 12.5, weight: isSelected ? .semibold : .medium))
-                                .foregroundStyle(isSelected ? .white : .primary)
-
-                            if mode == .shelf && !appState.shelfURLs.isEmpty {
-                                Text("\(appState.shelfURLs.count)")
-                                    .font(.system(size: 10.5, weight: .bold).monospacedDigit())
-                                    .foregroundStyle(isSelected ? appearance.accentColor : .white)
-                                    .padding(.horizontal, 6)
-                                    .padding(.vertical, 1)
-                                    .background(Capsule().fill(isSelected ? .white : appearance.accentColor))
-                            }
-                        }
-                        .padding(.horizontal, 14)
-                        .frame(height: 32)
-                        .background {
-                            if isSelected {
-                                RoundedRectangle(cornerRadius: 9, style: .continuous)
-                                    .fill(appearance.accentColor)
-                                    .shadow(color: appearance.accentColor.opacity(0.4), radius: 8, y: 2)
-                                    .matchedGeometryEffect(id: "StudioTabPill", in: studioNamespace)
-                            } else {
-                                RoundedRectangle(cornerRadius: 9, style: .continuous)
-                                    .fill(Color.primary.opacity(0.05))
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 9, style: .continuous)
-                                            .strokeBorder(Color.primary.opacity(0.08), lineWidth: 1)
-                                    )
-                            }
-                        }
-                        .contentShape(Rectangle())
-                    }
-                    .buttonStyle(StratumInteractiveButtonStyle())
+            // Mode tabs: the "view in Browser" button shrinks to an icon first, then the tabs scroll.
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 8) {
+                    modeTabs.fixedSize()
+                    Spacer(minLength: 8)
+                    viewInBrowserButton(showsTitle: true).fixedSize()
                 }
-
-                Spacer()
-
-                Button {
-                    appState.navigate(to: targetFolderURL)
-                } label: {
-                    HStack(spacing: 5) {
-                        Image(systemName: "arrow.up.right.square")
-                            .font(.system(size: 11.5, weight: .semibold))
-                        Text("View \(targetFolderURL.lastPathComponent) in Browser")
-                            .font(.system(size: 12, weight: .semibold))
-                    }
-                    .foregroundStyle(appearance.accentColor)
-                    .padding(.horizontal, 12)
-                    .frame(height: 30)
-                    .background(
-                        RoundedRectangle(cornerRadius: 8, style: .continuous)
-                            .fill(appearance.selectionFillColor)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                    .strokeBorder(appearance.selectionBorderColor, lineWidth: 1)
-                            )
-                    )
+                HStack(spacing: 8) {
+                    modeTabs.fixedSize()
+                    Spacer(minLength: 8)
+                    viewInBrowserButton(showsTitle: false)
                 }
-                .buttonStyle(StratumInteractiveButtonStyle())
+                HStack(spacing: 8) {
+                    ScrollView(.horizontal, showsIndicators: false) { modeTabs.fixedSize() }
+                    viewInBrowserButton(showsTitle: false)
+                }
             }
         }
         .padding(.horizontal, 24)
@@ -396,6 +300,144 @@ struct SmartOrganizerView: View {
                 .fill(Color.primary.opacity(0.07))
                 .frame(height: 1)
         }
+    }
+
+    private var headerTitles: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text("Smart Clean & Organizer Studio")
+                .font(.system(size: 22, weight: .bold))
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+            Text("Target folder: \(targetFolderURL.path) · Click any category below to create its folder & move files, find SHA-256 duplicates, or use the Drop Shelf.")
+                .font(.system(size: 12.5))
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
+    /// Scope Selector Pills
+    private var scopePills: some View {
+        let home = FileManager.default.homeDirectoryForCurrentUser
+        return HStack(spacing: 6) {
+            folderScopePill("Downloads", url: home.appendingPathComponent("Downloads"))
+            folderScopePill("Desktop", url: home.appendingPathComponent("Desktop"))
+            folderScopePill("Documents", url: home.appendingPathComponent("Documents"))
+
+            Button {
+                let panel = NSOpenPanel()
+                panel.canChooseFiles = false
+                panel.canChooseDirectories = true
+                panel.allowsMultipleSelection = false
+                panel.prompt = "Choose Folder"
+                if panel.runModal() == .OK, let url = panel.url {
+                    targetFolderURL = url
+                    reloadTargetFolder()
+                    if activeMode == .duplicates {
+                        scanForExactDuplicates()
+                    }
+                }
+            } label: {
+                HStack(spacing: 5) {
+                    Image(systemName: "folder.badge.gearshape")
+                        .font(.system(size: 11, weight: .semibold))
+                    Text("Choose Folder…")
+                        .font(.system(size: 12, weight: .medium))
+                }
+                .padding(.horizontal, 10)
+                .frame(height: 28)
+                .background(
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .fill(Color.primary.opacity(0.06))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                .strokeBorder(Color.primary.opacity(0.09), lineWidth: 1)
+                        )
+                )
+            }
+            .buttonStyle(StratumInteractiveButtonStyle())
+        }
+    }
+
+    /// 3-Mode Segmented Pill Switcher
+    private var modeTabs: some View {
+        HStack(spacing: 8) {
+            ForEach(StudioMode.allCases) { mode in
+                let isSelected = (activeMode == mode)
+                Button {
+                    withAnimation(.spring(response: 0.32, dampingFraction: 0.82)) {
+                        activeMode = mode
+                    }
+                } label: {
+                    HStack(spacing: 7) {
+                        Image(systemName: mode.icon)
+                            .font(.system(size: 12.5, weight: .semibold))
+                            .foregroundStyle(isSelected ? .white : appearance.accentColor)
+                        Text(mode.rawValue)
+                            .font(.system(size: 12.5, weight: isSelected ? .semibold : .medium))
+                            .foregroundStyle(isSelected ? .white : .primary)
+                            .lineLimit(1)
+
+                        if mode == .shelf && !appState.shelfURLs.isEmpty {
+                            Text("\(appState.shelfURLs.count)")
+                                .font(.system(size: 10.5, weight: .bold).monospacedDigit())
+                                .foregroundStyle(isSelected ? appearance.accentColor : .white)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 1)
+                                .background(Capsule().fill(isSelected ? .white : appearance.accentColor))
+                        }
+                    }
+                    .padding(.horizontal, 14)
+                    .frame(height: 32)
+                    .background {
+                        if isSelected {
+                            RoundedRectangle(cornerRadius: 9, style: .continuous)
+                                .fill(appearance.accentColor)
+                                .shadow(color: appearance.accentColor.opacity(0.4), radius: 8, y: 2)
+                                .matchedGeometryEffect(id: "StudioTabPill", in: studioNamespace)
+                        } else {
+                            RoundedRectangle(cornerRadius: 9, style: .continuous)
+                                .fill(Color.primary.opacity(0.05))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 9, style: .continuous)
+                                        .strokeBorder(Color.primary.opacity(0.08), lineWidth: 1)
+                                )
+                        }
+                    }
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(StratumInteractiveButtonStyle())
+            }
+        }
+    }
+
+    private func viewInBrowserButton(showsTitle: Bool) -> some View {
+        let title = "View \(targetFolderURL.lastPathComponent) in Browser"
+        return Button {
+            appState.navigate(to: targetFolderURL)
+        } label: {
+            HStack(spacing: 5) {
+                Image(systemName: "arrow.up.right.square")
+                    .font(.system(size: 11.5, weight: .semibold))
+                if showsTitle {
+                    Text(title)
+                        .font(.system(size: 12, weight: .semibold))
+                        .lineLimit(1)
+                }
+            }
+            .foregroundStyle(appearance.accentColor)
+            .padding(.horizontal, 12)
+            .frame(height: 30)
+            .background(
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .fill(appearance.selectionFillColor)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8, style: .continuous)
+                            .strokeBorder(appearance.selectionBorderColor, lineWidth: 1)
+                    )
+            )
+        }
+        .buttonStyle(StratumInteractiveButtonStyle())
+        .stratumHelp(title)
     }
 
     func folderScopePill(_ title: String, url: URL) -> some View {

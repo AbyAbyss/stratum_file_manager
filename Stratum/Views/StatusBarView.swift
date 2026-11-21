@@ -12,19 +12,25 @@ struct StatusBarView: View {
                 .lineLimit(1)
                 .truncationMode(.middle)
 
-            Spacer()
+            Spacer(minLength: 0)
 
+            // The path truncates first; the summary and the free space stay whole.
             Text(appState.statusSelectionSummary)
                 .font(.system(size: 11.5).monospacedDigit())
                 .foregroundStyle(.secondary)
+                .lineLimit(1)
+                .fixedSize()
+                .layoutPriority(1)
 
-            Spacer()
+            Spacer(minLength: 0)
 
             HStack(spacing: 10) {
                 if let boot = appState.bootVolume {
                     Text("\(BulkDirectoryReader.fastFormatBytes(boot.freeBytes)) available")
                         .font(.system(size: 11.5).monospacedDigit())
                         .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .fixedSize()
                 }
 
                 if appState.viewMode == .grid {
@@ -34,6 +40,7 @@ struct StatusBarView: View {
                         .stratumHelp("Icon size")
                 }
             }
+            .layoutPriority(1)
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 4)
