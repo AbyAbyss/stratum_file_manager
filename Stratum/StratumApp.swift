@@ -22,8 +22,6 @@ struct StratumApp: App {
         .windowStyle(.hiddenTitleBar)
         .defaultSize(width: 1340, height: 840)
         .commands {
-            WindowCommands()
-
             CommandGroup(after: .appInfo) {
                 if UpdateController.shared.isAvailable {
                     Button("Check for Updates…") {
@@ -59,6 +57,9 @@ struct StratumApp: App {
                 }
                 .keyboardShortcut("w", modifiers: [.command])
             }
+
+            // Must come after the group above: replacing .newItem discards anything added to it earlier.
+            WindowCommands()
 
             CommandGroup(replacing: .undoRedo) {
                 Button("Undo Move to Trash") {
@@ -252,7 +253,7 @@ struct WindowCommands: Commands {
     @Environment(\.openWindow) private var openWindow
 
     var body: some Commands {
-        CommandGroup(after: .newItem) {
+        CommandGroup(before: .newItem) {
             Button("New Window") {
                 openWindow(value: WindowSeed(path: WindowRegistry.shared.active.currentURL.path))
             }
