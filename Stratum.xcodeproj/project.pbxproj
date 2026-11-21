@@ -54,6 +54,7 @@
 		5BD7E670A3E28B2DECBE5695 /* SmartOrganizerView+Duplicates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87C7A3EE713F01EEE36AC539 /* SmartOrganizerView+Duplicates.swift */; };
 		665B60FD9CC293E3074E4B43 /* AppearanceTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAEB1AD44C14654D0364094A /* AppearanceTypes.swift */; };
 		6699D6255FFE90D79D19C102 /* ScanCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC59D84FACC963E94C7884B7 /* ScanCoordinator.swift */; };
+		687C3C61E75F51B6E9817C6C /* SidebarRailHover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F5B4D3737FAFA3EA42B5261 /* SidebarRailHover.swift */; };
 		68F18B95B67F04AC7B872358 /* AppStateModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB49F2041E93A371551FAF7 /* AppStateModels.swift */; };
 		6908F825816E7FA8AA26A5F3 /* ScanModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A600E6CCCA8545FEFCD8E660 /* ScanModels.swift */; };
 		69D3480BAC0499928EA57F29 /* SettingsScanningPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6554701917700524117D83A5 /* SettingsScanningPage.swift */; };
@@ -151,6 +152,7 @@
 		0DFA218F4C4C6199F255DB70 /* WindowRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowRegistry.swift; sourceTree = "<group>"; };
 		0E730F98592F41F85E9C7686 /* StorageMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageMapView.swift; sourceTree = "<group>"; };
 		0F3EB478E77E62019E6EEEEB /* ProtectActiveProjectsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtectActiveProjectsTests.swift; sourceTree = "<group>"; };
+		0F5B4D3737FAFA3EA42B5261 /* SidebarRailHover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarRailHover.swift; sourceTree = "<group>"; };
 		10733E9286239238E3127AED /* GroupsByNameView+Accordion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GroupsByNameView+Accordion.swift"; sourceTree = "<group>"; };
 		13E71AB20B2B84E7ABD952B1 /* MainWindowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindowView.swift; sourceTree = "<group>"; };
 		15C39B4BAC6EDD0EB5CAA0F1 /* ScanEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanEngine.swift; sourceTree = "<group>"; };
@@ -386,6 +388,7 @@
 				3B246DD4D80C2793B2BB46D2 /* BatchRenameSheet.swift */,
 				C2D917673F70ED81055452CB /* FirstRunFDASheet.swift */,
 				13E71AB20B2B84E7ABD952B1 /* MainWindowView.swift */,
+				0F5B4D3737FAFA3EA42B5261 /* SidebarRailHover.swift */,
 				C451677606067CF3A9DBD8ED /* SidebarView.swift */,
 				7264AFB9C86D36C3D5C9D148 /* StartupSplashView.swift */,
 				C22CF0063D58C2198BD1FA8B /* StatusBarView.swift */,
@@ -740,6 +743,7 @@
 				BDD5A2A7E2CBEF6A4C25A50A /* SettingsThemeCard.swift in Sources */,
 				6E2C6B625F3952F88B6631CC /* SettingsView.swift in Sources */,
 				C2ACA368A2926B64912DC66C /* SidePanelLayout.swift in Sources */,
+				687C3C61E75F51B6E9817C6C /* SidebarRailHover.swift in Sources */,
 				0A6869EA392B0DEFAD36A956 /* SidebarView.swift in Sources */,
 				1A97DCAA2BB63F65689BB53A /* SmartOrganizerView+Declutter.swift in Sources */,
 				5BD7E670A3E28B2DECBE5695 /* SmartOrganizerView+Duplicates.swift in Sources */,

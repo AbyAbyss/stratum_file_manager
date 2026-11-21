@@ -5,8 +5,11 @@ struct SidebarView: View {
     @Bindable var appState: AppState
     var appearance: AppearanceManager
 
-    /// Icons only; labels move to tooltips.
+    /// Icons only; each label slides out beside its icon on hover.
     private var isCollapsed: Bool { appState.sidebarCollapsed }
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var railHover: RailHover?
 
     private var homeURL: URL {
         FileManager.default.homeDirectoryForCurrentUser
@@ -274,7 +277,8 @@ struct SidebarView: View {
                                 .contentShape(Rectangle())
                             }
                             .buttonStyle(.plain)
-                            .help("iCloud Drive")
+                            .modifier(RailHoverSource(isEnabled: isCollapsed, label: "iCloud Drive", badge: nil, hover: $railHover))
+                            .accessibilityLabel("iCloud Drive")
                         }
                     }
 
@@ -377,7 +381,7 @@ struct SidebarView: View {
 
             // Disk Usage Glass Card at bottom of sidebar (matches reference design)
             if let boot = appState.bootVolume, isCollapsed {
-                sidebarRow(label: "\(boot.name) · \(BulkDirectoryReader.fastFormatBytes(boot.freeBytes)) free", icon: "internaldrive", badge: nil, isActive: appState.screen == .storage) {
+                sidebarRow(label: boot.name, icon: "internaldrive", badge: "\(BulkDirectoryReader.fastFormatBytes(boot.freeBytes)) free", isActive: appState.screen == .storage) {
                     appState.screen = .storage
                 }
             } else if let boot = appState.bootVolume {
@@ -461,6 +465,10 @@ struct SidebarView: View {
         .padding(.horizontal, isCollapsed ? 8 : 12)
         .padding(.vertical, 14)
         .background(appearance.sidebarGlassColor)
+        .coordinateSpace(name: RailHoverSource.coordinateSpace)
+        .overlay(alignment: .topLeading) { railHoverLabel }
+        .animation(reduceMotion ? .easeOut(duration: 0.12) : .spring(response: 0.26, dampingFraction: 0.8), value: railHover)
+        .onChange(of: isCollapsed) { _, _ in railHover = nil }
         .overlay(alignment: .trailing) {
             Rectangle()
                 .fill(Color.primary.opacity(0.07))
@@ -468,6 +476,25 @@ struct SidebarView: View {
         }
         .resizablePanel(key: "Stratum.sidebarWidth", defaultWidth: 236, range: WindowMetrics.sidebarMinWidth...400, edge: .trailing,
                         collapsedWidth: WindowMetrics.sidebarRailWidth, isCollapsed: $appState.sidebarCollapsed)
+    }
+
+    /// The hover label of the icon rail. It sits just outside the rail, centred on the hovered
+    /// icon, and glides to the next icon as the pointer moves down the rail.
+    @ViewBuilder
+    private var railHoverLabel: some View {
+        if isCollapsed, let railHover {
+            RailHoverLabel(hover: railHover, appearance: appearance)
+                .offset(x: WindowMetrics.sidebarRailWidth + 6, y: railHover.midY - RailHoverLabel.height / 2)
+                .allowsHitTesting(false)
+                .transition(
+                    reduceMotion
+                        ? .opacity
+                        : .asymmetric(
+                            insertion: .offset(x: -12).combined(with: .opacity).combined(with: .scale(scale: 0.92, anchor: .leading)),
+                            removal: .opacity
+                        )
+                )
+        }
     }
 
     private func sidebarSection<Content: View>(_ title: String, @ViewBuilder content: () -> Content) -> some View {
@@ -533,7 +560,9 @@ struct SidebarView: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .help(label)
+        // Expanded rows keep the system tooltip (for truncated names); the rail has its own label.
+        .help(isCollapsed ? "" : label)
+        .modifier(RailHoverSource(isEnabled: isCollapsed, label: label, badge: isCollapsed ? badge : nil, hover: $railHover))
         .accessibilityLabel(label)
     }
 

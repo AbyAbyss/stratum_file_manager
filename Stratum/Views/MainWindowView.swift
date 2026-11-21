@@ -46,6 +46,7 @@ struct MainWindowView: View {
                     if appState.showSidebar {
                         SidebarView(appState: appState, appearance: appearance)
                             .transition(.move(edge: .leading).combined(with: .opacity))
+                            .zIndex(1)   // its icon-rail hover labels reach over the content
                     }
 
                     // Opacity-only: scaling/offsetting two full screens at once is what made
