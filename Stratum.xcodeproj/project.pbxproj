@@ -101,6 +101,7 @@
 		B8FBDAD71B94B98B07E1CF06 /* StratumAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E33244289FC4672B2B65C7E /* StratumAppDelegate.swift */; };
 		B903AFB85C004ACCF5F15380 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 2FA6587CE5BC162D7ABCB774 /* Sparkle */; };
 		B9949980C89713CD699586F9 /* GridCollectionViewItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = A765EBFD1FC58E4E3C055246 /* GridCollectionViewItems.swift */; };
+		BD53BEA4A14562C12864EB31 /* WallpaperLocatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF58BD3C1582F0CB14BD26F9 /* WallpaperLocatorTests.swift */; };
 		BDD5A2A7E2CBEF6A4C25A50A /* SettingsThemeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61F90927958E1C1DA47434FC /* SettingsThemeCard.swift */; };
 		C2ACA368A2926B64912DC66C /* SidePanelLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB679F937D0D38C10A3436BE /* SidePanelLayout.swift */; };
 		C4356E6C397986F8F5364F0D /* VisualEffectBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024F9CB204AB944FB1FAAFEF /* VisualEffectBackground.swift */; };
@@ -109,6 +110,7 @@
 		D1449F3C59FC70D93B5E1E80 /* AppState+Shelf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39D44CADC7436BBA3E176AE3 /* AppState+Shelf.swift */; };
 		D42B693E7C1859B20E896531 /* NightSkyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30AD9DE4C41E2B509CEC6D18 /* NightSkyView.swift */; };
 		D94FCAC46EF31876A06302F3 /* AppState+Browser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 797CC3A9E1CCB9544375ADCC /* AppState+Browser.swift */; };
+		DEE06E667CC7C698851CDF2B /* WallpaperLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C6035E465CEA32CD295F55C /* WallpaperLocator.swift */; };
 		E35E20E884B67DE840CE6EAD /* StorageComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80C8AB52010ABCBB9A543591 /* StorageComponents.swift */; };
 		E3C6E121E03867D219A6DE23 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE224E3555C88FC444B95B7 /* AppState.swift */; };
 		E425CE1D34CC1134C5736269 /* StratumContextMenuBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4CF9CC9DD8E8A0198FEAE4 /* StratumContextMenuBuilder.swift */; };
@@ -189,6 +191,7 @@
 		6B92C90BE22725E797D906AC /* AppState+FileOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppState+FileOperations.swift"; sourceTree = "<group>"; };
 		6BBE9DFE555C628DE61D77A9 /* CommandPaletteView+Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CommandPaletteView+Search.swift"; sourceTree = "<group>"; };
 		6BDA7A8146161BD43636F44F /* GroupsByNameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsByNameView.swift; sourceTree = "<group>"; };
+		6C6035E465CEA32CD295F55C /* WallpaperLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WallpaperLocator.swift; sourceTree = "<group>"; };
 		6DE958612C09A5F625FD3A7D /* Stratum.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stratum.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		70491EB2406E3D394DFC4780 /* TreemapLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreemapLayout.swift; sourceTree = "<group>"; };
 		7264AFB9C86D36C3D5C9D148 /* StartupSplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartupSplashView.swift; sourceTree = "<group>"; };
@@ -222,6 +225,7 @@
 		ABC8F1BCCD7969EBCAD431A0 /* GridTileGraphicView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridTileGraphicView.swift; sourceTree = "<group>"; };
 		AC59D84FACC963E94C7884B7 /* ScanCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanCoordinator.swift; sourceTree = "<group>"; };
 		AE5B8EC631B09CBC3A403410 /* TerminalLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalLauncher.swift; sourceTree = "<group>"; };
+		AF58BD3C1582F0CB14BD26F9 /* WallpaperLocatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WallpaperLocatorTests.swift; sourceTree = "<group>"; };
 		B3C6E7BBAD4ACC898B0DBA8D /* ResizablePanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResizablePanel.swift; sourceTree = "<group>"; };
 		B56216304CCCAD281B771477 /* BulkDirectoryReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkDirectoryReader.swift; sourceTree = "<group>"; };
 		B9E94C08B1CBB8272B33F373 /* DirectoryWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryWatcher.swift; sourceTree = "<group>"; };
@@ -305,6 +309,7 @@
 				D2585D9FBF948BE73BCA66DB /* ColorLegibility.swift */,
 				17AF723BD16F558A6C2414C4 /* NSColor+Hex.swift */,
 				024F9CB204AB944FB1FAAFEF /* VisualEffectBackground.swift */,
+				6C6035E465CEA32CD295F55C /* WallpaperLocator.swift */,
 			);
 			path = Theme;
 			sourceTree = "<group>";
@@ -531,6 +536,7 @@
 				5DA2CFB988A15C07FF0FEEAD /* ScanEngineTests.swift */,
 				3A7C1EF28F3B52B73CC70963 /* TransferControlTests.swift */,
 				C7F1926E2DADFC3CFC5973C7 /* TreemapLayoutTests.swift */,
+				AF58BD3C1582F0CB14BD26F9 /* WallpaperLocatorTests.swift */,
 			);
 			path = StratumTests;
 			sourceTree = "<group>";
@@ -654,6 +660,7 @@
 				4F7682330F81DEBB2FE05855 /* ScanEngineTests.swift in Sources */,
 				6BCFA4689C116DDCA03DF974 /* TransferControlTests.swift in Sources */,
 				1910B024DD5BF80652441E6E /* TreemapLayoutTests.swift in Sources */,
+				BD53BEA4A14562C12864EB31 /* WallpaperLocatorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -764,6 +771,7 @@
 				0FEB075BBE22E091E7220083 /* UpdateController.swift in Sources */,
 				C4356E6C397986F8F5364F0D /* VisualEffectBackground.swift in Sources */,
 				76121105321878F3BD4C20AC /* WalkthroughView.swift in Sources */,
+				DEE06E667CC7C698851CDF2B /* WallpaperLocator.swift in Sources */,
 				A24925391DACC164F41DC509 /* WindowRegistry.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

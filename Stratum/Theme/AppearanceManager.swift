@@ -506,7 +506,7 @@ final class AppearanceManager {
 
     func sampleWallpaperColor() {
         guard let screen = NSScreen.main ?? NSScreen.screens.first,
-              let url = NSWorkspace.shared.desktopImageURL(for: screen) else {
+              let url = WallpaperLocator.currentImageURL(for: screen) else {
             return
         }
         DispatchQueue.global(qos: .utility).async {

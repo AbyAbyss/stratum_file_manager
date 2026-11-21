@@ -159,6 +159,11 @@ struct ScanRefreshControl: View {
                     .disabled(coordinator.isScanning)
                 Divider()
                 Toggle("Keep up to date automatically", isOn: Bindable(coordinator).autoRefreshEnabled)
+                Toggle("Also refresh on battery", isOn: Binding(
+                    get: { !coordinator.onlyOnPower },
+                    set: { coordinator.onlyOnPower = !$0 }
+                ))
+                .disabled(!coordinator.autoRefreshEnabled)
             } label: {
                 Image(systemName: "chevron.down")
                     .font(.system(size: 9, weight: .bold))
