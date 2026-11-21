@@ -61,7 +61,7 @@ targets:
         PRODUCT_NAME: Stratum
         # The app version: shown in Settings -> About and used for releases.
         # Bump it before releasing (see docs/RELEASING.md).
-        MARKETING_VERSION: "1.0.1"
+        MARKETING_VERSION: "1.1.0"
         CURRENT_PROJECT_VERSION: "1"
         # The EdDSA public key that update archives are checked against. Paste the key printed by
         # Sparkle's generate_keys here (docs/RELEASING.md). While empty, the build has no updater.
