@@ -18,18 +18,22 @@ extension AppState {
         shelfURLs.removeAll(where: { $0 == url })
     }
 
-    func dropAllShelfItems(into destinationFolder: URL) {
-        guard !shelfURLs.isEmpty else { return }
-        let itemsToCopy = shelfURLs
+    /// Copies (or moves) everything on the shelf into a folder and empties the shelf.
+    func dropAllShelfItems(into destinationFolder: URL, move: Bool = false) {
+        // Moving a file into the folder it is already in would only rename it.
+        let itemsToCopy = move
+            ? shelfURLs.filter { $0.deletingLastPathComponent().standardizedFileURL != destinationFolder.standardizedFileURL }
+            : shelfURLs
         shelfURLs.removeAll()
+        guard !itemsToCopy.isEmpty else { return }
         TransferQueueEngine.shared.enqueueTransfer(
-            kind: .copy,
+            kind: move ? .move : .copy,
             sourceURLs: itemsToCopy,
             to: destinationFolder,
             conflictPolicy: .keepBoth
         ) { [weak self] in
             self?.reloadCurrentDirectory(preserveSelection: true)
-            self?.showToast("Dropped \(itemsToCopy.count) Shelf \(itemsToCopy.count == 1 ? "item" : "items") into \(destinationFolder.lastPathComponent)")
+            self?.showToast("\(move ? "Moved" : "Copied") \(itemsToCopy.count) Shelf \(itemsToCopy.count == 1 ? "item" : "items") into \(destinationFolder.lastPathComponent)")
         }
     }
 

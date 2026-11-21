@@ -223,14 +223,19 @@ struct StratumApp: App {
 /// One window's content. Each window owns its own `AppState`; the disk scan is shared.
 struct WindowRoot: View {
     let seed: WindowSeed
+    /// SwiftUI can hand a window a second default seed shortly after it opens. The window keeps
+    /// the one it started with, or it would swap to a blank state mid-launch.
+    @State private var firstSeed: WindowSeed?
     @State private var appearance = AppearanceManager.shared
     @Environment(\.openWindow) private var openWindow
 
     var body: some View {
+        let seed = firstSeed ?? seed
         let appState = WindowRegistry.shared.state(for: seed)
         MainWindowView(appState: appState, appearance: appearance)
             .frame(minWidth: WindowMetrics.minWidth, minHeight: WindowMetrics.minHeight)
             .onAppear {
+                if firstSeed == nil { firstSeed = seed }
                 WindowRegistry.shared.openWindow = { openWindow(value: $0) }
                 // A folder passed at launch arrives before any window exists; open it now.
                 StratumAppDelegate.shared?.flushPending()

@@ -146,7 +146,8 @@ final class StratumContextMenuBuilder: NSObject {
             menu.addItem(makeItem("Move Copied Items Here", symbol: "arrow.right.doc.on.clipboard", action: #selector(ctxMoveHere)))
         }
         if !appState.shelfURLs.isEmpty {
-            menu.addItem(makeItem("Drop \(appState.shelfURLs.count) Shelf Items Here", symbol: "tray.and.arrow.up", action: #selector(ctxDropShelfHere)))
+            menu.addItem(makeItem("Copy \(appState.shelfURLs.count) Shelf Items Here", symbol: "tray.and.arrow.up", action: #selector(ctxDropShelfHere)))
+            menu.addItem(makeItem("Move \(appState.shelfURLs.count) Shelf Items Here", symbol: "tray.and.arrow.up.fill", action: #selector(ctxMoveShelfHere)))
         }
 
         menu.addItem(.separator())
@@ -418,6 +419,11 @@ final class StratumContextMenuBuilder: NSObject {
     @objc private func ctxDropShelfHere() {
         guard let appState = currentAppState, let dir = contextDirectoryURL else { return }
         appState.dropAllShelfItems(into: dir)
+    }
+
+    @objc private func ctxMoveShelfHere() {
+        guard let appState = currentAppState, let dir = contextDirectoryURL else { return }
+        appState.dropAllShelfItems(into: dir, move: true)
     }
 
     @objc private func ctxSelectAll() {

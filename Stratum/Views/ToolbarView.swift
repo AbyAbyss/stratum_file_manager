@@ -10,6 +10,7 @@ struct ToolbarView: View {
 
     @State var showToolbarTagsPopover = false
     @State private var showThemePicker = false
+    @State private var showShelf = false
     @State var density: ToolbarDensity = .full
     @State var tabStripWidth: CGFloat = 0
     @Namespace var toolbarMotionNamespace
@@ -203,6 +204,10 @@ struct ToolbarView: View {
                         }
                     }
 
+                    if !appState.shelfURLs.isEmpty {
+                        shelfButton
+                    }
+
                     toolbarIconButton("sidebar.right", label: "Toggle inspector (⌥⌘I)") {
                         withAnimation(.spring(response: 0.32, dampingFraction: 0.84)) {
                             appState.toggleInspector()
@@ -388,6 +393,34 @@ struct ToolbarView: View {
         }
         .buttonStyle(StratumInteractiveButtonStyle())
         .stratumHelp(label)
+    }
+
+    /// Appears only while files are parked, so a full shelf is never forgotten.
+    private var shelfButton: some View {
+        Button {
+            showShelf = true
+        } label: {
+            Image(systemName: "tray.full.fill")
+                .font(.system(size: 13.5, weight: .medium))
+                .foregroundStyle(appearance.accentColor)
+                .frame(width: 30, height: 30)
+                .overlay(alignment: .topTrailing) {
+                    Text("\(appState.shelfURLs.count)")
+                        .font(.system(size: 9, weight: .bold).monospacedDigit())
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 4)
+                        .frame(minWidth: 14, minHeight: 14)
+                        .background(Capsule().fill(appearance.accentColor))
+                        .offset(x: 3, y: 1)
+                }
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(StratumInteractiveButtonStyle(hoverScale: 1.08, pressScale: 0.90))
+        .stratumHelp("Shelf: \(appState.shelfURLs.count) parked")
+        .transition(.scale(scale: 0.6).combined(with: .opacity))
+        .popover(isPresented: $showShelf, arrowEdge: .bottom) {
+            ShelfPopover(appState: appState, appearance: appearance, isPresented: $showShelf)
+        }
     }
 
     func toolbarIconButton(_ symbol: String, label: String, disabled: Bool = false, action: @escaping () -> Void) -> some View {

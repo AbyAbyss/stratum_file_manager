@@ -11,7 +11,7 @@ extension SmartOrganizerView {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Drop Shelf (\(appState.shelfURLs.count) items parked)")
                         .font(.system(size: 16, weight: .bold))
-                    Text("Park files from any folder (Right-Click → Park on Drop Shelf, or drag files below) and move, copy, or zip them all at once.")
+                    Text("Park files from any folder (Right-Click → Park on Drop Shelf, or drag files below) then copy or move them all into one folder.")
                         .font(.system(size: 12.5))
                         .foregroundStyle(.secondary)
                 }
@@ -30,6 +30,19 @@ extension SmartOrganizerView {
                             .background(RoundedRectangle(cornerRadius: 8, style: .continuous).fill(appearance.accentColor))
                     }
                     .buttonStyle(StratumInteractiveButtonStyle())
+
+                    Button {
+                        appState.dropAllShelfItems(into: appState.currentURL, move: true)
+                    } label: {
+                        Label("Move All", systemImage: "arrow.right.doc.on.clipboard")
+                            .font(.system(size: 12, weight: .semibold))
+                            .foregroundStyle(appearance.accentColor)
+                            .padding(.horizontal, 12)
+                            .frame(height: 32)
+                            .background(RoundedRectangle(cornerRadius: 8, style: .continuous).strokeBorder(appearance.accentColor.opacity(0.6), lineWidth: 1))
+                    }
+                    .buttonStyle(StratumInteractiveButtonStyle())
+                    .stratumHelp("Move everything on the shelf into \(appState.currentFolderTitle)")
 
                     Button("Clear Shelf") {
                         appState.shelfURLs.removeAll()
