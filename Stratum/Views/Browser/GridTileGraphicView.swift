@@ -169,10 +169,20 @@ final class GridTileGraphicView: NSView {
             cardPath.stroke()
         }
 
-        // Graphic area at top of tile
-        let graphicCenterY = bounds.maxY - 45
+        // The graphic fills the space above the two text lines and scales with the tile, so the
+        // size slider resizes the icon instead of pushing it into the name.
+        let textTop: CGFloat = 46
+        let graphicArea = bounds.height - textTop - 12
+        let graphicScale = max(0.5, graphicArea / 64)
+        let graphicCenterY = textTop + 2 + graphicArea / 2
         let centerX = bounds.midX
 
+        NSGraphicsContext.saveGraphicsState()
+        let zoom = NSAffineTransform()
+        zoom.translateX(by: centerX, yBy: graphicCenterY)
+        zoom.scale(by: graphicScale)
+        zoom.translateX(by: -centerX, yBy: -graphicCenterY)
+        zoom.concat()
         if item.isFolderLike {
             drawFolderGraphic(centerX: centerX, centerY: graphicCenterY, appearance: appearance)
         } else if item.isAppOrPackage {
@@ -182,6 +192,7 @@ final class GridTileGraphicView: NSView {
         } else {
             drawPaperGraphic(item: item, centerX: centerX, centerY: graphicCenterY)
         }
+        NSGraphicsContext.restoreGraphicsState()
 
         // Draw Finder tag dots in top-right of tile if present
         if !item.tags.isEmpty {
