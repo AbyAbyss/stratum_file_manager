@@ -6,6 +6,7 @@ enum AppScreen: String, CaseIterable, Codable, Sendable {
     case organizer = "organizer"
     case groups = "groups"
     case storage = "storage"
+    case history = "history"
     case settings = "settings"
 
     var title: String {
@@ -14,6 +15,7 @@ enum AppScreen: String, CaseIterable, Codable, Sendable {
         case .organizer: return "Smart Organizer"
         case .groups: return "Groups"
         case .storage: return "Storage"
+        case .history: return "Storage History"
         case .settings: return "Settings"
         }
     }

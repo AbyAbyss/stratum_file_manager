@@ -174,6 +174,8 @@ struct MainWindowView: View {
             DeferredContent { GroupsByNameView(appState: appState, appearance: appearance) }
         case .storage:
             DeferredContent { StorageMapView(appState: appState, appearance: appearance) }
+        case .history:
+            DeferredContent { StorageHistoryView(appState: appState, appearance: appearance) }
         case .settings:
             DeferredContent { SettingsView(appState: appState, appearance: appearance) }
         }

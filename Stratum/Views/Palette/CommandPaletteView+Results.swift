@@ -76,6 +76,7 @@ extension CommandPaletteView {
                     sectionHeader("Go to")
                     paletteGoToRow(title: "Go to Groups by name", screen: .groups)
                     paletteGoToRow(title: "Go to Storage map", screen: .storage)
+                    paletteGoToRow(title: "Go to Storage history", screen: .history)
                     paletteGoToRow(title: "Open Smart Organizer", screen: .organizer)
                     paletteGoToRow(title: "Open Settings", screen: .settings)
 

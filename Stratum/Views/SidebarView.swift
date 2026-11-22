@@ -37,6 +37,7 @@ struct SidebarView: View {
             ("Smart Organizer", "wand.and.stars", .organizer, "⌥⌘2"),
             ("Groups", "infinity", .groups, "⌥⌘3"),
             ("Storage map", "rectangle.3.group", .storage, "⌥⌘4"),
+            ("History", "chart.line.uptrend.xyaxis", .history, "⌥⌘5"),
             ("Settings", "slider.horizontal.3", .settings, "⌘,"),
         ]
     }

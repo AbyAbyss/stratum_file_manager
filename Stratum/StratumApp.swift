@@ -197,6 +197,8 @@ struct StratumApp: App {
                     .keyboardShortcut("3", modifiers: [.command, .option])
                 Button("Storage Map") { appState.screen = .storage }
                     .keyboardShortcut("4", modifiers: [.command, .option])
+                Button("Storage History") { appState.screen = .history }
+                    .keyboardShortcut("5", modifiers: [.command, .option])
                 Button("Settings") { appState.screen = .settings }
                     .keyboardShortcut(",", modifiers: [.command])
 

@@ -61,6 +61,7 @@ struct ToolbarView: View {
                     Divider()
                     Button("Browser") { appState.screen = .browser }
                     Button("Storage Map") { appState.screen = .storage }
+                    Button("Storage History") { appState.screen = .history }
                     Button("Groups by Name") { appState.screen = .groups }
                     Button("Smart Clean & Organizer") { appState.screen = .organizer }
                 }

@@ -214,6 +214,7 @@ final class ScanCoordinator {
                 let resolver = PathResolver(db: db, rootPathPrefix: summary?.rootPath)
                 Task { @MainActor in
                     self.activeDB = db
+                    StorageHistory.shared.record(from: db)
                     self.pathResolver = resolver
                     // Fall back to the snapshot file's age so the UI can always say how old the data is.
                     let fileDate = try? newest.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate
@@ -300,6 +301,7 @@ final class ScanCoordinator {
                     let newResolver = PathResolver(db: db, rootPathPrefix: rootPath)
 
                     self.activeDB = db
+                    StorageHistory.shared.record(from: db)
                     self.pathResolver = newResolver
                     self.lastScanDate = Date()
                     self.lastCompletedScanTime = Date()
