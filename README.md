@@ -19,6 +19,7 @@
 
 <p align="center">
   <a href="https://github.com/AbyAbyss/stratum_file_manager/releases/latest"><b>⬇&nbsp; Download for macOS</b></a> &nbsp;·&nbsp;
+  <a href="https://abyabyss.github.io/stratum.html"><b>Website</b></a> &nbsp;·&nbsp;
   <a href="#features">Features</a> &nbsp;·&nbsp;
   <a href="#keyboard-shortcuts">Shortcuts</a> &nbsp;·&nbsp;
   <a href="#build-from-source">Build</a> &nbsp;·&nbsp;
