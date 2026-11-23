@@ -4,34 +4,21 @@ import QuickLookThumbnailing
 
 final class KeyHandlingCollectionView: NSCollectionView {
     weak var coordinator: FastIconGridView.Coordinator?
+    private var typeSelect = TypeSelectBuffer()
+
+    override func viewDidMoveToWindow() {
+        super.viewDidMoveToWindow()
+        BrowserKeys.claimFocusIfUnused(self)
+    }
 
     override func keyDown(with event: NSEvent) {
         guard let coordinator else {
             super.keyDown(with: event)
             return
         }
-        let flags = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
-
-        if event.keyCode == 49 && flags.isEmpty {
-            QuickLookCoordinator.shared.togglePreview(for: coordinator.appState.selectedItems.map(\.url))
-            return
-        }
-        if (event.keyCode == 36 && flags.isEmpty) || (event.keyCode == 125 && flags == .command) {
-            if let first = coordinator.appState.selectedItems.first {
-                coordinator.appState.openItem(first)
-            }
-            return
-        }
-        if event.keyCode == 126 && flags == .command {
-            coordinator.appState.goUp()
-            return
-        }
-        if event.keyCode == 51 && flags == .command {
-            coordinator.appState.moveSelectionToTrash()
-            return
-        }
-        if event.charactersIgnoringModifiers == "/" && flags.isEmpty {
-            coordinator.appState.showQuickFilter = true
+        if BrowserKeys.handle(event, appState: coordinator.appState) { return }
+        if let prefix = typeSelect.prefix(adding: event) {
+            coordinator.selectFirstItem(withPrefix: prefix)
             return
         }
         super.keyDown(with: event)

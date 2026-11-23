@@ -9,6 +9,7 @@ struct BrowserContainerView: View {
     /// While a different folder loads, the old listing is dimmed so it never reads as current.
     @State private var isNavigating = false
     @State private var navigationToken = 0
+    @FocusState private var filterFocused: Bool
 
     var body: some View {
         SidePanelLayout(panelEdge: .trailing, mainMinWidth: WindowMetrics.browserListMinWidth) {
@@ -430,6 +431,22 @@ struct BrowserContainerView: View {
             TextField("Filter current folder (/ to focus)…", text: $appState.filterQuery)
                 .textFieldStyle(.plain)
                 .font(.system(size: 12.5))
+                .focused($filterFocused)
+                .onAppear {
+                    if appState.showQuickFilter { filterFocused = true }
+                }
+                .onChange(of: appState.showQuickFilter) { _, show in
+                    if show { filterFocused = true }
+                }
+                .onChange(of: filterFocused) { _, focused in
+                    if !focused { appState.showQuickFilter = false }
+                }
+                // Return keeps the filter and goes back to the files; Escape drops it first.
+                .onSubmit { BrowserKeys.focusFileList(in: NSApp.keyWindow) }
+                .onExitCommand {
+                    appState.filterQuery = ""
+                    BrowserKeys.focusFileList(in: NSApp.keyWindow)
+                }
             if !appState.filterQuery.isEmpty {
                 Text("\(appState.displayedItems.count) matches")
                     .font(.system(size: 11).monospacedDigit())

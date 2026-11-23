@@ -41,6 +41,15 @@ final class StratumAppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        // The side buttons on a mouse go back and forward, as in Finder and browsers.
+        NSEvent.addLocalMonitorForEvents(matching: .otherMouseDown) { event in
+            guard event.buttonNumber == 3 || event.buttonNumber == 4 else { return event }
+            MainActor.assumeIsolated {
+                let state = WindowRegistry.shared.active
+                if event.buttonNumber == 3 { state.goBack() } else { state.goForward() }
+            }
+            return nil
+        }
         // Folders passed at launch arrive just before this; give them a moment to be handed off.
         guard isDuplicate else { return }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { NSApp.terminate(nil) }

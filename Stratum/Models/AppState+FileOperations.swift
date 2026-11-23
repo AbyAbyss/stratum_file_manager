@@ -151,6 +151,7 @@ extension AppState {
         let pb = NSPasteboard.general
         pb.clearContents()
         pb.writeObjects(urls as [NSURL])
+        clipboardChangeCount = pb.changeCount
         showToast("Copied \(urls.count) \(urls.count == 1 ? "item" : "items")")
     }
 
@@ -162,13 +163,19 @@ extension AppState {
         let pb = NSPasteboard.general
         pb.clearContents()
         pb.writeObjects(urls as [NSURL])
+        clipboardChangeCount = pb.changeCount
         showToast("Ready to move \(urls.count) \(urls.count == 1 ? "item" : "items")")
     }
 
     func pasteIntoCurrentFolder(forceMove: Bool = false) {
+        let pb = NSPasteboard.general
+        // Something was copied elsewhere (in Finder, say) after Stratum's own copy: paste that.
+        if pb.changeCount != clipboardChangeCount {
+            clipboardURLs = []
+            clipboardIsMove = false
+        }
         var urls = clipboardURLs
         if urls.isEmpty {
-            let pb = NSPasteboard.general
             if let read = pb.readObjects(forClasses: [NSURL.self], options: [.urlReadingFileURLsOnly: true]) as? [URL] {
                 urls = read
             }

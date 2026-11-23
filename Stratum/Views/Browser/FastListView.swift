@@ -116,7 +116,7 @@ struct FastListView: NSViewRepresentable {
     }
 
     @MainActor
-    final class Coordinator: NSObject, NSTableViewDataSource, NSTableViewDelegate, NSMenuDelegate {
+    final class Coordinator: NSObject, NSTableViewDataSource, NSTableViewDelegate, NSMenuDelegate, BrowserKeyTarget {
         var appState: AppState
         var items: [FileItem] = []
         weak var tableView: NSTableView?
@@ -199,6 +199,11 @@ struct FastListView: NSViewRepresentable {
             default:
                 return nil
             }
+        }
+
+        /// Typing a name jumps to the first row that starts with it.
+        func tableView(_ tableView: NSTableView, typeSelectStringFor tableColumn: NSTableColumn?, row: Int) -> String? {
+            items.indices.contains(row) ? items[row].name : nil
         }
 
         func tableViewSelectionDidChange(_ notification: Notification) {
@@ -309,44 +314,16 @@ struct FastListView: NSViewRepresentable {
 
 // MARK: - Custom TableView & Cells
 
-final class KeyHandlingTableView: NSTableView {
-    weak var coordinator: FastListView.Coordinator?
+class KeyHandlingTableView: NSTableView {
+    weak var coordinator: (any BrowserKeyTarget)?
+
+    override func viewDidMoveToWindow() {
+        super.viewDidMoveToWindow()
+        BrowserKeys.claimFocusIfUnused(self)
+    }
 
     override func keyDown(with event: NSEvent) {
-        guard let coordinator else {
-            super.keyDown(with: event)
-            return
-        }
-        let flags = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
-
-        // Spacebar -> Quick Look
-        if event.keyCode == 49 && flags.isEmpty {
-            let urls = coordinator.appState.selectedItems.map(\.url)
-            QuickLookCoordinator.shared.togglePreview(for: urls)
-            return
-        }
-        // Return (36) or Cmd+Down (125) -> Open selected
-        if (event.keyCode == 36 && flags.isEmpty) || (event.keyCode == 125 && flags == .command) {
-            if let first = coordinator.appState.selectedItems.first {
-                coordinator.appState.openItem(first)
-            }
-            return
-        }
-        // Cmd+Up (126) -> Go to parent folder
-        if event.keyCode == 126 && flags == .command {
-            coordinator.appState.goUp()
-            return
-        }
-        // Cmd+Delete (51) -> Move to Trash
-        if event.keyCode == 51 && flags == .command {
-            coordinator.appState.moveSelectionToTrash()
-            return
-        }
-        // "/" -> Quick filter bar
-        if event.charactersIgnoringModifiers == "/" && flags.isEmpty {
-            coordinator.appState.showQuickFilter = true
-            return
-        }
+        if let coordinator, BrowserKeys.handle(event, appState: coordinator.appState) { return }
         super.keyDown(with: event)
     }
 }

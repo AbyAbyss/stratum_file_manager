@@ -64,7 +64,7 @@ struct FastIconGridView: NSViewRepresentable {
     }
 
     @MainActor
-    final class Coordinator: NSObject, NSCollectionViewDataSource, NSCollectionViewDelegateFlowLayout, NSMenuDelegate {
+    final class Coordinator: NSObject, NSCollectionViewDataSource, NSCollectionViewDelegateFlowLayout, NSMenuDelegate, BrowserKeyTarget {
         struct Section {
             let title: String
             let items: [FileItem]
@@ -158,6 +158,19 @@ struct FastIconGridView: NSViewRepresentable {
                 return nil
             }
             return sections[indexPath.section].items[indexPath.item]
+        }
+
+        /// Type-to-select: picks the first item whose name starts with `prefix` and scrolls to it.
+        func selectFirstItem(withPrefix prefix: String) {
+            guard let collectionView else { return }
+            for (secIdx, sec) in sections.enumerated() {
+                guard let itemIdx = sec.items.firstIndex(where: { $0.lowercasedName.hasPrefix(prefix) }) else { continue }
+                let indexPath = IndexPath(item: itemIdx, section: secIdx)
+                appState.selectedItemIDs = [sec.items[itemIdx].id]
+                syncSelection(appState.selectedItemIDs)
+                collectionView.scrollToItems(at: [indexPath], scrollPosition: .nearestVerticalEdge)
+                return
+            }
         }
 
         // MARK: - NSCollectionViewDataSource

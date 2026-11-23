@@ -157,6 +157,8 @@ final class AppState {
     // Clipboard & Shelf
     var clipboardURLs: [URL] = []
     var clipboardIsMove: Bool = false
+    /// The system clipboard's change count when Stratum last wrote to it; see `pasteIntoCurrentFolder`.
+    var clipboardChangeCount: Int = -1
     var shelfURLs: [URL] = []
 
     // Custom Pinned Sidebar Folders
@@ -457,6 +459,12 @@ final class AppState {
             let nextIdx = min(idx, tabs.count - 1)
             selectTab(tabs[nextIdx].id)
         }
+    }
+
+    /// The tab after (`offset` 1) or before (-1) the active one, wrapping around at the ends.
+    func selectAdjacentTab(offset: Int) {
+        guard tabs.count > 1, let idx = activeTabIndex else { return }
+        selectTab(tabs[(idx + offset + tabs.count) % tabs.count].id)
     }
 
     func selectTab(_ id: UUID) {

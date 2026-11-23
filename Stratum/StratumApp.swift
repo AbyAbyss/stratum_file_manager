@@ -47,6 +47,12 @@ struct StratumApp: App {
                 }
                 .keyboardShortcut("n", modifiers: [.command, .shift])
 
+                Button("Open") {
+                    appState.selectedItems.forEach { appState.openItem($0) }
+                }
+                .keyboardShortcut("o", modifiers: [.command])
+                .disabled(appState.selectedItems.isEmpty)
+
                 // Closes the tab, or the window when it is the last tab. Other windows stay open.
                 Button(appState.tabs.count > 1 ? "Close Tab" : "Close Window") {
                     if appState.tabs.count > 1 {
@@ -61,30 +67,62 @@ struct StratumApp: App {
             // Must come after the group above: replacing .newItem discards anything added to it earlier.
             WindowCommands()
 
-            CommandGroup(replacing: .undoRedo) {
-                Button("Undo Move to Trash") {
-                    appState.undoLastTrash()
-                }
-                .keyboardShortcut("z", modifiers: [.command])
-                .disabled(TransferQueueEngine.shared.trashHistory.isEmpty)
+            CommandGroup(replacing: .appSettings) {
+                Button("Settings…") { appState.screen = .settings }
+                    .keyboardShortcut(",", modifiers: [.command])
             }
 
-            CommandGroup(after: .pasteboard) {
-                Button("Copy Selected Items") {
-                    appState.copySelectionToClipboard()
+            // Undo, Cut, Copy, Paste and Select All replace the system items rather than sit beside
+            // them: a shortcut only ever fires the first item that has it, and the system items
+            // know nothing about files. EditCommands sends each to the text field or to the files.
+            CommandGroup(replacing: .undoRedo) {
+                Button("Undo") {
+                    EditCommands.run(EditCommands.undo, in: appState) { appState.undoLastTrash() }
+                }
+                .keyboardShortcut("z", modifiers: [.command])
+
+                Button("Redo") {
+                    EditCommands.run(EditCommands.redo, in: appState)
+                }
+                .keyboardShortcut("z", modifiers: [.command, .shift])
+            }
+
+            CommandGroup(replacing: .pasteboard) {
+                Button("Cut") {
+                    EditCommands.run(#selector(NSText.cut(_:)), in: appState) { appState.cutSelectionToClipboard() }
+                }
+                .keyboardShortcut("x", modifiers: [.command])
+
+                Button("Copy") {
+                    EditCommands.run(#selector(NSText.copy(_:)), in: appState) { appState.copySelectionToClipboard() }
                 }
                 .keyboardShortcut("c", modifiers: [.command])
-                .disabled(appState.selectedItems.isEmpty)
 
-                Button("Paste Item") {
-                    appState.pasteIntoCurrentFolder(forceMove: false)
+                Button("Paste") {
+                    EditCommands.run(#selector(NSText.paste(_:)), in: appState) { appState.pasteIntoCurrentFolder(forceMove: false) }
                 }
                 .keyboardShortcut("v", modifiers: [.command])
 
                 Button("Move Item Here") {
-                    appState.pasteIntoCurrentFolder(forceMove: true)
+                    EditCommands.run(#selector(NSText.paste(_:)), in: appState) { appState.pasteIntoCurrentFolder(forceMove: true) }
                 }
                 .keyboardShortcut("v", modifiers: [.command, .option])
+
+                Button("Select All") {
+                    EditCommands.run(#selector(NSText.selectAll(_:)), in: appState) { appState.selectAllItems() }
+                }
+                .keyboardShortcut("a", modifiers: [.command])
+
+                Divider()
+
+                Button("Find") {
+                    if appState.screen == .browser {
+                        appState.showQuickFilter = true
+                    } else {
+                        appState.showCommandPalette = true
+                    }
+                }
+                .keyboardShortcut("f", modifiers: [.command])
 
                 Divider()
 
@@ -147,6 +185,11 @@ struct StratumApp: App {
                 }
                 .keyboardShortcut(".", modifiers: [.command, .shift])
 
+                Button("Toggle Full Screen") {
+                    NSApp.keyWindow?.toggleFullScreen(nil)
+                }
+                .keyboardShortcut("f", modifiers: [.command, .control])
+
                 Divider()
 
                 Button("Quick Look") {
@@ -200,7 +243,6 @@ struct StratumApp: App {
                 Button("Storage History") { appState.screen = .history }
                     .keyboardShortcut("5", modifiers: [.command, .option])
                 Button("Settings") { appState.screen = .settings }
-                    .keyboardShortcut(",", modifiers: [.command])
 
                 Divider()
 
@@ -269,6 +311,13 @@ struct WindowCommands: Commands {
             }
             .keyboardShortcut("n", modifiers: [.command, .option])
             .disabled(WindowRegistry.shared.active.tabs.count < 2)
+        }
+
+        CommandGroup(before: .windowArrangement) {
+            Button("Show Next Tab") { WindowRegistry.shared.active.selectAdjacentTab(offset: 1) }
+                .keyboardShortcut(.tab, modifiers: [.control])
+            Button("Show Previous Tab") { WindowRegistry.shared.active.selectAdjacentTab(offset: -1) }
+                .keyboardShortcut(.tab, modifiers: [.control, .shift])
         }
     }
 }

@@ -181,7 +181,9 @@ private struct ColumnSingleListView: NSViewRepresentable {
         scroll.hasVerticalScroller = true
         scroll.autohidesScrollers = true
 
-        let tableView = NSTableView()
+        let tableView = ColumnTableView()
+        tableView.coordinator = context.coordinator
+        tableView.columnCoordinator = context.coordinator
         tableView.style = .plain
         tableView.backgroundColor = .clear
         tableView.headerView = nil
@@ -219,7 +221,7 @@ private struct ColumnSingleListView: NSViewRepresentable {
     }
 
     @MainActor
-    final class Coordinator: NSObject, NSTableViewDataSource, NSTableViewDelegate, NSMenuDelegate {
+    final class Coordinator: NSObject, NSTableViewDataSource, NSTableViewDelegate, NSMenuDelegate, BrowserKeyTarget {
         var pane: AppState.ColumnPane
         var appState: AppState
         weak var tableView: NSTableView?
@@ -252,6 +254,11 @@ private struct ColumnSingleListView: NSViewRepresentable {
             let cell = (tableView.makeView(withIdentifier: id, owner: nil) as? ColumnItemCellView) ?? ColumnItemCellView(identifier: id)
             cell.configure(with: item)
             return cell
+        }
+
+        /// Typing a name jumps to the first row that starts with it.
+        func tableView(_ tableView: NSTableView, typeSelectStringFor tableColumn: NSTableColumn?, row: Int) -> String? {
+            pane.items.indices.contains(row) ? pane.items[row].name : nil
         }
 
         func tableViewSelectionDidChange(_ notification: Notification) {
@@ -343,6 +350,40 @@ private struct ColumnSingleListView: NSViewRepresentable {
                 directoryURL: pane.directoryURL
             )
         }
+    }
+}
+
+/// One column's list. Left and right arrows walk between columns, as in Finder.
+private final class ColumnTableView: KeyHandlingTableView {
+    weak var columnCoordinator: ColumnSingleListView.Coordinator?
+
+    override func keyDown(with event: NSEvent) {
+        let flags = event.modifierFlags.intersection([.command, .option, .control, .shift])
+        guard flags.isEmpty, let columnCoordinator, event.keyCode == 123 || event.keyCode == 124 else {
+            super.keyDown(with: event)
+            return
+        }
+        let directory = columnCoordinator.pane.directoryURL.standardizedFileURL
+        if event.keyCode == 123 {
+            // Left: back to the column that lists this folder.
+            guard let parent = column(showing: directory.deletingLastPathComponent()), parent !== self else { return }
+            columnCoordinator.appState.navigate(to: directory)
+            window?.makeFirstResponder(parent)
+        } else if columnCoordinator.pane.items.indices.contains(selectedRow),
+                  columnCoordinator.pane.items[selectedRow].isFolderLike,
+                  let child = column(showing: columnCoordinator.pane.items[selectedRow].url),
+                  child.numberOfRows > 0 {
+            // Right: into the selected folder's column.
+            window?.makeFirstResponder(child)
+            child.selectRowIndexes(IndexSet(integer: 0), byExtendingSelection: false)
+        }
+    }
+
+    private func column(showing directory: URL) -> ColumnTableView? {
+        let target = directory.standardizedFileURL
+        return window?.contentView?.firstDescendant {
+            ($0 as? ColumnTableView)?.columnCoordinator?.pane.directoryURL.standardizedFileURL == target
+        } as? ColumnTableView
     }
 }
 
