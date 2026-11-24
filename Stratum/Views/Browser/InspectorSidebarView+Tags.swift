@@ -19,7 +19,7 @@ extension InspectorSidebarView {
                         Text(tag.name)
                             .font(.system(size: 12, weight: .medium))
                         Image(systemName: "xmark")
-                            .font(.system(size: 8, weight: .bold))
+                            .font(.system(size: 8, weight: .semibold))
                             .foregroundStyle(.secondary)
                     }
                     .padding(.horizontal, 9)
@@ -40,7 +40,7 @@ extension InspectorSidebarView {
                 } label: {
                     HStack(spacing: 4) {
                         Image(systemName: "plus")
-                            .font(.system(size: 10, weight: .bold))
+                            .font(.system(size: 10, weight: .semibold))
                         Text("Add tag")
                             .font(.system(size: 12))
                     }
@@ -74,7 +74,7 @@ extension InspectorSidebarView {
                                     Spacer()
                                     if isAssigned {
                                         Image(systemName: "checkmark")
-                                            .font(.system(size: 11, weight: .bold))
+                                            .font(.system(size: 11, weight: .semibold))
                                     }
                                 }
                                 .padding(.horizontal, 8)

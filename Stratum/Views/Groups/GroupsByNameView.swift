@@ -81,7 +81,7 @@ struct GroupsByNameView: View {
                 if let lastTrash = transferEngine.trashHistory.first {
                     HStack(spacing: 10) {
                         Image(systemName: "checkmark.circle.fill")
-                            .font(.system(size: 14, weight: .bold))
+                            .font(.system(size: 14, weight: .semibold))
                             .foregroundStyle(Color(nsColor: NSColor(hex: "#5FD38D") ?? .systemGreen))
                         Text("Moved \(lastTrash.itemCount) \(lastTrash.itemCount == 1 ? "folder" : "folders") to Trash · \(BulkDirectoryReader.fastFormatBytes(lastTrash.freedBytes)) freed")
                             .font(.system(size: 13, weight: .medium))
@@ -180,7 +180,7 @@ struct GroupsByNameView: View {
     private var headerTitles: some View {
         VStack(alignment: .leading, spacing: 3) {
             Text("Groups by name")
-                .font(.system(size: 22, weight: .bold))
+                .font(.system(size: 22, weight: .semibold))
                 .lineLimit(1)
             Text("Folders with the same name across \(formatTilde(scanCoordinator.scannedRootPath)), totalled. Click any folder row or checkbox to select for cleanup.")
                 .font(.system(size: 13))
@@ -341,7 +341,7 @@ struct GroupsByNameView: View {
             Image(systemName: "magnifyingglass")
                 .font(.system(size: 12))
                 .foregroundStyle(.secondary)
-            TextField("Filter groups or project paths…", text: $searchQuery)
+            TextField("Filter groups", text: $searchQuery)
                 .textFieldStyle(.plain)
                 .font(.system(size: 12.5))
             if !searchQuery.isEmpty {

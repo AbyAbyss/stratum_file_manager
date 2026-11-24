@@ -14,7 +14,7 @@ struct FocusCard: View {
                 .frame(width: 6, height: 44)
 
             VStack(alignment: .leading, spacing: 3) {
-                Text(item.name).font(.system(size: 16, weight: .bold, design: .rounded)).lineLimit(1)
+                Text(item.name).font(.system(size: 16, weight: .semibold, design: .rounded)).lineLimit(1)
                 Text(item.path).font(.system(size: 11.5)).foregroundStyle(.secondary).lineLimit(1).truncationMode(.middle)
             }
 
@@ -36,7 +36,7 @@ struct FocusCard: View {
 
     private func stat(_ value: String, _ label: String) -> some View {
         VStack(alignment: .trailing, spacing: 2) {
-            Text(value).font(.system(size: 14, weight: .bold, design: .rounded).monospacedDigit())
+            Text(value).font(.system(size: 14, weight: .semibold, design: .rounded).monospacedDigit())
             Text(label).font(.system(size: 10.5, weight: .medium)).foregroundStyle(.secondary)
         }
     }
@@ -80,7 +80,7 @@ struct FolderRow: View {
                 .frame(width: 74, alignment: .trailing)
 
             Image(systemName: "chevron.right")
-                .font(.system(size: 10, weight: .bold))
+                .font(.system(size: 10, weight: .semibold))
                 .foregroundStyle(.tertiary)
                 .opacity(item.isFile ? 0 : 1)
         }
@@ -117,22 +117,21 @@ struct CategoryCard: View {
                 Text(percent).font(.system(size: 12, weight: .semibold).monospacedDigit()).foregroundStyle(.secondary)
             }
             Text(StorageFormat.bytes(total.totalSize))
-                .font(.system(size: 22, weight: .bold, design: .rounded).monospacedDigit())
-            Text("\(total.type.displayName) · \(total.fileCount) files")
+                .font(.system(size: 22, weight: .semibold, design: .rounded).monospacedDigit())
+            Text("\(total.type.displayName) · \(total.fileCount) \(total.fileCount == 1 ? "file" : "files")")
                 .font(.system(size: 11.5)).foregroundStyle(.secondary)
         }
         .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(tint.opacity(isSelected ? 0.2 : 0.09))
+                .fill(tint.opacity(isSelected ? 0.2 : (hovering ? 0.14 : 0.09)))
                 .overlay(
                     RoundedRectangle(cornerRadius: 16, style: .continuous)
                         .strokeBorder(isSelected ? tint : Color.primary.opacity(0.07), lineWidth: isSelected ? 2 : 1)
                 )
         )
-        .scaleEffect(hovering ? 1.02 : 1)
-        .animation(.spring(response: 0.25, dampingFraction: 0.75), value: hovering)
+        .animation(.easeOut(duration: 0.14), value: hovering)
         .onHover { hovering = $0 }
         .contentShape(Rectangle())
     }
@@ -184,7 +183,7 @@ struct EmptyScanCard: View {
     var body: some View {
         VStack(spacing: 14) {
             Image(systemName: "chart.pie.fill").font(.system(size: 40)).foregroundStyle(appearance.accentColor)
-            Text("No storage data yet").font(.system(size: 18, weight: .bold, design: .rounded))
+            Text("No storage data yet").font(.system(size: 18, weight: .semibold, design: .rounded))
             Text("Scan your home folder to see what's using space.")
                 .font(.system(size: 13)).foregroundStyle(.secondary)
             Button("Scan Home Folder", action: scan)

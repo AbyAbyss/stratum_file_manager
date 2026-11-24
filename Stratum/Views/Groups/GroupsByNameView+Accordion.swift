@@ -66,7 +66,7 @@ extension GroupsByNameView {
                         Text("Move to Trash · \(BulkDirectoryReader.fastFormatBytes(selectedTotalBytes))")
                             .font(.system(size: 13, weight: .semibold).monospacedDigit())
                         Image(systemName: "arrow.right")
-                            .font(.system(size: 11.5, weight: .bold))
+                            .font(.system(size: 11.5, weight: .semibold))
                     }
                     .foregroundStyle(.white)
                     .padding(.horizontal, 15)
@@ -127,7 +127,7 @@ extension GroupsByNameView {
                             )
                         if allChecked || someChecked {
                             Image(systemName: allChecked ? "checkmark" : "minus")
-                                .font(.system(size: 10, weight: .bold))
+                                .font(.system(size: 10, weight: .semibold))
                                 .foregroundStyle(.white)
                                 .contentTransition(.symbolEffect(.replace))
                                 .stratumSymbolPop(value: allChecked)
@@ -135,7 +135,7 @@ extension GroupsByNameView {
                         }
                     }
                     .frame(width: 22, height: 22)
-                    .animation(.spring(response: 0.28, dampingFraction: 0.7), value: allChecked || someChecked)
+                    .animation(.spring(response: 0.28, dampingFraction: 0.86), value: allChecked || someChecked)
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
@@ -158,8 +158,8 @@ extension GroupsByNameView {
                                 Text(group.name)
                                     .font(.system(size: 14, weight: .semibold, design: .monospaced))
                                 if group.avgAgeDays >= 60 || group.devOnly {
-                                    Text("STALE")
-                                        .font(.system(size: 10, weight: .bold))
+                                    Text("Stale")
+                                        .font(.system(size: 10, weight: .semibold))
                                         .foregroundStyle(Color.stratumLabel(Color(nsColor: NSColor(hex: "#FFC46B") ?? .systemYellow)))
                                         .padding(.horizontal, 6)
                                         .padding(.vertical, 1)
@@ -191,7 +191,7 @@ extension GroupsByNameView {
                             .font(.system(size: 15, weight: .semibold).monospacedDigit())
 
                         Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
-                            .font(.system(size: 11, weight: .bold))
+                            .font(.system(size: 11, weight: .semibold))
                             .foregroundStyle(.secondary)
                     }
                     .contentShape(Rectangle())
@@ -237,13 +237,13 @@ extension GroupsByNameView {
                                             )
                                         if isInstChecked {
                                             Image(systemName: "checkmark")
-                                                .font(.system(size: 10, weight: .bold))
+                                                .font(.system(size: 10, weight: .semibold))
                                                 .foregroundStyle(.white)
                                                 .transition(.scale(scale: 0.4).combined(with: .opacity))
                                         }
                                     }
                                     .frame(width: 19, height: 19)
-                                    .animation(.spring(response: 0.28, dampingFraction: 0.7), value: isInstChecked)
+                                    .animation(.spring(response: 0.28, dampingFraction: 0.86), value: isInstChecked)
 
                                     VStack(alignment: .leading, spacing: 1) {
                                         Text(inst.parentProjectName)

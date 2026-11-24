@@ -51,7 +51,7 @@ extension ToolbarView {
                                 .overlay(alignment: .topTrailing) {
                                     if tab.isPinned {
                                         Image(systemName: "pin.fill")
-                                            .font(.system(size: 6.5, weight: .bold))
+                                            .font(.system(size: 6.5, weight: .semibold))
                                             .foregroundStyle(appearance.accentColor)
                                             .rotationEffect(.degrees(35))
                                             .offset(x: 5, y: -4)
@@ -82,7 +82,7 @@ extension ToolbarView {
                             }
                         } label: {
                             Image(systemName: "xmark")
-                                .font(.system(size: 9, weight: .bold))
+                                .font(.system(size: 9, weight: .semibold))
                                 .foregroundStyle(.secondary)
                                 .frame(width: 20, height: 20)
                                 .contentShape(Rectangle())

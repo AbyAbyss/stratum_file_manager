@@ -184,7 +184,6 @@ struct BrowserContainerView: View {
             HStack(spacing: 8) {
                 Text(appState.currentFolderTitle)
                     .font(.system(size: 22, weight: .semibold))
-                    .tracking(-0.2)
                     .lineLimit(1)
                     .truncationMode(.middle)
 
@@ -217,7 +216,7 @@ struct BrowserContainerView: View {
                 if appState.isCurrentFolderInICloud {
                     Text("·")
                     Image(systemName: "checkmark")
-                        .font(.system(size: 10, weight: .bold))
+                        .font(.system(size: 10, weight: .semibold))
                         .foregroundStyle(Color(nsColor: NSColor(hex: "#5FD38D") ?? .systemGreen))
                     Text("Synced to iCloud")
                 }
@@ -228,7 +227,7 @@ struct BrowserContainerView: View {
                     } label: {
                         HStack(spacing: 4) {
                             Image(systemName: "sparkles")
-                                .font(.system(size: 10, weight: .bold))
+                                .font(.system(size: 10, weight: .semibold))
                             Text("Smart Folder: \(smartName)")
                             Image(systemName: "xmark.circle.fill")
                         }
@@ -325,7 +324,7 @@ struct BrowserContainerView: View {
         } label: {
             HStack(spacing: 4) {
                 Image(systemName: "plus")
-                    .font(.system(size: 10.5, weight: .bold))
+                    .font(.system(size: 10.5, weight: .semibold))
                 if showsTitle {
                     Text("New")
                         .font(.system(size: 12, weight: .medium))
@@ -350,7 +349,7 @@ struct BrowserContainerView: View {
                 Text(field.rawValue)
                     .font(.system(size: 12, weight: isActive ? .semibold : .regular))
                 Image(systemName: isActive && !appState.sortAscending ? "chevron.up" : "chevron.down")
-                    .font(.system(size: 8.5, weight: .bold))
+                    .font(.system(size: 8.5, weight: .semibold))
             }
             .foregroundStyle(isActive ? .primary : .secondary)
             .padding(.horizontal, 10)
@@ -428,7 +427,7 @@ struct BrowserContainerView: View {
         HStack(spacing: 8) {
             Image(systemName: "line.3.horizontal.decrease.circle.fill")
                 .foregroundStyle(appearance.accentColor)
-            TextField("Filter current folder (/ to focus)…", text: $appState.filterQuery)
+            TextField("Filter this folder", text: $appState.filterQuery)
                 .textFieldStyle(.plain)
                 .font(.system(size: 12.5))
                 .focused($filterFocused)
@@ -564,7 +563,7 @@ struct BrowserContainerView: View {
                 appState.selectedItemIDs = []
             } label: {
                 Image(systemName: "xmark")
-                    .font(.system(size: 10, weight: .bold))
+                    .font(.system(size: 10, weight: .semibold))
                     .foregroundStyle(.secondary)
                     .frame(width: 24, height: 24)
                     .contentShape(Rectangle())

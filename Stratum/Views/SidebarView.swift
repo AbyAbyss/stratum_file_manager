@@ -50,16 +50,15 @@ struct SidebarView: View {
                     VStack(alignment: .leading, spacing: 3) {
                         if !isCollapsed {
                             HStack {
-                                Text("FAVORITES")
-                                    .font(.system(size: 10, weight: .bold))
-                                    .tracking(0.8)
+                                Text("Favorites")
+                                    .font(.system(size: 11, weight: .medium))
                                     .foregroundStyle(.secondary.opacity(0.8))
                                 Spacer()
                                 Button {
                                     appState.togglePinFolder(appState.currentURL)
                                 } label: {
                                     Image(systemName: appState.isPinned(appState.currentURL) ? "pin.slash" : "plus")
-                                        .font(.system(size: 10, weight: .bold))
+                                        .font(.system(size: 10, weight: .semibold))
                                         .foregroundStyle(.secondary)
                                         .frame(width: 18, height: 18)
                                         .contentShape(Rectangle())
@@ -116,7 +115,7 @@ struct SidebarView: View {
                     }
 
                     // Workspace Modes
-                    sidebarSection("WORKSPACE MODES") {
+                    sidebarSection("Workspace modes") {
                         ForEach(tools, id: \.label) { tool in
                             let isActive = (appState.screen == tool.screen)
                             sidebarRow(
@@ -132,7 +131,7 @@ struct SidebarView: View {
                     }
 
                     // Smart Folders (Cross-Mac live queries)
-                    sidebarSection("SMART FOLDERS") {
+                    sidebarSection("Smart folders") {
                         sidebarRow(
                             label: "Large files",
                             icon: "chart.bar",
@@ -197,7 +196,7 @@ struct SidebarView: View {
                     }
 
                     // Locations
-                    sidebarSection("LOCATIONS") {
+                    sidebarSection("Locations") {
                         ForEach(appState.volumes) { vol in
                             let isActive = (appState.screen == .browser && appState.activeSmartFolderName == nil && appState.currentURL.standardizedFileURL == vol.url.standardizedFileURL)
                             HStack(spacing: 2) {
@@ -287,9 +286,8 @@ struct SidebarView: View {
                     if !isCollapsed {
                         VStack(alignment: .leading, spacing: 6) {
                             HStack {
-                                Text("TAGS")
-                                    .font(.system(size: 10, weight: .bold))
-                                    .tracking(0.8)
+                                Text("Tags")
+                                    .font(.system(size: 11, weight: .medium))
                                     .foregroundStyle(.secondary.opacity(0.8))
                                 Spacer()
                                 if appState.selectedTagFilter != nil {
@@ -325,7 +323,6 @@ struct SidebarView: View {
                                             Circle()
                                                 .fill(tagColor)
                                                 .frame(width: 8.5, height: 8.5)
-                                                .shadow(color: tagColor.opacity(0.55), radius: 3)
 
                                             Text(tag.name)
                                                 .font(.system(size: 11.5, weight: isActive ? .semibold : .medium))
@@ -337,7 +334,7 @@ struct SidebarView: View {
 
                                             if isActive {
                                                 Image(systemName: "checkmark")
-                                                    .font(.system(size: 9, weight: .bold))
+                                                    .font(.system(size: 9, weight: .semibold))
                                                     .foregroundStyle(appearance.accentColor)
                                             }
                                         }
@@ -397,7 +394,7 @@ struct SidebarView: View {
                                 .font(.system(size: 11.5, weight: .semibold))
                                 .foregroundStyle(appearance.accentColor)
                             Text(boot.name)
-                                .font(.system(size: 12, weight: .bold))
+                                .font(.system(size: 12, weight: .semibold))
                                 .lineLimit(1)
                         }
                         ViewThatFits(in: .horizontal) {
@@ -419,13 +416,7 @@ struct SidebarView: View {
                                 Capsule()
                                     .fill(Color.primary.opacity(0.10))
                                 Capsule()
-                                    .fill(
-                                        LinearGradient(
-                                            colors: [appearance.accentColor, appearance.accentColor.opacity(0.55)],
-                                            startPoint: .leading,
-                                            endPoint: .trailing
-                                        )
-                                    )
+                                    .fill(appearance.accentColor)
                                     .frame(width: w * frac)
                             }
                         }
@@ -509,8 +500,7 @@ struct SidebarView: View {
                     .padding(.bottom, 6)
             } else {
                 Text(title)
-                    .font(.system(size: 10, weight: .bold))
-                    .tracking(0.8)
+                    .font(.system(size: 11, weight: .medium))
                     .foregroundStyle(.secondary.opacity(0.8))
                     .padding(.horizontal, 10)
                     .padding(.bottom, 3)
@@ -582,7 +572,7 @@ struct SidebarView: View {
             if let badge {
                 if isShortcutBadge && isActive {
                     Text(badge)
-                        .font(.system(size: 10, weight: .bold).monospacedDigit())
+                        .font(.system(size: 10, weight: .semibold).monospacedDigit())
                         .foregroundStyle(appearance.accentColor)
                         .padding(.horizontal, 6)
                         .padding(.vertical, 2)

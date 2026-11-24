@@ -158,14 +158,14 @@ struct StorageMapView: View {
                 .stroke(appearance.accentColor, style: StrokeStyle(lineWidth: 7, lineCap: .round))
                 .rotationEffect(.degrees(-90))
             Text("\(Int((usedFraction * 100).rounded()))%")
-                .font(.system(size: 14, weight: .bold, design: .rounded).monospacedDigit())
+                .font(.system(size: 14, weight: .semibold, design: .rounded).monospacedDigit())
                 .contentTransition(.numericText())
         }
         .frame(width: 58, height: 58)
 
         let titles = VStack(alignment: .leading, spacing: 3) {
             Text(volume?.name ?? "Storage")
-                .font(.system(size: 20, weight: .bold, design: .rounded))
+                .font(.system(size: 20, weight: .semibold, design: .rounded))
             Text(volume.map { "\(StorageFormat.bytes($0.usedBytes)) used · \(StorageFormat.bytes($0.freeBytes)) free of \(StorageFormat.bytes($0.totalBytes))" } ?? "Scanning volumes…")
                 .font(.system(size: 12.5))
                 .foregroundStyle(.secondary)
@@ -333,7 +333,7 @@ struct StorageMapView: View {
         return HStack(spacing: 6) {
             Button { _ = goUp() } label: {
                 Image(systemName: "chevron.left")
-                    .font(.system(size: 12, weight: .bold))
+                    .font(.system(size: 12, weight: .semibold))
                     .frame(width: 28, height: 28)
                     .background(Circle().fill(Color.primary.opacity(0.07)))
             }
@@ -343,7 +343,7 @@ struct StorageMapView: View {
 
             ForEach(Array(crumbs.enumerated()), id: \.element.id) { index, crumb in
                 if index > 0 {
-                    Image(systemName: "chevron.right").font(.system(size: 9, weight: .bold)).foregroundStyle(.tertiary)
+                    Image(systemName: "chevron.right").font(.system(size: 9, weight: .semibold)).foregroundStyle(.tertiary)
                 }
                 Button(index == 0 ? rootName : crumb.name) {
                     if index < crumbs.count - 1 {
@@ -358,7 +358,7 @@ struct StorageMapView: View {
 
             Spacer()
             Text(StorageFormat.bytes(currentTotal))
-                .font(.system(size: 13, weight: .bold, design: .rounded).monospacedDigit())
+                .font(.system(size: 13, weight: .semibold, design: .rounded).monospacedDigit())
                 .foregroundStyle(.secondary)
                 .contentTransition(.numericText())
         }
@@ -414,9 +414,8 @@ struct StorageMapView: View {
             }
 
             VStack(alignment: .leading, spacing: 0) {
-                Text("LARGEST \(category.displayName.uppercased()) FILES")
-                    .font(.system(size: 11, weight: .bold, design: .rounded))
-                    .tracking(0.8)
+                Text("Largest \(category.displayName.lowercased()) files")
+                    .font(.system(size: 12, weight: .medium))
                     .foregroundStyle(.secondary)
                     .padding(.horizontal, 16)
                     .padding(.vertical, 12)

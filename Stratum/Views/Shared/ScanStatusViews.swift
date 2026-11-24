@@ -41,7 +41,7 @@ struct ScanningStateView: View {
 
             VStack(spacing: 6) {
                 Text(isLoadingResults ? "Preparing your results…" : "Scanning \(displayRoot)…")
-                    .font(.system(size: 19, weight: .bold, design: .rounded))
+                    .font(.system(size: 19, weight: .semibold, design: .rounded))
                     .contentTransition(.interpolate)
                 Text("The \(resultName) will appear when the scan finishes. Nothing out of date is shown in the meantime.")
                     .font(.system(size: 12.5))
@@ -166,7 +166,7 @@ struct ScanRefreshControl: View {
                 .disabled(!coordinator.autoRefreshEnabled)
             } label: {
                 Image(systemName: "chevron.down")
-                    .font(.system(size: 9, weight: .bold))
+                    .font(.system(size: 9, weight: .semibold))
                     .foregroundStyle(.secondary)
                     .frame(width: 28, height: 38)
                     .contentShape(Rectangle())
@@ -182,7 +182,6 @@ struct ScanRefreshControl: View {
                 .overlay(Capsule().strokeBorder(isBusy ? appearance.accentColor.opacity(0.55) : Color.primary.opacity(0.08), lineWidth: 1))
         )
         .clipShape(Capsule())
-        .scaleEffect(hovering && !isBusy ? 1.02 : 1)
         .fixedSize()
         .onHover { hovering = $0 }
         .animation(.spring(response: 0.3, dampingFraction: 0.8), value: hovering)
@@ -192,7 +191,7 @@ struct ScanRefreshControl: View {
     @ViewBuilder
     private var icon: some View {
         let symbol = Image(systemName: "arrow.clockwise")
-            .font(.system(size: 13, weight: .bold))
+            .font(.system(size: 13, weight: .semibold))
             .foregroundStyle(appearance.accentColor)
 
         if isBusy && !reduceMotion {
@@ -224,7 +223,7 @@ struct ScanRefreshControl: View {
     private func rescan() {
         guard !coordinator.isScanning else { return }
         if !reduceMotion {
-            withAnimation(.spring(response: 0.5, dampingFraction: 0.65)) { clickTurns += 1 }
+            withAnimation(.spring(response: 0.5, dampingFraction: 0.86)) { clickTurns += 1 }
         }
         coordinator.startScan(at: URL(fileURLWithPath: coordinator.scannedRootPath))
     }

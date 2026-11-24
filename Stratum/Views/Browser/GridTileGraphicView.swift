@@ -363,7 +363,7 @@ final class GridTileGraphicView: NSView {
         // Protruding extension badge at bottom-left
         let badgeColor = NSColor(hex: item.badgeTintHex) ?? .darkGray
         let extText = item.displayExt
-        let badgeFont = NSFont.systemFont(ofSize: 9, weight: .bold)
+        let badgeFont = NSFont.systemFont(ofSize: 9, weight: .semibold)
         let pStyle = NSMutableParagraphStyle()
         pStyle.alignment = .center
         let attrs: [NSAttributedString.Key: Any] = [

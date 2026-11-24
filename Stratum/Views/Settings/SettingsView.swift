@@ -58,7 +58,7 @@ struct SettingsView: View {
                 VStack(alignment: .leading, spacing: 28) {
                     VStack(alignment: .leading, spacing: 6) {
                         Text(page.rawValue)
-                            .font(.system(size: 30, weight: .bold, design: .rounded))
+                            .font(.system(size: 30, weight: .semibold, design: .rounded))
                         Text(page.subtitle)
                             .font(.system(size: 13.5))
                             .foregroundStyle(.secondary)

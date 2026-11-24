@@ -80,7 +80,6 @@ struct SettingsThemeCard: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .scaleEffect(hovering && !isSelected ? 1.015 : 1)
         .animation(.spring(response: 0.28, dampingFraction: 0.8), value: hovering)
         .animation(.spring(response: 0.3, dampingFraction: 0.82), value: isSelected)
         .onHover { hovering = $0 }

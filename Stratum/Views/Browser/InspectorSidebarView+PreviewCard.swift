@@ -80,7 +80,7 @@ extension InspectorSidebarView {
                 VStack(alignment: .leading, spacing: 6) {
                     HStack {
                         Text(item.displayExt)
-                            .font(.system(size: 10, weight: .bold, design: .monospaced))
+                            .font(.system(size: 10, weight: .semibold, design: .monospaced))
                             .foregroundStyle(.white)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
@@ -120,7 +120,7 @@ extension InspectorSidebarView {
                         }
 
                     Text(item.displayExt)
-                        .font(.system(size: 12, weight: .bold))
+                        .font(.system(size: 12, weight: .semibold))
                         .foregroundStyle(.white)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 2)

@@ -28,7 +28,7 @@ struct BatchRenameSheet: View {
         VStack(alignment: .leading, spacing: 14) {
             HStack {
                 Text("Batch Rename \(targetItems.count) \(targetItems.count == 1 ? "Item" : "Items")")
-                    .font(.system(size: 16, weight: .bold))
+                    .font(.system(size: 16, weight: .semibold))
                 Spacer()
                 Picker("", selection: $mode) {
                     ForEach(BatchRenameMode.allCases, id: \.self) { m in
@@ -114,7 +114,7 @@ struct BatchRenameSheet: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
 
                             Image(systemName: "arrow.right")
-                                .font(.system(size: 10, weight: .bold))
+                                .font(.system(size: 10, weight: .semibold))
                                 .foregroundStyle(.tertiary)
 
                             Text(newName)

@@ -24,9 +24,8 @@ struct StorageInsightsPanel: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            Text("INSIGHTS")
-                .font(.system(size: 11, weight: .bold, design: .rounded))
-                .tracking(1)
+            Text("Insights")
+                .font(.system(size: 12, weight: .medium))
                 .foregroundStyle(.secondary)
 
             if scanCoordinator.showsScanState {
@@ -78,7 +77,7 @@ struct StorageInsightsPanel: View {
                 Text("Nothing to clean up").font(.system(size: 13, weight: .semibold))
             } else {
                 Text(StorageFormat.bytes(cleanableBytes))
-                    .font(.system(size: 26, weight: .bold, design: .rounded).monospacedDigit())
+                    .font(.system(size: 26, weight: .semibold, design: .rounded).monospacedDigit())
                     .contentTransition(.numericText())
                 Text("in \(scanCoordinator.groups.count) groups of folders, like caches, node_modules and DerivedData.")
                     .font(.system(size: 11.5))

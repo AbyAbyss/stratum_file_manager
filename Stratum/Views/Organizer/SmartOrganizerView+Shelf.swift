@@ -10,7 +10,7 @@ extension SmartOrganizerView {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Drop Shelf (\(appState.shelfURLs.count) items parked)")
-                        .font(.system(size: 16, weight: .bold))
+                        .font(.system(size: 16, weight: .semibold))
                     Text("Park files from any folder (Right-Click → Park on Drop Shelf, or drag files below) then copy or move them all into one folder.")
                         .font(.system(size: 12.5))
                         .foregroundStyle(.secondary)

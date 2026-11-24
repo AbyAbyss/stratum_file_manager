@@ -295,7 +295,7 @@ struct SmartOrganizerView: View {
     private var headerTitles: some View {
         VStack(alignment: .leading, spacing: 2) {
             Text("Smart Clean & Organizer Studio")
-                .font(.system(size: 22, weight: .bold))
+                .font(.system(size: 22, weight: .semibold))
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
             Text("Target folder: \(targetFolderURL.path) · Click any category below to create its folder & move files, find SHA-256 duplicates, or use the Drop Shelf.")
@@ -379,7 +379,7 @@ struct SmartOrganizerView: View {
 
                         if mode == .shelf && !appState.shelfURLs.isEmpty {
                             Text("\(appState.shelfURLs.count)")
-                                .font(.system(size: 10.5, weight: .bold).monospacedDigit())
+                                .font(.system(size: 10.5, weight: .semibold).monospacedDigit())
                                 .foregroundStyle(isSelected ? appearance.accentColor : .white)
                                 .padding(.horizontal, 6)
                                 .padding(.vertical, 1)
@@ -392,7 +392,6 @@ struct SmartOrganizerView: View {
                         if isSelected {
                             RoundedRectangle(cornerRadius: 9, style: .continuous)
                                 .fill(appearance.accentColor)
-                                .shadow(color: appearance.accentColor.opacity(0.4), radius: 8, y: 2)
                                 .matchedGeometryEffect(id: "StudioTabPill", in: studioNamespace)
                         } else {
                             RoundedRectangle(cornerRadius: 9, style: .continuous)

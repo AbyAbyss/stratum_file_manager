@@ -20,7 +20,7 @@ struct FastColumnView: View {
                         } label: {
                             HStack(spacing: 3) {
                                 Image(systemName: "chevron.left.2")
-                                    .font(.system(size: 9.5, weight: .bold))
+                                    .font(.system(size: 9.5, weight: .semibold))
                                 Text("Root")
                                     .font(.system(size: 11, weight: .medium))
                             }
@@ -73,7 +73,7 @@ struct FastColumnView: View {
 
                                     if !isLast {
                                         Image(systemName: "chevron.right")
-                                            .font(.system(size: 8, weight: .bold))
+                                            .font(.system(size: 8, weight: .semibold))
                                             .foregroundStyle(.tertiary)
                                     }
                                 }

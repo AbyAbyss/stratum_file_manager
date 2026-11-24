@@ -30,12 +30,12 @@ extension ToolbarView {
                 .buttonStyle(StratumInteractiveButtonStyle())
 
                 Image(systemName: "chevron.right")
-                    .font(.system(size: 9, weight: .bold))
+                    .font(.system(size: 9, weight: .semibold))
                     .foregroundStyle(.tertiary)
 
                 HStack(spacing: 6) {
                     Image(systemName: "sparkle.magnifyingglass")
-                        .font(.system(size: 11.5, weight: .bold))
+                        .font(.system(size: 11.5, weight: .semibold))
                         .foregroundStyle(appearance.accentColor)
                     Text(smartName)
                         .font(.system(size: 12.5, weight: .semibold))
@@ -97,12 +97,12 @@ extension ToolbarView {
                 .buttonStyle(StratumInteractiveButtonStyle())
 
                 Image(systemName: "chevron.right")
-                    .font(.system(size: 9, weight: .bold))
+                    .font(.system(size: 9, weight: .semibold))
                     .foregroundStyle(.tertiary)
 
                 HStack(spacing: 6) {
                     Image(systemName: "tag.fill")
-                        .font(.system(size: 11, weight: .bold))
+                        .font(.system(size: 11, weight: .semibold))
                         .foregroundStyle(appearance.accentColor)
                     Text("Tag: \(tagName)")
                         .font(.system(size: 12.5, weight: .semibold))
@@ -187,7 +187,7 @@ extension ToolbarView {
                     )
                     .contentShape(Rectangle())
                 }
-                .buttonStyle(StratumInteractiveButtonStyle(hoverScale: 1.04, pressScale: 0.95))
+                .buttonStyle(StratumInteractiveButtonStyle())
                 .contextMenu {
                     Button("Open in New Tab") {
                         appState.addNewTab(at: seg.url)
@@ -220,7 +220,7 @@ extension ToolbarView {
 
                 if !seg.isLast {
                     Image(systemName: "chevron.right")
-                        .font(.system(size: 9, weight: .bold))
+                        .font(.system(size: 9, weight: .semibold))
                         .foregroundStyle(.tertiary)
                 }
             }

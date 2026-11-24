@@ -111,7 +111,7 @@ struct StorageHistoryView: View {
         AdaptiveStack(spacing: 12) {
             VStack(alignment: .leading, spacing: 3) {
                 Text("Storage History")
-                    .font(.system(size: 24, weight: .bold))
+                    .font(.system(size: 24, weight: .semibold))
                 Text("\(rootTitle) · \(allSamples.count) \(allSamples.count == 1 ? "day" : "days") recorded · updated \(latest.date.formatted(date: .abbreviated, time: .shortened))")
                     .font(.system(size: 12.5))
                     .foregroundStyle(.secondary)
@@ -162,7 +162,7 @@ struct StorageHistoryView: View {
                     .minimumScaleFactor(0.7)
                 if let trend, trend != 0 {
                     Image(systemName: trend > 0 ? "arrow.up.right" : "arrow.down.right")
-                        .font(.system(size: 12, weight: .bold))
+                        .font(.system(size: 12, weight: .semibold))
                         .foregroundStyle(trend > 0 ? Self.growColor : Self.shrinkColor)
                 }
             }
@@ -298,7 +298,7 @@ struct StorageHistoryView: View {
             } label: {
                 HStack(spacing: 8) {
                     Image(systemName: "chevron.right")
-                        .font(.system(size: 9, weight: .bold))
+                        .font(.system(size: 9, weight: .semibold))
                         .foregroundStyle(.tertiary)
                         .rotationEffect(.degrees(expanded.contains(change.id) ? 90 : 0))
                         .opacity(hasChildren ? 1 : 0)
@@ -412,7 +412,7 @@ struct StorageHistoryView: View {
                 HStack(spacing: 2) {
                     if delta != 0 {
                         Image(systemName: delta > 0 ? "arrow.up" : "arrow.down")
-                            .font(.system(size: 8.5, weight: .bold))
+                            .font(.system(size: 8.5, weight: .semibold))
                             .foregroundStyle(color)
                     }
                     Text(delta == 0 ? "no change" : Self.signed(delta))

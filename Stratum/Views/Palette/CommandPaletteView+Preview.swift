@@ -45,7 +45,7 @@ extension CommandPaletteView {
                             )
 
                             Text(item.displayExt)
-                                .font(.system(size: 11, weight: .bold))
+                                .font(.system(size: 11, weight: .semibold))
                                 .foregroundStyle(.white)
                                 .padding(.horizontal, 8)
                                 .padding(.vertical, 2)

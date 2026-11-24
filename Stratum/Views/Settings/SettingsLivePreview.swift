@@ -61,7 +61,7 @@ struct SettingsLivePreview: View {
                 HStack {
                     Spacer()
                     Text("Clean")
-                        .font(.system(size: 10.5, weight: .bold))
+                        .font(.system(size: 10.5, weight: .semibold))
                         .foregroundStyle(appearance.onAccent)
                         .padding(.horizontal, 12).frame(height: 22)
                         .background(RoundedRectangle(cornerRadius: 6, style: .continuous).fill(appearance.accentColor))

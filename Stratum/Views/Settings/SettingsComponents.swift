@@ -226,7 +226,7 @@ struct SettingsButton: View {
             .overlay(RoundedRectangle(cornerRadius: 9, style: .continuous).strokeBorder(stroke, lineWidth: 1))
             .contentShape(RoundedRectangle(cornerRadius: 9, style: .continuous))
         }
-        .buttonStyle(StratumInteractiveButtonStyle(hoverScale: 1.02, pressScale: 0.97))
+        .buttonStyle(StratumInteractiveButtonStyle())
         .onHover { hovering = $0 }
     }
 

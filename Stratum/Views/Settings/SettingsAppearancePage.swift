@@ -162,8 +162,7 @@ struct SettingsAppearancePage: View {
                 .fill(color)
                 .frame(width: 30, height: 30)
                 .overlay(Circle().strokeBorder(isSelected ? Color.primary : Color.primary.opacity(0.15), lineWidth: isSelected ? 2.5 : 1))
-                .overlay { if isSelected { Image(systemName: "checkmark").font(.system(size: 11, weight: .bold)).foregroundStyle(.white).shadow(radius: 2) } }
-                .shadow(color: isSelected ? color.opacity(0.5) : .clear, radius: 6)
+                .overlay { if isSelected { Image(systemName: "checkmark").font(.system(size: 11, weight: .semibold)).foregroundStyle(.white).shadow(radius: 2) } }
                 .frame(width: 38, height: 38)
                 .contentShape(Rectangle())
         }
@@ -230,7 +229,7 @@ struct SettingsAppearancePage: View {
             } label: {
                 HStack(spacing: 6) {
                     Image(systemName: "chevron.right")
-                        .font(.system(size: 10, weight: .bold))
+                        .font(.system(size: 10, weight: .semibold))
                         .rotationEffect(.degrees(showAdvanced ? 90 : 0))
                     Text("Advanced: surface tints").font(.system(size: 13, weight: .semibold))
                     Spacer()

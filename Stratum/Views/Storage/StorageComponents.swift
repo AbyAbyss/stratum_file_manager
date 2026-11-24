@@ -214,7 +214,7 @@ private struct TreemapTile: View {
                     VStack(alignment: .leading, spacing: 2) {
                         HStack(spacing: 4) {
                             if item.isProtected {
-                                Image(systemName: "lock.fill").font(.system(size: 9, weight: .bold))
+                                Image(systemName: "lock.fill").font(.system(size: 9, weight: .semibold))
                             }
                             Text(item.name)
                                 .font(.system(size: roomy ? 13 : 11, weight: .semibold))
@@ -222,7 +222,7 @@ private struct TreemapTile: View {
                         }
                         if roomy {
                             Text(StorageFormat.bytes(item.size))
-                                .font(.system(size: 18, weight: .bold, design: .rounded).monospacedDigit())
+                                .font(.system(size: 18, weight: .semibold, design: .rounded).monospacedDigit())
                             Text(percent)
                                 .font(.system(size: 11, weight: .medium))
                                 .opacity(0.85)
@@ -234,12 +234,13 @@ private struct TreemapTile: View {
                 }
             }
             .frame(width: max(0, frame.width), height: max(0, frame.height))
-            .scaleEffect(appeared ? (isHovered ? 1.018 : 1) : 0.88)
+            .scaleEffect(appeared ? 1 : 0.88)
+            .brightness(isHovered ? 0.06 : 0)
             .opacity(appeared ? (isDimmed ? 0.5 : 1) : 0)
-            .shadow(color: item.color.opacity(isHovered || isSelected ? 0.45 : 0), radius: 14, y: 5)
+            .shadow(color: .black.opacity(isHovered || isSelected ? 0.3 : 0), radius: 12, y: 4)
             .zIndex(isHovered || isSelected ? 1 : 0)
             .offset(x: frame.minX, y: frame.minY)
-            .animation(.spring(response: 0.28, dampingFraction: 0.8), value: isHovered)
+            .animation(.easeOut(duration: 0.14), value: isHovered)
             .animation(.easeOut(duration: 0.2), value: isDimmed)
             .onAppear {
                 withAnimation(.spring(response: 0.55, dampingFraction: 0.8).delay(Double(index) * 0.035)) {

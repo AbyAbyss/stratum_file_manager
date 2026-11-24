@@ -61,7 +61,6 @@ struct CommandPaletteView: View {
                     )
             )
             .shadow(color: .black.opacity(0.65), radius: 45, y: 24)
-            .shadow(color: appearance.accentColor.opacity(0.18), radius: 35)
             .padding(.top, 64)
             .padding(.horizontal, 16)
         }
@@ -107,7 +106,7 @@ struct CommandPaletteView: View {
                         activeChips.removeAll(where: { $0.id == chip.id })
                     } label: {
                         Image(systemName: "xmark")
-                            .font(.system(size: 9, weight: .bold))
+                            .font(.system(size: 9, weight: .semibold))
                             .frame(width: 16, height: 16)
                     }
                     .buttonStyle(.plain)
@@ -221,7 +220,7 @@ struct CommandPaletteView: View {
                     Text(searchEverywhere ? "Everywhere" : appState.currentFolderTitle)
                         .font(.system(size: 12))
                     Image(systemName: "chevron.down")
-                        .font(.system(size: 9, weight: .bold))
+                        .font(.system(size: 9, weight: .semibold))
                 }
                 .foregroundStyle(.secondary)
                 .padding(.horizontal, 10)

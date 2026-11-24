@@ -2,8 +2,8 @@ import SwiftUI
 import AppKit
 
 struct StratumInteractiveButtonStyle: ButtonStyle {
-    var hoverScale: CGFloat = 1.03
-    var pressScale: CGFloat = 0.95
+    var hoverScale: CGFloat = 1.0
+    var pressScale: CGFloat = 0.97
 
     func makeBody(configuration: Configuration) -> some View {
         StratumInteractiveButtonBody(
@@ -23,8 +23,8 @@ struct StratumInteractiveButtonStyle: ButtonStyle {
             configuration.label
                 .scaleEffect(configuration.isPressed ? pressScale : (isHovered ? hoverScale : 1.0))
                 .brightness(configuration.isPressed ? -0.03 : (isHovered ? 0.03 : 0))
-                .animation(.spring(response: 0.22, dampingFraction: 0.72), value: configuration.isPressed)
-                .animation(.spring(response: 0.24, dampingFraction: 0.74), value: isHovered)
+                .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
+                .animation(.easeOut(duration: 0.14), value: isHovered)
                 .onHover { hovering in
                     isHovered = hovering
                 }

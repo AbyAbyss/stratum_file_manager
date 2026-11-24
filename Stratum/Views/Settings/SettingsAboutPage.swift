@@ -22,7 +22,7 @@ struct SettingsAboutPage: View {
             VStack(spacing: 10) {
                 StratumIsometricLogo(size: 84, accentColor: appearance.accentColor)
                 Text("Stratum")
-                    .font(.system(size: 24, weight: .bold, design: .rounded))
+                    .font(.system(size: 24, weight: .semibold, design: .rounded))
                 Text("Version \(AppInfo.version)")
                     .font(.system(size: 13))
                     .foregroundStyle(.secondary)

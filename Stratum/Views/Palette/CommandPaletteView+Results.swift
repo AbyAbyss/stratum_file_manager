@@ -220,7 +220,7 @@ extension CommandPaletteView {
                     .frame(width: 26, height: 32)
             } else {
                 Text(item.displayExt)
-                    .font(.system(size: 7, weight: .bold))
+                    .font(.system(size: 7, weight: .semibold))
                     .foregroundStyle(.white)
                     .padding(.horizontal, 3)
                     .padding(.vertical, 1)

@@ -29,13 +29,11 @@ struct ToolbarView: View {
                     HStack(spacing: 7) {
                         StratumIsometricLogo(
                             size: 22,
-                            accentColor: appearance.accentColor,
-                            isAnimated: true
+                            accentColor: appearance.accentColor
                         )
                         if density == .full {
-                            Text("STRATUM")
-                                .font(.system(size: 11.5, weight: .bold, design: .rounded))
-                                .tracking(0.8)
+                            Text("Stratum")
+                                .font(.system(size: 13, weight: .semibold))
                                 .foregroundStyle(.primary)
                                 .fixedSize()
                         }
@@ -52,7 +50,7 @@ struct ToolbarView: View {
                     )
                     .contentShape(Capsule())
                 }
-                .buttonStyle(StratumInteractiveButtonStyle(hoverScale: 1.04, pressScale: 0.94))
+                .buttonStyle(StratumInteractiveButtonStyle())
                 .stratumHelp("Stratum Engine — Click to replay launch animation")
                 .contextMenu {
                     Button("Replay Startup Animation") {
@@ -111,7 +109,7 @@ struct ToolbarView: View {
                         } label: {
                             HStack(spacing: 4) {
                                 Image(systemName: "chevron.left")
-                                    .font(.system(size: 10, weight: .bold))
+                                    .font(.system(size: 10, weight: .semibold))
                                 Text("Browser")
                                     .font(.system(size: 12, weight: .medium))
                             }
@@ -135,7 +133,7 @@ struct ToolbarView: View {
                             .foregroundStyle(.tertiary)
 
                         Text(appState.screen.title)
-                            .font(.system(size: 13.5, weight: .bold))
+                            .font(.system(size: 13.5, weight: .semibold))
                             .lineLimit(1)
                             .padding(.horizontal, 2)
                             .contentTransition(.interpolate)
@@ -193,7 +191,7 @@ struct ToolbarView: View {
                                 .frame(width: 30, height: 30)
                                 .contentShape(Rectangle())
                         }
-                        .buttonStyle(StratumInteractiveButtonStyle(hoverScale: 1.08, pressScale: 0.90))
+                        .buttonStyle(StratumInteractiveButtonStyle())
                         .stratumHelp("Switch Glass Theme or Customize Appearance")
                         .popover(isPresented: $showThemePicker, arrowEdge: .bottom) {
                             ThemePickerPopover(
@@ -311,7 +309,7 @@ struct ToolbarView: View {
                         )
                         .contentShape(Rectangle())
                     }
-                    .buttonStyle(StratumInteractiveButtonStyle(hoverScale: 1.02, pressScale: 0.97))
+                    .buttonStyle(StratumInteractiveButtonStyle())
                 } else {
                     toolbarIconButton("magnifyingglass", label: "Search or run a command (⌘K)") {
                         openCommandPalette()
@@ -386,7 +384,7 @@ struct ToolbarView: View {
     func transferControl(_ symbol: String, label: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Image(systemName: symbol)
-                .font(.system(size: 9.5, weight: .bold))
+                .font(.system(size: 9.5, weight: .semibold))
                 .foregroundStyle(.secondary)
                 .frame(width: 22, height: 22)
                 .background(Circle().fill(Color.primary.opacity(0.08)))
@@ -407,7 +405,7 @@ struct ToolbarView: View {
                 .frame(width: 30, height: 30)
                 .overlay(alignment: .topTrailing) {
                     Text("\(appState.shelfURLs.count)")
-                        .font(.system(size: 9, weight: .bold).monospacedDigit())
+                        .font(.system(size: 9, weight: .semibold).monospacedDigit())
                         .foregroundStyle(.white)
                         .padding(.horizontal, 4)
                         .frame(minWidth: 14, minHeight: 14)
@@ -416,7 +414,7 @@ struct ToolbarView: View {
                 }
                 .contentShape(Rectangle())
         }
-        .buttonStyle(StratumInteractiveButtonStyle(hoverScale: 1.08, pressScale: 0.90))
+        .buttonStyle(StratumInteractiveButtonStyle())
         .stratumHelp("Shelf: \(appState.shelfURLs.count) parked")
         .transition(.scale(scale: 0.6).combined(with: .opacity))
         .popover(isPresented: $showShelf, arrowEdge: .bottom) {
@@ -436,7 +434,7 @@ struct ToolbarView: View {
                 )
                 .contentShape(Rectangle())
         }
-        .buttonStyle(StratumInteractiveButtonStyle(hoverScale: 1.08, pressScale: 0.90))
+        .buttonStyle(StratumInteractiveButtonStyle())
         .disabled(disabled)
         .stratumHelp(label)
     }
@@ -456,7 +454,6 @@ struct ToolbarView: View {
                     if isActive {
                         RoundedRectangle(cornerRadius: 6, style: .continuous)
                             .fill(appearance.accentColor)
-                            .shadow(color: appearance.accentColor.opacity(0.45), radius: 5, y: 1)
                             .matchedGeometryEffect(id: "ActiveViewModePill", in: toolbarMotionNamespace)
                     }
                 }

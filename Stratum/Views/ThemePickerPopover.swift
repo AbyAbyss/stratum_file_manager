@@ -113,7 +113,7 @@ struct ThemePickerPopover: View {
                 }
                 if wasActive {
                     Image(systemName: "checkmark")
-                        .font(.system(size: 10.5, weight: .bold))
+                        .font(.system(size: 10.5, weight: .semibold))
                         .foregroundStyle(.secondary)
                 }
             }

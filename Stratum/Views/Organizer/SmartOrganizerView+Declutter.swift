@@ -21,7 +21,7 @@ extension SmartOrganizerView {
 
                     VStack(alignment: .leading, spacing: 3) {
                         Text("\(targetFolderURL.lastPathComponent) has \(totalOrganizableFiles) loose \(totalOrganizableFiles == 1 ? "file" : "files") (\(BulkDirectoryReader.fastFormatBytes(totalOrganizableBytes)))")
-                            .font(.system(size: 16, weight: .bold))
+                            .font(.system(size: 16, weight: .semibold))
                             .contentTransition(.numericText())
                         Text("Nothing is moved automatically — click any category below (or Organize All) to create its folder inside \(targetFolderURL.path).")
                             .font(.system(size: 12.5))
@@ -61,7 +61,7 @@ extension SmartOrganizerView {
                 } label: {
                     HStack(spacing: 7) {
                         Image(systemName: "sparkles")
-                            .font(.system(size: 12.5, weight: .bold))
+                            .font(.system(size: 12.5, weight: .semibold))
                         Text("Organize All Categories (\(totalOrganizableFiles))")
                             .font(.system(size: 13, weight: .semibold))
                             .lineLimit(1)
@@ -72,7 +72,6 @@ extension SmartOrganizerView {
                     .background(
                         RoundedRectangle(cornerRadius: 10, style: .continuous)
                             .fill(totalOrganizableFiles == 0 ? Color.secondary.opacity(0.35) : appearance.accentColor)
-                            .shadow(color: totalOrganizableFiles == 0 ? .clear : appearance.accentColor.opacity(0.45), radius: 8, y: 2)
                     )
                 }
                 .buttonStyle(StratumInteractiveButtonStyle())
@@ -96,7 +95,7 @@ extension SmartOrganizerView {
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundStyle(Color(nsColor: NSColor(hex: "#5FD38D") ?? .systemGreen))
                         Text("Created Category Folders in \(targetFolderURL.lastPathComponent)")
-                            .font(.system(size: 14, weight: .bold))
+                            .font(.system(size: 14, weight: .semibold))
                             .lineLimit(1)
                             .layoutPriority(1)
                         Text("· Open in Browser or Unpack back to \(targetFolderURL.lastPathComponent)")
@@ -128,10 +127,10 @@ extension SmartOrganizerView {
                                     VStack(alignment: .leading, spacing: 2) {
                                         HStack(spacing: 6) {
                                             Text("\(org.folderName)/")
-                                                .font(.system(size: 14, weight: .bold))
+                                                .font(.system(size: 14, weight: .semibold))
                                                 .lineLimit(1)
-                                            Text("CREATED BY YOU")
-                                                .font(.system(size: 9.5, weight: .bold))
+                                            Text("Created by you")
+                                                .font(.system(size: 9.5, weight: .semibold))
                                                 .foregroundStyle(badgeTint)
                                                 .fixedSize()
                                                 .padding(.horizontal, 6)
@@ -224,7 +223,7 @@ extension SmartOrganizerView {
                                     } label: {
                                         HStack(spacing: 4) {
                                             Image(systemName: "arrow.uturn.backward")
-                                                .font(.system(size: 10.5, weight: .bold))
+                                                .font(.system(size: 10.5, weight: .semibold))
                                             Text("Unpack")
                                                 .font(.system(size: 11.5, weight: .medium))
                                                 .lineLimit(1)
@@ -260,7 +259,7 @@ extension SmartOrganizerView {
             if !organizerBuckets.isEmpty {
                 VStack(alignment: .leading, spacing: 10) {
                     Text("Loose Files in \(targetFolderURL.lastPathComponent) — Click a Category to Create Folder & Move")
-                        .font(.system(size: 14, weight: .bold))
+                        .font(.system(size: 14, weight: .semibold))
                         .fixedSize(horizontal: false, vertical: true)
 
                     LazyVGrid(

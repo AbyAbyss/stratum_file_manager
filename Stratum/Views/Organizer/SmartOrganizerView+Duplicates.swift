@@ -12,7 +12,7 @@ extension SmartOrganizerView {
             AdaptiveStack(spacing: 14) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("SHA-256 Verified Duplicate Files")
-                        .font(.system(size: 16, weight: .bold))
+                        .font(.system(size: 16, weight: .semibold))
                     Text("Found \(duplicateClusters.count) identical file sets (\(BulkDirectoryReader.fastFormatBytes(totalReclaimable)) reclaimable) across your workspace.")
                         .font(.system(size: 12.5))
                         .foregroundStyle(.secondary)
@@ -46,7 +46,7 @@ extension SmartOrganizerView {
                     Image(systemName: "checkmark.circle.fill")
                         .font(.system(size: 34))
                         .foregroundStyle(appearance.accentColor)
-                    Text("No duplicate files found!")
+                    Text("No duplicate files found")
                         .font(.system(size: 15, weight: .semibold))
                     Text("All scanned files in \(targetFolderURL.lastPathComponent), Desktop, and Documents are unique.")
                         .font(.system(size: 12.5))
@@ -99,8 +99,8 @@ extension SmartOrganizerView {
                                             .truncationMode(.middle)
 
                                         if idx == 0 {
-                                            Text("KEEP ORIGINAL")
-                                                .font(.system(size: 9.5, weight: .bold))
+                                            Text("Keep original")
+                                                .font(.system(size: 9.5, weight: .semibold))
                                                 .foregroundStyle(appearance.accentColor)
                                                 .padding(.horizontal, 6)
                                                 .padding(.vertical, 2)

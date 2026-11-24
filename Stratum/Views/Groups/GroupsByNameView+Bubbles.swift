@@ -92,7 +92,7 @@ extension GroupsByNameView {
                             .contentShape(Circle())
                             .shadow(color: .black.opacity(0.35), radius: 12, y: 6)
                         }
-                        .buttonStyle(StratumInteractiveButtonStyle(hoverScale: 1.07, pressScale: 0.94))
+                        .buttonStyle(StratumInteractiveButtonStyle())
                         .scaleEffect(bubblesAppeared ? 1 : 0.6)
                         .opacity(bubblesAppeared ? 1 : 0)
                         .position(x: b.x, y: b.y)
